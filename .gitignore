@@ -1,0 +1,11 @@
+# ide thingy
+.idea/
+.history/
+.vscode/
+
+# compile thingy
+.gradle/
+target/
+
+# logs
+**.log

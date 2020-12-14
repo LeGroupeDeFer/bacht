@@ -1,0 +1,7 @@
+# @name apiTest
+
+GET http://localhost:8000/api/noodles
+Accept: text/plain
+Cache-Control: no-cache
+
+### ------------------------------------------------------------ LOGIN SUCCESS
