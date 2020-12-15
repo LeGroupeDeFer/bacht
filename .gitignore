@@ -9,3 +9,7 @@ target/
 
 # logs
 **.log
+backend/log
+
+# node
+frontend/node_modules
