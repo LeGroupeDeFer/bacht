@@ -75,7 +75,7 @@ frontend() {
 
   cd frontend
   npm ci
-  npm run dev > ../frontend.log 2>&1 &
+  npm run watch > ../logs/frontend.log 2>&1 &
   echo $! > /tmp/frontend.pid
   cd ..
   cp -R frontend/static/. ${ASSETS_DIR}/
@@ -94,11 +94,11 @@ reload() {
 # TRAPS
 cleanup() {
   if [ -f /tmp/backend.pid ]; then
-    safe_kill -9 $(cat /tmp/backend.pid)
+    safe_kill $(cat /tmp/backend.pid)
     rm /tmp/backend.pid
   fi
   if [ -f /tmp/frontend.pid ]; then
-    safe_kill -9 $(cat /tmp/frontend.pid)
+    safe_kill $(cat /tmp/frontend.pid)
     rm /tmp/frontend.pid
   fi
   exit 0

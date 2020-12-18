@@ -3,9 +3,13 @@
 .history/
 .vscode/
 
-# compile thingy
+# compiled scala things
 .gradle/
 target/
+
+# compiled/transpiled frontend things
+frontend/static/js/
+frontend/static/css/
 
 # logs
 **.log
