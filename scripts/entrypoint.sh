@@ -78,16 +78,16 @@ frontend() {
   npm run dev > ../frontend.log 2>&1 &
   echo $! > /tmp/frontend.pid
   cd ..
-  cp -R frontend/public/. ${ASSETS_DIR}/
+  cp -R frontend/static/. ${ASSETS_DIR}/
 }
 
 # RELOADER
 reload() {
   log "Starting reloader..."
-  inotifywait -m -r -e create -e modify -e move -e delete --format "%w %f %e" frontend/public \
+  inotifywait -m -r -e create -e modify -e move -e delete --format "%w %f %e" frontend/static \
   | while read DIR FILE EVENT; do
     log "Change (${EVENT}) to ${DIR}${FILE} detected..."
-    cp -R frontend/public/. ${ASSETS_DIR}/
+    cp -R frontend/static/. ${ASSETS_DIR}/
   done
 }
 
@@ -108,12 +108,10 @@ cleanup() {
 main() {
   migrate
   backend
-  while read DIR FILE EVENT; do
-    log "something changed, no actions are taken !"
-  done
+  frontend
+  reload
 }
-#  frontend
-#  reload
+
 
 trap cleanup SIGINT
 trap cleanup SIGQUIT
