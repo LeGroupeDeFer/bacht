@@ -141,7 +141,7 @@ export function delay(fn, ms = 250) {
 
 
 export const prevent = fn => e =>
-  e.preventDefault() || e.stopPropagation() || fn();
+  e.preventDefault() || e.stopPropagation() || fn(e);
 
 
 /* ----------------------------- Promise utils ----------------------------- */

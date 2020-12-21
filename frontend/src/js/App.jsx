@@ -4,10 +4,9 @@ import {
   Route,
   useHistory
 } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { refresh, selectConnected } from './store/auth';
-import api from './lib/api';
+import { connectAuth } from './store/auth';
+import Loader from './component/Loader';
 
 
 const Home = lazy(() => import('./pages/Home'));
@@ -15,22 +14,14 @@ const Auth = lazy(() => import('./pages/Auth'));
 
 
 // App :: None => Component
-function App(_) {
+function App({ connected }) {
 
-  const dispatch  = useDispatch();
-  const history   = useHistory();
-  const connected = useSelector(selectConnected);
+  const history = useHistory();
 
-  useEffect(() => {
-    if (!connected)
-      if (api.auth.inSession())
-        dispatch(refresh());
-      else
-        history.push('/auth/login');
-  }, []);
+  useEffect(() => connected || history.push('/auth/login'), []);
 
   return (
-    <Suspense fallback="Loading...">
+    <Suspense fallback={<Loader width="50" />}>
       <Switch>
         <Route exact path="/">
           <Home />
@@ -45,4 +36,4 @@ function App(_) {
 }
 
 
-export default App;
+export default connectAuth(App);

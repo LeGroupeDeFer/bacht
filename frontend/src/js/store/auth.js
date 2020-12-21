@@ -1,12 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { now, api, defined } from '../lib';
+import { useDispatch, useSelector, connect } from 'react-redux';
+import { now, api } from '../lib';
 
+
+class AuthError extends Error {}
 
 const initialState = {
   token : null,
   status: 'idle',
   error : null,
-  timer : null
+  inSession: api.auth.inSession()
 };
 
 export const login = createAsyncThunk(
@@ -18,7 +21,7 @@ export const logout = createAsyncThunk(
   'auth/logout',
   () => {
     if (!api.auth.inSession())
-      return Promise.reject(new Error('Out of session'));
+      return Promise.reject(new AuthError('Out of session'));
     return api.auth.logout();
   }
 );
@@ -27,7 +30,7 @@ export const refresh = createAsyncThunk(
   'auth/refresh',
   () => {
     if (!api.auth.inSession())
-      return Promise.reject(new Error('Out of session'));
+      return Promise.reject(new AuthError('Out of session'));
     return api.auth.refresh();
   }
 );
@@ -48,6 +51,7 @@ export const slice = createSlice({
       state.error = null;
 
       state.timer = setTimeout(refresh, state.token.exp - now());
+      state.inSession = true;
     },
     [login.rejected]: (state, action) => {
       state.status = 'failed';
@@ -63,6 +67,7 @@ export const slice = createSlice({
       state.status = 'succeeded';
       state.token = null;
       state.error = null;
+      state.inSession = false;
 
       clearTimeout(state.timer);
       state.timer = null;
@@ -78,6 +83,7 @@ export const slice = createSlice({
     [refresh.fulfilled]: (state, action) => {
       state.status = 'succeeded';
       state.token = action.payload;
+      state.inSession = true;
 
       clearTimeout(state.timer);
       state.timer = setTimeout(refresh, state.token.exp - now());
@@ -86,15 +92,28 @@ export const slice = createSlice({
       state.status = 'failed';
       state.token = null;
       state.error = action.error;
+      state.inSession = false;
     }
   },
 });
 
-export const selectConnected = state => defined(state.token);
 
-export const selectSubject = state => state.token.sub;
+export const useAuth = () => {
+  const dispatch = useDispatch();
+  const state = useSelector(state => state.auth);
+  return ({
+    ...state,
+    login: (username, password) => dispatch(login({ username, password })),
+    logout: () => dispatch(logout()),
+    refresh: () => dispatch(refresh())
+  });
+};
 
-export const selectToken = state => state.token;
+
+export const connectAuth = connect(
+  state => state.auth,
+  { login, logout, refresh }
+);
 
 
 export default slice.reducer;
