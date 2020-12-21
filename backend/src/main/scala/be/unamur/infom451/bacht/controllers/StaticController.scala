@@ -25,7 +25,7 @@ trait StaticController {
   def index(): Response =
     content("index.html")
 
-  @Endpoint(path = "/auth")
+  @Endpoint(path = "/auth/*path")
   def redirectAuth(): Response = index()
 
   @Endpoint(path = "/*path")
