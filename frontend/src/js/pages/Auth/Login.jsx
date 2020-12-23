@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 
 import { connectAuth } from 'sharea/store/auth';
