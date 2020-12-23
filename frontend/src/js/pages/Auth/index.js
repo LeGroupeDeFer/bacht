@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { Link, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
 
 import { connectAuth } from 'sharea/store/auth';
 import Loader from 'sharea/component/Loader';
+import Heading from 'sharea/component/Heading';
 
 import Login from './Login';
 import Logout from './Logout';
@@ -12,24 +13,43 @@ import Register from './Register';
 // Auth :: None => Component
 function Auth({ inSession, refresh, status }) {
 
-  let { url } = useRouteMatch();
+  const { pathname } = useLocation();
+  const { url } = useRouteMatch();
 
-  useEffect(() => inSession && refresh(), []);
+  useEffect(() =>
+    inSession && !pathname.endsWith('logout') && refresh(),
+    []
+  );
+
   if (status === 'loading')
-    return <Loader.Centered width="50" />;
+    return <Loader.Centered width="100" />;
 
   return (
-    <Switch>
-      <Route path={`${url}/login`}>
-        <Login />
-      </Route>
-      <Route path={`${url}/logout`}>
-        <Logout />
-      </Route>
-      <Route path={`${url}/register`}>
-        <Register />
-      </Route>
-    </Switch>
+    <div className="auth">
+
+      <Heading />
+      <hr />
+
+      <Switch>
+        <Route path={`${url}/login`}>
+          <Login />
+        </Route>
+        <Route path={`${url}/logout`}>
+          <Logout />
+        </Route>
+        <Route path={`${url}/register`}>
+          <Register />
+        </Route>
+      </Switch>
+
+      <footer>
+        <div><Link to="/auth/login">Login</Link></div>
+        <div>|</div>
+        <div><Link to="/auth/register">Register</Link></div>
+        <div>|</div>
+        <div><Link to="/faq">FAQ</Link></div>
+      </footer>
+    </div>
   );
 
 }

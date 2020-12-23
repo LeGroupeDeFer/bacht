@@ -14,11 +14,11 @@ const Auth = lazy(() => import('./pages/Auth'));
 
 
 // App :: None => Component
-function App({ connected }) {
+function App({ inSession }) {
 
   const history = useHistory();
 
-  useEffect(() => connected || history.push('/auth/login'), []);
+  useEffect(() => inSession || history.push('/auth/login'), []);
 
   return (
     <Suspense fallback={<Loader width="50" />}>

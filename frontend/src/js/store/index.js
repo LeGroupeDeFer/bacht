@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './auth';
-
+import layoutReducer from './layout';
 
 export default configureStore({
   reducer: {
-    auth: authReducer
+    auth: authReducer,
+    layout: layoutReducer
   },
 });
+

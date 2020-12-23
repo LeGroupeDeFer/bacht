@@ -6,15 +6,20 @@ import { now, api } from '../lib';
 class AuthError extends Error {}
 
 const initialState = {
-  token : null,
-  status: 'idle',
-  error : null,
-  inSession: api.auth.inSession()
+  token     : null,
+  request   : null,
+  status    : 'idle',
+  error     : null,
+  inSession : api.auth.inSession()
 };
 
 export const login = createAsyncThunk(
   'auth/login',
-  ({ username, password }) => api.auth.login(username, password)
+  ({ username, password }) => {
+    if (api.auth.inSession())
+      return Promise.reject(new AuthError('Already connected'));
+    return api.auth.login(username, password)
+  }
 );
 
 export const logout = createAsyncThunk(
@@ -35,6 +40,15 @@ export const refresh = createAsyncThunk(
   }
 );
 
+export const register = createAsyncThunk(
+  'auth/register',
+  ({ username, password }) => {
+    if (api.auth.inSession())
+      return Promise.reject(new AuthError('Already connected'));
+    return api.auth.register(username, password);
+  }
+)
+
 export const slice = createSlice({
   name: 'auth',
   initialState,
@@ -43,6 +57,7 @@ export const slice = createSlice({
     // LOGIN
     [login.pending]: (state, _) => {
       state.status = 'loading';
+      state.request = 'login';
       state.error = null;
     },
     [login.fulfilled]: (state, action) => {
@@ -60,7 +75,8 @@ export const slice = createSlice({
     },
     // LOGOUT
     [logout.pending]: (state, _) => {
-      state.status = 'loading';
+      state.status = 'loading'
+      state.request = 'logout';
       state.error = null;
     },
     [logout.fulfilled]: (state, _) => {
@@ -79,6 +95,7 @@ export const slice = createSlice({
     // REFRESH
     [refresh.pending]: (state, _) => {
       state.status = 'loading';
+      state.request = 'refresh';
     },
     [refresh.fulfilled]: (state, action) => {
       state.status = 'succeeded';
@@ -93,6 +110,19 @@ export const slice = createSlice({
       state.token = null;
       state.error = action.error;
       state.inSession = false;
+    },
+    // REGISTER
+    [register.pending]: (state, _) => {
+      state.status = 'loading';
+      state.request = 'register';
+      state.error = null;
+    },
+    [register.fulfilled]: (state, _) => {
+      state.status = 'succeeded';
+    },
+    [register.rejected]: (state, action) => {
+      state.status = 'failed';
+      state.error = action.error;
     }
   },
 });
@@ -101,18 +131,19 @@ export const slice = createSlice({
 export const useAuth = () => {
   const dispatch = useDispatch();
   const state = useSelector(state => state.auth);
-  return ({
+  return {
     ...state,
-    login: (username, password) => dispatch(login({ username, password })),
-    logout: () => dispatch(logout()),
-    refresh: () => dispatch(refresh())
-  });
+    login   : (username, password) => dispatch(login({ username, password })),
+    logout  : () => dispatch(logout()),
+    refresh : () => dispatch(refresh()),
+    register: (username, password) => dispatch(register({ username, password }))
+  };
 };
 
 
 export const connectAuth = connect(
   state => state.auth,
-  { login, logout, refresh }
+  { login, logout, refresh, register }
 );
 
 

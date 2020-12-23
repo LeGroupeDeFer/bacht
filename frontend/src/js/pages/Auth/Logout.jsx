@@ -1,9 +1,21 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+
+import { useHistory } from 'react-router-dom';
+
+import { connectAuth } from 'sharea/store/auth';
 
 
-function Logout(_) {
-  return <h1>Logout</h1>;
+function Logout({ logout, inSession, status }) {
+
+  const history = useHistory();
+  useEffect(
+    () => inSession ? logout() : history.replace('/auth/login'),
+    [status]
+  );
+
+  return <></>;
+
 }
 
 
-export default Logout;
+export default connectAuth(Logout);

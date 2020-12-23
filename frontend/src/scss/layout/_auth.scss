@@ -1,6 +1,7 @@
 @use "../theme" as *;
 
-.login-form {
+
+.auth {
 
   max-width: 720px;
 
@@ -20,10 +21,31 @@
     margin: 0 0 .1em 0;
   }
 
+  footer {
+    display: flex;
+    justify-content: center;
+
+    & > div {
+      margin: 0 1em;
+    }
+  }
+}
+
+.login-form, .register-form {
+
   input {
     text-align: center;
     max-width: 360px;
     margin: auto;
+  }
+
+  label {
+    font-weight: bold;
+    color: theme-color("secondary");
+  }
+
+  button {
+    padding: .5em 2em;
   }
 
   .error {

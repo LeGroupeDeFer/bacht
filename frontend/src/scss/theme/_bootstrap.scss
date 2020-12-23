@@ -1,13 +1,23 @@
+
+$primary:   #FE4A49;
+$secondary: #392759;
+$ternary:   #FED766;
+$danger:    #DD9787;
+$cyan:      #3AAED8;
+$purple:    #48416D;
+$white:     #F4F4F8;
+
+
 @forward "../../../node_modules/bootstrap" with (
-  $body-bg : #2AB7CA,
+  $body-bg : #F4F4F8,
   $theme-colors: (
-    "primary":   #FE4A49,
-    "secondary": #2AB7CA,
-    "ternary":   #FED766,
-    "danger":    #DD9787,
-    "cyan":      #3AAED8,
-    "purple":    #48416D,
-    "white":     #F4F4F8,
+    "primary":   $primary,
+    "secondary": $secondary,
+    "ternary":   $ternary,
+    "danger":    $danger,
+    "cyan":      $cyan,
+    "purple":    $purple,
+    "white":     $white,
   ),
   $h1-font-size: 2.5em,
   $h2-font-size: 2em,
@@ -18,25 +28,46 @@
   /* Vertical align inputs */
   $input-bg: transparent,
   $input-border-radius: 0,
-  $input-border-color: rgba(255, 255, 255, .6),
-  $input-focus-border-color: #FED766,
+  $input-border-color: rgba(0, 0, 0, .5),
+  $input-focus-border-color: $primary,
   $input-box-shadow: none,
   $input-focus-box-shadow: none,
-  $input-color: white,
-  $input-placeholder-color: rgba(255, 255, 255, .6)
+  $input-color: $purple,
+  $input-placeholder-color: rgba(0, 0, 0, .5)
 );
 
 body {
-  color: white;
+
+  height: 100vh;
+  overflow: hidden;
+
+  color: rgba(0, 0, 0, .75);
+
 }
 
 a {
-  color: white;
+
+  color: inherit;
+  border-bottom: 2px solid $primary;
+  padding-bottom: 2px;
+
+  transition: .2s ease-in;
+
+  &:hover {
+
+    color: inherit;
+    font-style: italic;
+    text-decoration: none;
+
+    transition: .2s ease-out;
+
+  }
+
 }
 
-a:hover {
-  color: white;
-  text-decoration: none;
-  border-bottom: 2px solid #FE4A49;
-  padding-bottom: 2px;
+*::selection {
+
+  color: $white;
+  background-color: $primary;
+
 }

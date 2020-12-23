@@ -94,7 +94,7 @@ function api(endpoint, { body, ...providedConfig } = {}) {
     .then((response) =>
       Promise.all([
         new Promise((resolve, _) => resolve(response.status)),
-        response.headers.get('Content-Type').includes('application/json')
+        (response.headers.get('Content-Type') || '').includes('application/json')
           ? response.json()
           : response.text(),
       ])
@@ -220,6 +220,10 @@ Object.assign(auth, {
       throw e;
     }
 
+  },
+
+  async register(username, password) {
+    return auth('/register', { body: { username, password }});
   },
 
   /**

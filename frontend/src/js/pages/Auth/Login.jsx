@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 
 import { connectAuth } from 'sharea/store/auth';
@@ -8,7 +8,8 @@ import Error from 'sharea/component/Error';
 
 
 
-function Login({ error, connected, login }) {
+
+function Login({ error, inSession, login }) {
 
   const history = useHistory();
   const [state, setState] = useState({
@@ -16,7 +17,7 @@ function Login({ error, connected, login }) {
     password: ''
   });
 
-  useEffect(() => connected && history.push('/'), []);
+  useEffect(() => inSession && history.push('/'), []);
 
   const onChange = name => e => setState(
     s => ({ ...s, [name]: e.target.value })
@@ -25,16 +26,13 @@ function Login({ error, connected, login }) {
 
   return (
     <div className="login-form">
+
       <Form
         method="POST"
         action="/api/auth/login"
         onSubmit={prevent(onSubmit)}
       >
-        <div class="heading">
-          <div className="app-version">v0.0.1</div>
-          <h1>Sharea</h1>
-          <a href="https://github.com/LeGroupeDeFer/bacht">View on GitHub</a>
-        </div>
+
         <Form.Group controlId="username">
           <Form.Label>Username</Form.Label>
           <Form.Control
@@ -53,9 +51,14 @@ function Login({ error, connected, login }) {
             onChange={onChange('password')}
           />
         </Form.Group>
+
         <Button type="submit">Login</Button>
         <Error error={error} variant="light" />
+
+        <hr />
+
       </Form>
+
     </div>
   );
 

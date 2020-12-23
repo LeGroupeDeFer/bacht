@@ -1,0 +1,52 @@
+@use "../theme" as *;
+
+#root {
+  height: 100%;
+}
+
+/* ------------------------------- DASHBOARD ------------------------------- */
+
+.dashboard {
+
+  display: flex;
+  height: 100%;
+
+}
+
+main {
+
+  flex-grow: 1;
+
+}
+
+.sidebar {
+
+  width: 360px;
+  height: 100%;
+
+  margin-left: -300px;
+
+  background: theme-color("secondary");
+  transition: .2s ease-in;
+
+  &-toggle {
+
+    display: flex;
+    flex-direction: row-reverse;
+
+    padding: 5px;
+
+    color: white;
+
+  }
+
+}
+
+.sidebar-active {
+
+  margin-left: 0;
+  transition: .2s ease-out;
+
+}
+
+/* --------------------------------- AUTH ---------------------------------- */
