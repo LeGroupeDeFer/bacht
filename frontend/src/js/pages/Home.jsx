@@ -11,7 +11,7 @@ function Home(_) {
     <div className="dashboard">
       <Sidebar />
       <main className="content">
-        <Container>
+        <Container fluid>
           <Row>
             <Col>
               <h1>Hello!</h1>

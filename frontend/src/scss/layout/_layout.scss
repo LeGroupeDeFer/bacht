@@ -21,12 +21,16 @@ main {
 
 .sidebar {
 
+  display: flex;
+  flex-direction: column;
+
   width: 360px;
   height: 100%;
 
   margin-left: -300px;
 
   background: theme-color("secondary");
+  box-shadow: 0 0 5px rgba(0, 0, 0, .4);
   transition: .2s ease-in;
 
   &-toggle {
@@ -37,6 +41,34 @@ main {
     padding: 5px;
 
     color: white;
+
+  }
+
+  .nav {
+
+    flex-grow: 1;
+    justify-content: center;
+
+  }
+
+  .nav-link {
+
+    display: flex;
+    justify-content: space-between;
+
+    padding: 1rem 1.25rem;
+    border: 0;
+
+    color: white;
+    font-weight: bold;
+
+    &:hover, &.active {
+
+      font-style: normal;
+      border-right: 5px solid $primary;
+      background-color: darken($secondary, 10%);
+
+    }
 
   }
 
