@@ -6,6 +6,29 @@ servers:
   - url: https://sharea.be
 
 paths:
+  /api/media/{id}/like:
+    get:
+      summary: Toggle liking of media
+      tags: ["media", "like", "user"]
+      parameters:
+        - $ref: "#/components/parameters/queryId"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  like:
+                    type: boolean
+                  likes:
+                    type: integer
+        401:
+          $ref: "#/components/responses/401Error"
+        404:
+          $ref: "#/components/responses/404IdError"
+
   /api/media/{id}:
     get:
       tags: ["media"]
@@ -13,17 +36,36 @@ paths:
       parameters:
         - $ref: "#/components/parameters/queryId"
       responses:
-        "200":
+        200:
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaInfo"
+        404:
+          $ref: "#/components/responses/404IdError"
 
     put:
       tags: ["media"]
       summary: "Update a media"
       parameters:
         - $ref: "#/components/parameters/queryId"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MediaUpdateForm"
       responses:
-        "200":
+        200:
           description: OK
+        401:
+          $ref: "#/components/responses/401Error"
+        403:
+          $ref: "#/components/responses/403Error"
+        404:
+          $ref: "#/components/responses/404IdError"
+        422:
+          $ref: "#/components/responses/422Error"
 
     delete:
       tags: ["media"]
@@ -31,16 +73,31 @@ paths:
       parameters:
         - $ref: "#/components/parameters/queryId"
       responses:
-        "200":
+        200:
           description: OK
+        401:
+          $ref: "#/components/responses/401Error"
+        403:
+          $ref: "#/components/responses/403Error"
+        404:
+          $ref: "#/components/responses/404IdError"
 
   /api/media:
     post:
       tags: ["media"]
       summary: "Create a new media"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MediaCreationForm"
       responses:
-        "200":
+        200:
           $ref: "#/components/responses/CreationSuccessful"
+        401:
+          $ref: "#/components/responses/401Error"
+        422:
+          $ref: "#/components/responses/422Error"
 
   /api/sharea/{id}/medias:
     get:
@@ -49,16 +106,17 @@ paths:
       parameters:
         - $ref: "#/components/parameters/queryId"
       responses:
-        "200":
+        200:
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: 
-                    
-        "404":
+                  $ref: "#/components/schemas/MediaInfo"
+        401:
+          $ref: "#/components/responses/401Error"
+        404:
           description: "Not found : There is no sharea with this id"
 
   /api/sharea/{id}:
@@ -68,17 +126,38 @@ paths:
       parameters:
         - $ref: "#/components/parameters/queryId"
       responses:
-        "200":
+        200:
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ShareaInfo"
+        404:
+          $ref: "#/components/responses/404IdError"
 
     put:
       tags: ["sharea"]
       summary: "Update a sharea"
+      description: "The backend has to check if the author_id is the same as the current user"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ShareaForm"
       parameters:
         - $ref: "#/components/parameters/queryId"
       responses:
-        "200":
+        200:
           description: OK
+        401:
+          $ref: "#/components/responses/401Error"
+        403:
+          $ref: "#/components/responses/403Error"
+        404:
+          $ref: "#/components/responses/404IdError"
+        422:
+          $ref: "#/components/responses/422Error"
 
     delete:
       tags: ["sharea"]
@@ -86,27 +165,33 @@ paths:
       parameters:
         - $ref: "#/components/parameters/queryId"
       responses:
-        "200":
+        200:
           description: OK
+        401:
+          $ref: "#/components/responses/401Error"
+        403:
+          $ref: "#/components/responses/403Error"
+        404:
+          $ref: "#/components/responses/404IdError"
 
   /api/sharea:
     post:
       tags: ["sharea"]
       summary: "Create a new sharea"
+      description: "The backend will ned the current user id to fill the 'creator_id' field."
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Sharea"
+              $ref: "#/components/schemas/ShareaForm"
       responses:
-        "200":
+        200:
           $ref: "#/components/responses/CreationSuccessful"
-        "401":
-          description: "Unauthorized"
-        "422":
-          description: "Unprocessable entity"
-
+        401:
+          $ref: "#/components/responses/401Error"
+        422:
+          $ref: "#/components/responses/422Error"
 components:
   securitySchemes:
     jwtToken:
@@ -118,13 +203,13 @@ components:
     queryId:
       name: id
       in: path
-      description: "An pertinent id for the current query"
+      description: "A pertinent id for the current query"
       schema:
         type: integer
       required: true
 
   schemas:
-    Sharea:
+    ShareaForm:
       type: object
       required: ["name"]
       properties:
@@ -133,13 +218,25 @@ components:
         description:
           type: string
 
+    ShareaInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        author:
+          $ref: "#/components/schemas/UserInfo"
+
     OnlyId:
       type: object
       required: ["id"]
       properties:
         id:
           type: integer
-    
+
     UserInfo:
       type: object
       properties:
@@ -150,18 +247,44 @@ components:
         biopic:
           type: string
 
-    Media:
+    MediaCreationForm:
+      type: object
+      properties:
+        shareaId:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+        content:
+          type: string
+
+    MediaUpdateForm:
       type: object
       properties:
         name:
           type: string
-        author:
-          $ref: "#/components/schemas/UserInfo"
+        type:
+          type: string
+        content:
+          type: string
+
+    MediaInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
         type:
           type: string
         content:
           type: string
           description: "This can be anything and MUST be considered as blob"
+        author:
+          $ref: "#/components/schemas/UserInfo"
+        likes:
+          type: integer
 
   responses:
     CreationSuccessful:
@@ -170,3 +293,11 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/OnlyId"
+    401Error:
+      description: "Unauthorized : Most likely the user is not logged in"
+    403Error:
+      description: "Forbidden : The user has no right to do this"
+    422Error:
+      description: "Unprocessable entity : Most likely the payload is malformatted"
+    404IdError:
+      description: "Not found : Unknown id"
