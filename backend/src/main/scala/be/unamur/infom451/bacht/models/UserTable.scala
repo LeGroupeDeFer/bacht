@@ -2,12 +2,27 @@ package be.unamur.infom451.bacht.models
 
 import be.unamur.infom451.bacht.lib._
 
+import scala.concurrent.{ExecutionContext, Future}
+
 
 object UserTable {
 
   import api._
+  import Ops._
 
   /* ------------------------ ORM class definition ------------------------- */
+
+  object User {
+
+    def all(implicit ec: ExecutionContext, db: Database): Future[Seq[User]] =
+      users.execute
+
+    def byId(id: Int)(
+      implicit ec: ExecutionContext, db: Database
+    ): Future[User] = users
+      .withId(id)
+      .one
+  }
 
   case class User(
      id: Option[Int],
@@ -18,6 +33,22 @@ object UserTable {
      biopic: String,
      refreshTokenId: Int
   )
+
+  /* ----------------------------- Projection ----------------------------- */
+
+  type UserTuple = (Option[Int], String, Hash, String, String, String, Int)
+
+  // Tuple -> Token
+  private def userApply(u: UserTuple): User =
+    User(u._1, u._2, u._3, u._4, u._5, u._6, u._7)
+
+  // Token -> Tuple
+  private def userUnapply(u: User): Option[UserTuple] = Some(
+    u.id, u.username, u.password, u.firstName, u.lastName, u.biopic,
+    u.refreshTokenId
+  )
+
+  /* -------------------------- Table definition --------------------------- */
 
   class Users(tag: Tag) extends Table[User](tag, "users") {
 
@@ -38,7 +69,7 @@ object UserTable {
       column[String]("last_name", O.Length(128))
 
     def biopic: Rep[String] =
-      column[String]("biopic")
+      column[String]("biopic", O.Length(256))
 
     def refreshTokenId: Rep[Int] =
       column[Int]("refresh_token_id", O.Unique)
@@ -46,7 +77,7 @@ object UserTable {
     // Projection
     def * = (
       id.?, username, password, firstName, lastName, biopic, refreshTokenId
-    ) <> (User.tupled, User.unapply)
+    ) <> (userApply, userUnapply)
 
     // Foreign key
     def refreshToken =
