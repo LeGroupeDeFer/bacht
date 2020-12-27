@@ -17,6 +17,7 @@ function Register({ error, inSession, register, request, status }) {
     lastName: '',
     biopic: ''
   });
+  const [valid, setValid] = useState(false);
 
   useEffect(() => inSession && history.push('/'), []);
   useEffect(
@@ -25,6 +26,10 @@ function Register({ error, inSession, register, request, status }) {
       : undefined,
     [status]
   );
+  useEffect(() => setValid(
+    state.username.length > 3 && state.password.length > 4
+    && state.firstName.length > 3 && state.lastName.length > 3
+  ), [state]);
 
   const onChange = name => e => setState(
     s => ({ ...s, [name]: e.target.value })
@@ -97,7 +102,7 @@ function Register({ error, inSession, register, request, status }) {
 
         <Form.Row>
           <Col>
-            <Button type="submit">Register</Button>
+            <Button type="submit" disabled={!valid}>Register</Button>
           </Col>
         </Form.Row>
 

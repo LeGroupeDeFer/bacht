@@ -44,13 +44,13 @@ function Sidebar({ sidebar: { isOpen }, toggleSidebar }) {
       <Nav defaultActiveKey="/" className="flex-column">
         {links.map(({ uri, title, icon }) => (
           <Nav.Link
+            key={uri}
             as={NavLink}
             to={uri}
             exact
           >
             <span className="nav-link-text">{title}</span>
             <Icon
-              size="md"
               icon={icon}
               className="nav-link-icon"
             />
