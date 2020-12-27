@@ -18,7 +18,13 @@ object AuthController extends Guide {
 
   sealed trait AuthResponse
 
-  case class RegisterRequest(username: String, password: String) extends AuthRequest
+  case class RegisterRequest(
+    username: String,
+    password: String,
+    firstName: String,
+    lastName: String,
+    biopic: String
+  ) extends AuthRequest
 
   case class LoginRequest(username: String, password: String) extends AuthRequest
 
@@ -62,7 +68,7 @@ trait AuthController {
   // TODO - Place account creation logic somewhere else
   @Endpoint(method = HttpMethod.POST, path = "/register")
   def register(r: RegisterRequest): TwitterFuture[String] =
-    Auth.register(r.username, r.password)
+    Auth.register(r.username, r.password, r.firstName, r.lastName, r.biopic)
       .map(_ => "Ok")
       .recoverWith(ErrorResponse.recover[String](422))
 

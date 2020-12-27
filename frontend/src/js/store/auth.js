@@ -42,10 +42,10 @@ export const refresh = createAsyncThunk(
 
 export const register = createAsyncThunk(
   'auth/register',
-  ({ username, password }) => {
+  ({ username, password, firstName, lastName, biopic }) => {
     if (api.auth.inSession())
       return Promise.reject(new AuthError('Already connected'));
-    return api.auth.register(username, password);
+    return api.auth.register(username, password, firstName, lastName, biopic);
   }
 )
 

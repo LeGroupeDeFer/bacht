@@ -16,8 +16,12 @@ function Login({ error, inSession, login }) {
     username: '',
     password: ''
   });
+  const [valid, setValid] = useState(false);
 
   useEffect(() => inSession && history.push('/'), []);
+  useEffect(() => setValid(
+    state.username.length > 3 && state.password.length > 4
+  ), [state]);
 
   const onChange = name => e => setState(
     s => ({ ...s, [name]: e.target.value })
@@ -52,7 +56,7 @@ function Login({ error, inSession, login }) {
           />
         </Form.Group>
 
-        <Button type="submit">Login</Button>
+        <Button type="submit" disabled={!valid}>Login</Button>
         <Error error={error} variant="light" />
 
         <hr />

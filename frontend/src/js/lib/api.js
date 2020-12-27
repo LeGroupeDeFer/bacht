@@ -222,8 +222,10 @@ Object.assign(auth, {
 
   },
 
-  async register(username, password) {
-    return auth('/register', { body: { username, password }});
+  async register(username, password, firstName, lastName, biopic) {
+    return auth('/register', { body: {
+      username, password, firstName, lastName, biopic
+    } });
   },
 
   /**
