@@ -16,8 +16,8 @@ object Ops {
   import slick.dbio.NoStream
 
   implicit class SqlActionOps[+R, +S <: slick.dbio.NoStream, -E <: slick.dbio.Effect](
-                                                                                       a: DBIOAction[R, S, E]
-                                                                                     ) {
+     a: DBIOAction[R, S, E]
+   ) {
 
     def execute(implicit ec: ExecutionContext, db: Database): Future[R] =
       db.run(a)
@@ -48,6 +48,15 @@ object Ops {
 
     def withUsername(username: String): Query[Users, User, C] =
       q.filter(_.username === username)
+
+    def withFirstName(firstName: String): Query[Users, User, C] =
+      q.filter(_.firstName === firstName)
+
+    def withLastName(lastName: String): Query[Users, User, C] =
+      q.filter(_.lastName === lastName)
+
+    def withName(name: String): Query[Users, User, C] =
+      q.filter(u => u.username === name || u.firstName === name || u.lastName === name)
 
     def withToken: Query[(Users, Tokens), (User, Token), C] =
       q.join(tokens).on(_.refreshTokenId === _.id)

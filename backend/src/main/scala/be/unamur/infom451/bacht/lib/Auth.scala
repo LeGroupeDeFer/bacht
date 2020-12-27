@@ -43,15 +43,22 @@ object Auth extends FinagleFilter {
    * @param db       The database on which to operate
    * @return The created user
    */
-  def register(username: String, password: String)(
+  def register(
+    username: String,
+    password: String,
+    firstName: String,
+    lastName: String,
+    biopic: String
+  )(
     implicit ec: ExecutionContext,
     db: Database
   ): Future[User] = {
     val hash = Hash.of(password)
     for {
       tokenId <- tokens.insert(0).execute
-      userId <- users.insert(User(None, username, hash, tokenId)).execute
-    } yield User(Some(userId), username, hash, tokenId)
+      u = User(None, username, hash, firstName, lastName, biopic, tokenId)
+      userId <- users.insert(u).execute
+    } yield User(Some(userId), username, hash, firstName, lastName, biopic, tokenId)
   }
 
   /**

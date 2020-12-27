@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, Link } from 'react-router-dom';
-import { Form, Button } from 'react-bootstrap';
+import { Button, Col, Form } from 'react-bootstrap';
 
 import { connectAuth } from 'sharea/store/auth';
 import { prevent } from 'sharea/lib';
@@ -12,7 +12,10 @@ function Register({ error, inSession, register, request, status }) {
   const history = useHistory();
   const [state, setState] = useState({
     username: '',
-    password: ''
+    password: '',
+    firstName: '',
+    lastName: '',
+    biopic: ''
   });
 
   useEffect(() => inSession && history.push('/'), []);
@@ -37,27 +40,70 @@ function Register({ error, inSession, register, request, status }) {
         onSubmit={prevent(onSubmit)}
       >
 
-        <Form.Group controlId="username">
-          <Form.Label>Username</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Aa"
-            value={state.username}
-            onChange={onChange('username')}
-          />
-        </Form.Group>
-        <Form.Group controlId="password">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Bb"
-            value={state.password}
-            onChange={onChange('password')}
-          />
-        </Form.Group>
+        <Form.Row>
+          <Form.Group controlId="username" as={Col} sm={6}>
+            <Form.Label>Username</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Your username"
+              value={state.username}
+              onChange={onChange('username')}
+            />
+          </Form.Group>
+          <Form.Group controlId="password" as={Col} sm={6}>
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Your password"
+              value={state.password}
+              onChange={onChange('password')}
+            />
+          </Form.Group>
+        </Form.Row>
 
-        <Button type="submit">Register</Button>
-        <Error error={error} variant="light" />
+        <Form.Row>
+          <Form.Group controlId="firstName" as={Col} sm={6}>
+            <Form.Label>First name</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Your firstname"
+              value={state.firstName}
+              onChange={onChange('firstName')}
+            />
+          </Form.Group>
+          <Form.Group controlId="lastName" as={Col} sm={6}>
+            <Form.Label>Last name</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Your lastname"
+              value={state.lastName}
+              onChange={onChange('lastName')}
+            />
+          </Form.Group>
+        </Form.Row>
+
+        <Form.Row>
+          <Form.Group controlId="biopic" as={Col}>
+            <Form.Label>About you</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={6}
+              placeholder="Who are you, what are your interests?"
+              value={state.biopic}
+              onChange={onChange('biopic')}
+            />
+          </Form.Group>
+        </Form.Row>
+
+        <Form.Row>
+          <Col>
+            <Button type="submit">Register</Button>
+          </Col>
+        </Form.Row>
+
+        <Form.Row>
+          <Col><Error error={error} variant="light" /></Col>
+        </Form.Row>
 
         <hr />
       </Form>

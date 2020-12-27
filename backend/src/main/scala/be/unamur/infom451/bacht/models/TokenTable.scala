@@ -13,11 +13,11 @@ object TokenTable {
   /* ------------------------ ORM class definition ------------------------- */
 
   case class Token(
-                    id: Option[Int],
-                    hash: String,
-                    creationDate: Instant,
-                    expirationDate: Option[Instant]
-                  ) {
+    id: Option[Int],
+    hash: String,
+    creationDate: Instant,
+    expirationDate: Option[Instant]
+  ) {
 
     def ttl: Long = expirationDate
       .map(_.getEpochSecond - now.getEpochSecond)
