@@ -29,6 +29,28 @@ object UserTable {
       .withUsername(username)
       .oneOption
 
+    def byIdWithShareas(id: Int)(
+      implicit ec: ExecutionContext, db: Database
+    ): Future[(User, Seq[Sharea])] = users
+      .withId(id)
+      .withShareas
+      .execute
+      .map {
+        case Nil => throw unknownIdentifier
+        case xs => (xs.head._1, xs.flatMap(_._2))
+      }
+
+    def byUsernameWithShareas(username: String)(
+      implicit ec: ExecutionContext, db: Database
+    ): Future[(User, Seq[Sharea])] = users
+      .withUsername(username)
+      .withShareas
+      .execute
+      .map {
+        case Nil => throw unknownIdentifier
+        case xs => (xs.head._1, xs.flatMap(_._2))
+      }
+
   }
 
   case class User(

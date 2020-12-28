@@ -7,7 +7,8 @@ package object api {
   val routes: Router = Router(
     AuthController.routes,
     APIController.routes,
-    UserController.routes
+    UserController.routes,
+    ShareaController.routes
   )
 
 }

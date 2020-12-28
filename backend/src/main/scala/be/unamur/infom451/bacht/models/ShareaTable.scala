@@ -2,6 +2,8 @@ package be.unamur.infom451.bacht.models
 
 import scala.concurrent.{ExecutionContext, Future}
 
+import be.unamur.infom451.bacht.lib._
+
 
 object ShareaTable {
 
@@ -27,6 +29,17 @@ object ShareaTable {
       .withName(name)
       .oneOption
 
+    def byIdWithMedias(id: Int)(
+      implicit ec: ExecutionContext, db: Database
+    ): Future[(Sharea, Seq[Media])] = shareas
+      .withId(id)
+      .withMedias
+      .execute
+      .map {
+        case Nil => throw unknownIdentifier
+        case xs => (xs.head._1, xs.flatMap(_._2))
+      }
+
   }
 
   case class Sharea(
@@ -34,7 +47,14 @@ object ShareaTable {
     name: String,
     description: String,
     creatorId: Int
-  )
+  ) {
+
+    def insert: Future[Sharea] = shareas
+      .insert(this)
+      .execute
+      .map(id => this.copy(id=Some(id)))
+
+  }
 
   /* ----------------------------- Projection ----------------------------- */
 

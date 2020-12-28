@@ -7,11 +7,14 @@ import java.time.{Clock, Instant, ZoneOffset}
 import java.util.Date
 import java.util.concurrent.atomic.AtomicReference
 
+import be.unamur.infom451.bacht.models.UserTable.User
+
 import collection.mutable.{Map => MutableMap}
 import com.twitter.{util => twitter}
 import com.twitter.finagle.context.Contexts
 import com.twitter.util.tunable.TunableMap.Key
 import org.mindrot.jbcrypt.BCrypt
+import pdi.jwt.JwtClaim
 import slick.jdbc.MySQLProfile
 import wvlet.airframe.http.finagle.{Finagle, FinagleBackend}
 
@@ -64,6 +67,13 @@ package object lib {
 
   def withContextValueOption[A, B](name: String)(body: Option[A] => B): B =
     body(contextValue[A](name))
+
+  def withUser[A](body: User => A)(
+    implicit ec: ExecutionContext,
+    db: Database
+  ): Future[A] = withContextValue("token") {
+    (t: JwtClaim) => User.byUsername(t.subject.get)(ec, db)
+  }.map(_.get)(ec).map(body)(ec)
 
   def now(implicit clock: Clock): Instant =
     clock.instant

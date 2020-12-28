@@ -21,6 +21,8 @@ object APIController extends Guide {
 
   sealed trait APIResponse
 
+  case class VersionResponse(version: String)
+
   case class WaffleResponse(name: String, value: Double)
 
 }
@@ -31,6 +33,9 @@ object APIController extends Guide {
 trait APIController {
 
   import APIController._
+
+  @Endpoint(method = HttpMethod.GET, path = "/")
+  def version: VersionResponse = VersionResponse("0.0.1")
 
   @Endpoint(method = HttpMethod.GET, path = "/waffle")
   def waffle: WaffleResponse = WaffleResponse("brasse", 42.69)

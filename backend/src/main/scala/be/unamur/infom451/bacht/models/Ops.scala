@@ -64,7 +64,12 @@ object Ops {
     def withToken: Query[(Users, Tokens), (User, Token), C] =
       q.join(tokens).on(_.refreshTokenId === _.id)
 
-    def token: Query[Tokens, Token, C] = q.withToken.map(_._2)
+    def token: Query[Tokens, Token, C] =
+      q.withToken.map(_._2)
+
+    def withShareas =
+      q joinLeft shareas on (_.id === _.creatorId)
+
 
     def insert(user: User): DBIOAction[Int, NoStream, Effect.Write] =
       users returning users.map(_.id) += user
@@ -107,6 +112,9 @@ object Ops {
 
     def withName(name: String): Query[Shareas, Sharea, C] =
       q.filter(_.name === name)
+
+    def withMedias =
+      q joinLeft medias on (_.id === _.shareaId)
 
     def insert(sharea: Sharea): DBIOAction[Int, NoStream, Effect.Write] =
       shareas returning shareas.map(_.id) += sharea
