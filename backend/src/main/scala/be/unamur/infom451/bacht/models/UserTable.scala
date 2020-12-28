@@ -1,8 +1,8 @@
 package be.unamur.infom451.bacht.models
 
-import be.unamur.infom451.bacht.lib._
-
 import scala.concurrent.{ExecutionContext, Future}
+
+import be.unamur.infom451.bacht.lib._
 
 
 object UserTable {

@@ -34,6 +34,9 @@ object Ops {
     def oneOption(implicit ec: ExecutionContext, db: Database): Future[Option[A]] =
       db.run(q.result.headOption)
 
+    def all(implicit ec: ExecutionContext, db: Database): Future[C[A]] =
+      db.run(q.result)
+
     def execute(implicit ec: ExecutionContext, db: Database): Future[C[A]] =
       db.run(q.result)
 
@@ -92,6 +95,31 @@ object Ops {
 
     def renew(hash: String, lifetime: Long)(implicit clock: Clock): DBIOAction[Int, NoStream, Effect.Write] =
       q.map(t => (t.hash, t.expirationDate)).update((hash, timestampAfter(lifetime)))
+
+  }
+
+  // Sharea Extension
+
+  implicit class ShareaQueryOps[C[_]](q: Query[Shareas, Sharea, C]) {
+
+    def withId(id: Int): Query[Shareas, Sharea, C] =
+      q.filter(_.id === id)
+
+    def withName(name: String): Query[Shareas, Sharea, C] =
+      q.filter(_.name === name)
+
+    def insert(sharea: Sharea): DBIOAction[Int, NoStream, Effect.Write] =
+      shareas returning shareas.map(_.id) += sharea
+
+  }
+
+  implicit class MediaQueryOps[C[_]](q: Query[Medias, Media, C]) {
+
+    def withId(id: Int): Query[Medias, Media, C] =
+      q.filter(_.id === id)
+
+    def insert(media: Media): DBIOAction[Int, NoStream, Effect.Write] =
+      medias returning medias.map(_.id) += media
 
   }
 
