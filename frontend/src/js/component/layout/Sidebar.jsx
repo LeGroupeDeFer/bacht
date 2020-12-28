@@ -10,7 +10,7 @@ import { connectLayout } from 'sharea/store/layout';
 
 const links = [
   {
-    uri: '/',
+    uri: '/dashboard',
     title: 'Dashboard',
     icon: faHome,
   },
@@ -20,8 +20,8 @@ const links = [
     icon: faUser
   },
   {
-    uri: '/explore',
-    title: 'Explore',
+    uri: '/discover',
+    title: 'Discover',
     icon: faMountain
   },
   {
@@ -47,7 +47,6 @@ function Sidebar({ sidebar: { isOpen }, toggleSidebar }) {
             key={uri}
             as={NavLink}
             to={uri}
-            exact
           >
             <span className="nav-link-text">{title}</span>
             <Icon

@@ -26,10 +26,20 @@ trait StaticController {
     content("index.html")
 
   @Endpoint(path = "/dashboard/*path")
-  def redirectDashboard(): Response = index()
+  def redirectDashboard(): Response =
+    index()
+
+  @Endpoint(path = "/profile/*path")
+  def redirectProfile(): Response =
+    index()
+
+  @Endpoint(path = "/discover/*path")
+  def redirectDiscover(): Response =
+    index()
 
   @Endpoint(path = "/auth/*path")
-  def redirectAuth(): Response = index()
+  def redirectAuth(): Response =
+    index()
 
   @Endpoint(path = "/*path")
   def content(path: String): Response =

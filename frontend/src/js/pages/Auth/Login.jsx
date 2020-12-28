@@ -18,7 +18,7 @@ function Login({ error, inSession, login }) {
   });
   const [valid, setValid] = useState(false);
 
-  useEffect(() => inSession && history.push('/'), []);
+  useEffect(() => inSession && history.push('/dashboard'), []);
   useEffect(() => setValid(
     state.username.length > 3 && state.password.length > 4
   ), [state]);
