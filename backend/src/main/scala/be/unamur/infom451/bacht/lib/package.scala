@@ -13,6 +13,7 @@ import com.twitter.finagle.context.Contexts
 import com.twitter.util.tunable.TunableMap.Key
 import org.mindrot.jbcrypt.BCrypt
 import slick.jdbc.MySQLProfile
+import wvlet.airframe.http.finagle.{Finagle, FinagleBackend}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future, Promise}
@@ -54,6 +55,15 @@ package object lib {
   /* -------------------------- Utils functions --------------------------- */
 
   import api._
+
+  def contextValue[A](name: String): Option[A] =
+    FinagleBackend.getThreadLocal[A](name)
+
+  def withContextValue[A, B](name: String)(body: A => B): B =
+    body(contextValue[A](name).get)
+
+  def withContextValueOption[A, B](name: String)(body: Option[A] => B): B =
+    body(contextValue[A](name))
 
   def now(implicit clock: Clock): Instant =
     clock.instant

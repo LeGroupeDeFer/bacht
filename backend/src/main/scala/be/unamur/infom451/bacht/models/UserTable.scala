@@ -19,9 +19,16 @@ object UserTable {
 
     def byId(id: Int)(
       implicit ec: ExecutionContext, db: Database
-    ): Future[User] = users
+    ): Future[Option[User]] = users
       .withId(id)
-      .one
+      .oneOption
+
+    def byUsername(username: String)(
+      implicit ec: ExecutionContext, db: Database
+    ): Future[Option[User]] = users
+      .withUsername(username)
+      .oneOption
+
   }
 
   case class User(

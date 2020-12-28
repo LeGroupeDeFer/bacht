@@ -24,8 +24,6 @@ import scala.util.{Random, Try}
  */
 object Auth extends FinagleFilter {
 
-  /* TODO Find a simple way to add users */
-
   import api._
   import Ops._
 
