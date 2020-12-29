@@ -1,10 +1,9 @@
 import React from 'react';
-import { Nav, Container, Row, Col } from 'react-bootstrap';
-import { NavLink } from 'react-router-dom';
 
 import Sidebar from 'sharea/component/layout/Sidebar';
 import { connectAuth } from 'sharea/store/auth';
-import { capitalize } from '../lib';
+import { capitalize } from 'sharea/lib';
+import TabNav from "sharea/component/layout/TabNav";
 
 
 const links = [
@@ -22,22 +21,6 @@ const links = [
   },
 ];
 
-
-function DashboardNav(_) {
-
-  return (
-    <Nav defaultActiveKey="/dashboard">
-      {links.map(({ uri, title }) => (
-        <Nav.Item key={uri}>
-          <Nav.Link as={NavLink} exact to={uri}>{title}</Nav.Link>
-        </Nav.Item>
-      ))}
-    </Nav>
-  );
-
-}
-
-
 // Home :: None => Component
 function Home({ token }) {
 
@@ -48,7 +31,7 @@ function Home({ token }) {
         <div className="inner-content">
           <div className="heading">
             <h1>Hi, {capitalize(token.sub)}</h1>
-            <DashboardNav />
+            <TabNav links={links} default="/dashboard" />
           </div>
         </div>
       </main>

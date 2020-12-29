@@ -5,9 +5,9 @@ import { connectAuth } from 'sharea/store/auth';
 import Loader from 'sharea/component/Loader';
 import Heading from 'sharea/component/Heading';
 
-import Login from './Login';
-import Logout from './Logout';
-import Register from './Register';
+import Login from 'sharea/Login';
+import Logout from 'sharea/Logout';
+import Register from 'sharea/Register';
 
 
 // Auth :: None => Component
