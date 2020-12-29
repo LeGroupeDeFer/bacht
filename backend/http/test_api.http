@@ -1,7 +1,151 @@
-# @name apiTest
-
 GET http://localhost:8000/api/noodles
 Accept: text/plain
 Cache-Control: no-cache
 
+### ----------------------------------------------------------------- REGISTER
+
+POST http://localhost:8000/api/auth/register
+Accept: application/json
+Cache-Control: no-cache
+
+{ "username": "john", "password": "secret" }
+
 ### ------------------------------------------------------------ LOGIN SUCCESS
+
+POST http://localhost:8000/api/auth/login
+Accept: application/json
+Cache-Control: no-cache
+
+{ "username": "john", "password": "secret" }
+
+> {%
+    client.global.set("refresh_token", response.body.token);
+%}
+
+### ------------------------------------------------------------ LOGIN FAILURE
+
+POST http://localhost:8000/api/auth/login
+Accept: application/json
+Cache-Control: no-cache
+
+{ "username": "john", "password": "definitelynotthesecret" }
+
+### ---------------------------------------------------------- REFRESH SUCCESS
+
+POST http://localhost:8000/api/auth/refresh
+Accept: application/json
+Cache-Control: no-cache
+
+{ "username": "john", "token": "{{refresh_token}}" }
+
+> {%
+    client.global.set("access_token", response.body.access);
+    client.global.set("refresh_token", response.body.refresh);
+%}
+
+### ---------------------------------------------------------- REFRESH FAILURE
+
+POST http://localhost:8000/api/auth/refresh
+Accept: application/json
+Cache-Control: no-cache
+
+{ "username": "john", "token": "whatever" }
+
+### ----------------------------------------------------------- LOGOUT SUCCESS
+
+POST http://localhost:8000/api/auth/logout
+Accept: application/json
+Cache-Control: no-cache
+
+{ "username": "john", "token": "{{refresh_token}}" }
+
+### ----------------------------------------------------------- LOGOUT FAILURE
+
+POST http://localhost:8000/api/auth/logout
+Accept: application/json
+Cache-Control: no-cache
+
+{ "username": "john", "token": "whatever" }
+
+### --------------------------------------------------------------- USERS LIST
+
+GET http://localhost:8000/api/user
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{refresh_token}}
+Authorization: Bearer {{access_token}}
+
+### ------------------------------------------------------------- SPECIFIC USER
+
+GET http://localhost:8000/api/user/self
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+### ------------------------------------------------------------- UPDATE USER
+PUT http://localhost:8000/api/user/
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+{"username" : "john","firstName": "johndoe","lastName" : "latourdoe","biopic"  : "qmdlkfjmlqdksfj"}
+
+### ------------------------------------------------------------- DELETE USER
+
+DELETE http://localhost:8000/api/user
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+### ------------------------------------------------------------- SHAREAS LIST
+
+GET http://localhost:8000/api/sharea
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+### --------------------------------------------------------- USER SHAREAS LIST
+
+GET http://localhost:8000/api/user/self/sharea
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+### ----------------------------------------------------------- SPECIFIC SHAREA
+
+GET http://localhost:8000/api/sharea/1
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+### ------------------------------------------------------------- CREATE SHAREA
+
+POST http://localhost:8000/api/sharea
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+{ "name": "test", "description": "whatever" }
+
+> {%
+    client.global.set("last_sharea_id", response.body.id);
+%}
+### ------------------------------------------------------------- UPDATE SHAREA
+
+PUT http://localhost:8000/api/sharea/{{last_sharea_id}}
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+{ "name": "ohmygod", "description": "it just changed name and description" }
+
+> {%
+    client.global.set("last_sharea_id", response.body.id);
+%}
+
+### ------------------------------------------------------------- DELETE SHAREA
+
+DELETE http://localhost:8000/api/sharea/{{last_sharea_id}}
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}

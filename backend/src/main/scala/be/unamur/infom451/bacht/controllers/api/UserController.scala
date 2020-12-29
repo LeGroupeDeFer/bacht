@@ -6,8 +6,8 @@ import scala.concurrent.Future
 import wvlet.airframe.http.{Endpoint, HttpMethod, Router}
 import pdi.jwt.JwtClaim
 import be.unamur.infom451.bacht.lib._
-import be.unamur.infom451.bacht.models.Sharea
-import be.unamur.infom451.bacht.models.UserTable.User
+import be.unamur.infom451.bacht.models.{Sharea}
+import be.unamur.infom451.bacht.models.UserTable.{User}
 
 
 object UserController extends Guide {
@@ -17,6 +17,7 @@ object UserController extends Guide {
     .andThen[UserController]
 
   case class UserInfo(id: Int, username: String)
+
   type UserResponse = Seq[UserInfo]
 
   object DetailedUserInfo {
@@ -29,6 +30,7 @@ object UserController extends Guide {
         user.biopic,
         Seq()
       )
+
     def from(user: User, shareas: Seq[Sharea]): DetailedUserInfo =
       DetailedUserInfo(
         user.id.get,
@@ -39,17 +41,26 @@ object UserController extends Guide {
         shareas.map(_.id.get)
       )
   }
+
   case class DetailedUserInfo(
-    id: Int,
-    username: String,
+    id       : Int,
+    username : String,
     firstName: String,
-    lastName: String,
-    biopic: String,
-    shareas: Seq[Int]
+    lastName : String,
+    biopic   : String,
+    shareas  : Seq[Int]
   )
+
   type DetailedUserResponse = DetailedUserInfo
 
   type UserShareaResponse = Seq[ShareaInfo]
+
+  case class UpdateRequest(
+    username : String,
+    firstName: String,
+    lastName : String,
+    biopic   : String
+  )
 
 }
 
@@ -91,6 +102,23 @@ trait UserController {
 
     } recoverWith ErrorResponse.recover(404)
 
-  // TODO PUT method
+
+  @Endpoint(method = HttpMethod.PUT, path = "/")
+  def update(updateRequest: UpdateRequest): Future[DetailedUserInfo] =
+    withUser(u => u).flatMap {
+      (current: User) =>
+        User
+          .update(User(current.id, updateRequest.username, current.password, updateRequest.firstName, updateRequest.lastName, updateRequest.biopic, current.refreshTokenId))
+          .map(DetailedUserInfo.from)
+    } recoverWith ErrorResponse.recover(404)
+
+
+  @Endpoint(method = HttpMethod.DELETE, path = "/")
+  def delete(): Future[Boolean] =
+    withUser(u => u).flatMap {
+      (current: User) =>
+        User.delete(current.id.get)
+    } recoverWith ErrorResponse.recover(418)
+
 
 }

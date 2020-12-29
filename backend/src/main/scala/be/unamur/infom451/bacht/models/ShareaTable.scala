@@ -40,20 +40,35 @@ object ShareaTable {
         case xs => (xs.head._1, xs.flatMap(_._2))
       }
 
+    def update(sharea: Sharea)
+      (implicit ec: ExecutionContext, db: Database)
+    : Future[Sharea] = shareas
+      .withId(sharea.id.get)
+      .update(sharea)
+      .execute
+      .map(m => if (m != 1) throw updateError else m)
+      .map(_ => sharea)
+
+    def delete(id: Int)
+      (implicit ec: ExecutionContext, db: Database)
+    : Future[Boolean] = shareas
+      .withId(id)
+      .delete
+      .execute
+      .map(m => if (m != 1) throw updateError else true)
   }
 
   case class Sharea(
-    id: Option[Int],
-    name: String,
+    id         : Option[Int],
+    name       : String,
     description: String,
-    creatorId: Int
+    creatorId  : Int
   ) {
 
     def insert: Future[Sharea] = shareas
       .insert(this)
       .execute
-      .map(id => this.copy(id=Some(id)))
-
+      .map(id => this.copy(id = Some(id)))
   }
 
   /* ----------------------------- Projection ----------------------------- */
