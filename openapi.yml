@@ -6,7 +6,7 @@ servers:
   - url: 'https://sharea.be'
 paths:
   '/api/media/{id}/like':
-    get:
+    post:
       summary: Toggle liking of media
       tags:
         - media
@@ -20,12 +20,41 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  like:
-                    type: boolean
-                  likes:
-                    type: integer
+                $ref: '#/components/schemas/Likes'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '404':
+          $ref: '#/components/responses/404IdError'
+  '/api/sharea/{id}/like':
+    post:
+      tags: ['like', 'sharea']
+      summary: Toggle the liking of sharea
+      parameters:
+        - $ref: '#/components/parameters/queryId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Likes'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '404':
+          $ref: '#/components/responses/404IdError'
+  '/api/user/{id}/like':
+    post:
+      tags: ['like', 'user']
+      summary: Toggle the liking of user
+      parameters:
+        - $ref: '#/components/parameters/queryId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Likes'
         '401':
           $ref: '#/components/responses/401Error'
         '404':
@@ -335,6 +364,13 @@ components:
           type: integer
         like:
           type: boolean
+    Likes:
+      type: object
+      properties:
+        like:
+          type: boolean
+        likes:
+          type: integer
     DetailedUserInfo:
       title: DetailedUserInfo
       type: object
