@@ -1,0 +1,154 @@
+# @name apiTest
+
+
+### ----------------------------------------------------------------- REGISTER
+
+# @name register
+POST http://localhost:8000/api/auth/register
+Accept: application/json
+Cache-Control: no-cache
+
+{ "username": "john", "password": "secret" }
+
+
+### ------------------------------------------------------------ LOGIN SUCCESS
+
+# @name loginSuccess
+POST http://localhost:8000/api/auth/login
+Accept: application/json
+Cache-Control: no-cache
+
+{ "username": "john", "password": "secret" }
+
+
+### ------------------------------------------------------------ LOGIN FAILURE
+
+# @name loginFailure
+POST http://localhost:8000/api/auth/login
+Accept: application/json
+Cache-Control: no-cache
+
+{ "username": "john", "password": "definitelynotthesecret" }
+
+
+### ---------------------------------------------------------- REFRESH SUCCESS
+
+@refreshToken = {{loginSuccess.response.body.$.token}}
+
+# @name refreshSuccess
+POST http://localhost:8000/api/auth/refresh
+Accept: application/json
+Cache-Control: no-cache
+
+{ "username": "john", "token": "{{refreshToken}}" }
+
+
+### ----------------------------------------------- CONSECUTIVE REFRESH SUCCESS
+
+@consecutiveRefreshToken = {{refreshSuccess.response.body.$.refresh}}
+
+# @name consecutiveRefreshSuccess
+POST http://localhost:8000/api/auth/refresh
+Accept: application/json
+Cache-Control: no-cache
+
+{ "username": "john", "token": "{{consecutiveRefreshToken}}" }
+
+
+### ---------------------------------------------------------- REFRESH FAILURE
+
+# @name refreshFailure
+POST http://localhost:8000/api/auth/refresh
+Accept: application/json
+Cache-Control: no-cache
+
+{ "username": "john", "token": "whatever" }
+
+
+### ----------------------------------------------------------- LOGOUT SUCCESS
+
+@logoutRefreshToken = {{consecutiveRefreshSuccess.response.body.$.refresh}}
+
+# @name logoutSuccess
+POST http://localhost:8000/api/auth/logout
+Accept: application/json
+Cache-Control: no-cache
+
+{ "username": "john", "token": "{{logoutRefreshToken}}" }
+
+
+### ----------------------------------------------------------- LOGOUT FAILURE
+
+# @name logoutFailure
+POST http://localhost:8000/api/auth/logout
+Accept: application/json
+Cache-Control: no-cache
+
+{ "username": "john", "token": "whatever" }
+
+
+### --------------------------------------------------------------- USERS LIST
+
+@accessToken = {{consecutiveRefreshSuccess.response.body.$.access}}
+
+# @name userList
+GET http://localhost:8000/api/user
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{accessToken}}
+
+
+### ------------------------------------------------------------- SPECIFIC USER
+
+@accessToken = {{consecutiveRefreshSuccess.response.body.$.access}}
+
+# @name user
+GET http://localhost:8000/api/user/self
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{accessToken}}
+
+
+### ------------------------------------------------------------- SHAREAS LIST
+
+@accessToken = {{consecutiveRefreshSuccess.response.body.$.access}}
+
+# @name shareaList
+GET http://localhost:8000/api/sharea
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{accessToken}}
+
+### --------------------------------------------------------- USER SHAREAS LIST
+
+@accessToken = {{consecutiveRefreshSuccess.response.body.$.access}}
+
+# @name shareaList
+GET http://localhost:8000/api/user/self/sharea
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{accessToken}}
+
+
+### ----------------------------------------------------------- SPECIFIC SHAREA
+
+@accessToken = {{consecutiveRefreshSuccess.response.body.$.access}}
+
+# @name sharea
+GET http://localhost:8000/api/sharea/1
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{accessToken}}
+
+
+### ------------------------------------------------------------- CREATE SHAREA
+
+@accessToken = {{consecutiveRefreshSuccess.response.body.$.access}}
+
+# @name createSharea
+POST http://localhost:8000/api/sharea
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{accessToken}}
+
+{ "name": "test", "description": "whatever" }

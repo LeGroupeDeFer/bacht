@@ -1,8 +1,8 @@
 package be.unamur.infom451.bacht.models
 
-import be.unamur.infom451.bacht.lib._
-
 import scala.concurrent.{ExecutionContext, Future}
+
+import be.unamur.infom451.bacht.lib._
 
 
 object UserTable {
@@ -19,9 +19,38 @@ object UserTable {
 
     def byId(id: Int)(
       implicit ec: ExecutionContext, db: Database
-    ): Future[User] = users
+    ): Future[Option[User]] = users
       .withId(id)
-      .one
+      .oneOption
+
+    def byUsername(username: String)(
+      implicit ec: ExecutionContext, db: Database
+    ): Future[Option[User]] = users
+      .withUsername(username)
+      .oneOption
+
+    def byIdWithShareas(id: Int)(
+      implicit ec: ExecutionContext, db: Database
+    ): Future[(User, Seq[Sharea])] = users
+      .withId(id)
+      .withShareas
+      .execute
+      .map {
+        case Nil => throw unknownIdentifier
+        case xs => (xs.head._1, xs.flatMap(_._2))
+      }
+
+    def byUsernameWithShareas(username: String)(
+      implicit ec: ExecutionContext, db: Database
+    ): Future[(User, Seq[Sharea])] = users
+      .withUsername(username)
+      .withShareas
+      .execute
+      .map {
+        case Nil => throw unknownIdentifier
+        case xs => (xs.head._1, xs.flatMap(_._2))
+      }
+
   }
 
   case class User(

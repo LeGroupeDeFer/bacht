@@ -154,6 +154,11 @@ export const subscribed = (promise, onResolve, onReject) => {
   return () => isSubscribed = false;
 }
 
+/* ----------------------------- String utils ------------------------------ */
+
+export const capitalize = s => typeof s === 'string'
+  ? `${s.charAt(0).toUpperCase()}${s.slice(1)}`
+  : '';
 
 /* ------------------------------------------------------------------------- */
 

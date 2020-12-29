@@ -24,12 +24,20 @@ package object models {
     )
   }
 
-  type Users = UserTable.Users
-  type User = UserTable.User
-  val users = UserTable.users
+  type Users    = UserTable.Users
+  type User     = UserTable.User
+  val users     = UserTable.users
 
-  type Tokens = TokenTable.Tokens
-  type Token = TokenTable.Token
-  val tokens = TokenTable.tokens
+  type Tokens   = TokenTable.Tokens
+  type Token    = TokenTable.Token
+  val tokens    = TokenTable.tokens
+
+  type Shareas  = ShareaTable.Shareas
+  type Sharea   = ShareaTable.Sharea
+  val shareas   = ShareaTable.shareas
+
+  type Medias   = MediaTable.Medias
+  type Media    = MediaTable.Media
+  val medias    = MediaTable.medias
 
 }

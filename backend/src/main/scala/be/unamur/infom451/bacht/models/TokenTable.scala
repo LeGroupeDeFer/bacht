@@ -48,16 +48,22 @@ object TokenTable {
   class Tokens(tag: Tag) extends Table[Token](tag, "tokens") {
 
     // Columns
-    def id: Rep[Int] = column[Int]("id", O.PrimaryKey, O.AutoInc)
+    def id: Rep[Int] =
+      column[Int]("id", O.PrimaryKey, O.AutoInc)
 
-    def hash: Rep[String] = column[String]("hash", O.Length(32), O.Unique)
+    def hash: Rep[String] =
+      column[String]("hash", O.Length(32), O.Unique)
 
-    def creationDate: Rep[Timestamp] = column[Timestamp]("creation_date")
+    def creationDate: Rep[Timestamp] =
+      column[Timestamp]("creation_date")
 
-    def expirationDate: Rep[Timestamp] = column[Timestamp]("expiration_date")
+    def expirationDate: Rep[Timestamp] =
+      column[Timestamp]("expiration_date")
 
     // Projection
-    def * = (id.?, hash, creationDate, expirationDate.?) <> (tokenApply, tokenUnapply)
+    def * = (
+      id.?, hash, creationDate, expirationDate.?
+    ) <> (tokenApply, tokenUnapply)
 
   }
 
