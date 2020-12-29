@@ -53,7 +53,8 @@ object UserTable {
 
     def update(user: User)(implicit ec: ExecutionContext, db: Database):
     Future[User] =
-      users.withId(user.id.get)
+      users
+        .withId(user.id.get)
         .update(user)
         .execute
         .map(m => if (m != 1) throw updateError else m)

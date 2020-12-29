@@ -126,3 +126,26 @@ Cache-Control: no-cache
 Authorization: Bearer {{access_token}}
 
 { "name": "test", "description": "whatever" }
+
+> {%
+    client.global.set("last_sharea_id", response.body.id);
+%}
+### ------------------------------------------------------------- UPDATE SHAREA
+
+PUT http://localhost:8000/api/sharea/{{last_sharea_id}}
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+{ "name": "ohmygod", "description": "it just changed name and description" }
+
+> {%
+    client.global.set("last_sharea_id", response.body.id);
+%}
+
+### ------------------------------------------------------------- DELETE SHAREA
+
+DELETE http://localhost:8000/api/sharea/{{last_sharea_id}}
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
