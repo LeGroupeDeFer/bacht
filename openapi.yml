@@ -210,10 +210,6 @@ paths:
                   $ref: '#/components/schemas/UserInfo'
       operationId: get-user
       description: The list of users
-      parameters:
-        - schema:
-            type: string
-          in: header
       security:
         - jwtToken: []
   '/user/{id}':
@@ -287,8 +283,6 @@ components:
         id:
           type: integer
         username:
-          type: string
-        biopic:
           type: string
     MediaCreationForm:
       type: object
