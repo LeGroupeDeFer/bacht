@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useHistory, Link } from 'react-router-dom';
-import { Button, Col, Form } from 'react-bootstrap';
+import React, {useEffect, useState} from 'react';
+import {useHistory} from 'react-router-dom';
+import {Button, Col, Form} from 'react-bootstrap';
 
-import { connectAuth } from 'sharea/store/auth';
-import { prevent } from 'sharea/lib';
+import {connectAuth} from 'sharea/store/auth';
+import {prevent} from 'sharea/lib';
 import Error from 'sharea/component/Error';
 
 
-function Register({ error, inSession, register, request, status }) {
+function Register({error, inSession, register, request, status}) {
 
   const history = useHistory();
   const [state, setState] = useState({
@@ -27,12 +27,12 @@ function Register({ error, inSession, register, request, status }) {
     [status]
   );
   useEffect(() => setValid(
-    state.username.length > 3 && state.password.length > 4
-    && state.firstName.length > 3 && state.lastName.length > 3
+    state.username.length > 1 && state.password.length > 2
+    && state.firstName.length > 1 && state.lastName.length > 1
   ), [state]);
 
   const onChange = name => e => setState(
-    s => ({ ...s, [name]: e.target.value })
+    s => ({...s, [name]: e.target.value})
   );
   const onSubmit = _ => register(state);
 
