@@ -51,6 +51,17 @@ object UserTable {
         case xs => (xs.head._1, xs.flatMap(_._2))
       }
 
+    def update(user: User)(implicit ec: ExecutionContext, db: Database):
+    Future[User] =
+      users.withId(user.id.get)
+        .update(user)
+        .execute
+        .map(m => if (m != 1) throw updateError else m)
+        .map(_ => user)
+
+    def delete(id: Int)(implicit ec: ExecutionContext, db: Database):
+    Future[Boolean] =
+      users.withId(id).delete.execute.map(m => if(m!=1) throw updateError else true)
   }
 
   case class User(
