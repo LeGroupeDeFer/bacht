@@ -7,4 +7,4 @@ CREATE TABLE user_like
     PRIMARY KEY (id),
     FOREIGN KEY (liker_id) REFERENCES users (id),
     FOREIGN KEY (liked_id) REFERENCES users (id)
-)
+);
