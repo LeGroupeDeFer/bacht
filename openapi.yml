@@ -198,7 +198,7 @@ paths:
   /user:
     get:
       summary: Your GET endpoint
-      tags: []
+      tags: [user]
       responses:
         '200':
           description: OK
@@ -225,14 +225,14 @@ paths:
         required: true
     get:
       summary: Your GET endpoint
-      tags: []
+      tags: [user]
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: ''
+                $ref: '#/components/schemas/DetailedUserInfo'
         '404':
           description: Created
       operationId: get-user-id
