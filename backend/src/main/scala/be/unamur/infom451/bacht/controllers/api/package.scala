@@ -8,7 +8,8 @@ package object api {
     AuthController.routes,
     APIController.routes,
     UserController.routes,
-    ShareaController.routes
+    ShareaController.routes,
+    MediaController.routes
   )
 
 }

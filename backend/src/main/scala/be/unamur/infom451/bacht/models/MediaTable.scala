@@ -1,6 +1,6 @@
 package be.unamur.infom451.bacht.models
 
-import java.sql.Blob
+import be.unamur.infom451.bacht.lib._
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -29,14 +29,31 @@ object MediaTable {
     id: Option[Int],
     name: String,
     kind: String,
-    content: Blob,
+    content: Array[Byte],
     creatorId: Int,
     shareaId: Int
-  )
+  ) {
+    def insert: Future[Media] =
+      medias
+        .insert(this)
+        .execute
+        .map( id => this.copy (id = Some(id)))
+
+    def delete: Future[Unit] =
+      medias.withId(this.id.get)
+        .delete
+        .execute
+        .map(_ => ())
+
+    def update: Future[Media] =
+      medias.insertOrUpdate(this)
+        .execute
+        .map(_ => this)
+  }
 
   /* ----------------------------- Projection ----------------------------- */
 
-  type MediaTuple = (Option[Int], String, String, Blob, Int, Int)
+  type MediaTuple = (Option[Int], String, String, Array[Byte], Int, Int)
 
   private def mediaApply(m: MediaTuple): Media =
     Media(m._1, m._2, m._3, m._4, m._5, m._6)
@@ -58,8 +75,8 @@ object MediaTable {
     def kind: Rep[String] =
       column[String]("type", O.Length(128))
 
-    def content: Rep[Blob] =
-      column[Blob]("content")
+    def content: Rep[Array[Byte]] =
+      column[Array[Byte]]("content")
 
     def creatorId: Rep[Int] =
       column[Int]("creator_id")

@@ -49,7 +49,27 @@ object ShareaController extends Guide {
     name: String,
     description: String
   )
-
+  object DetailedMediaInfo {
+    def from(media: Media) : DetailedMediaInfo =
+      DetailedMediaInfo(
+        media.id.get,
+        media.name,
+        media.kind,
+        media.content.map(_.toChar).mkString,
+        media.creatorId,
+        media.shareaId
+      )
+  }
+  case class DetailedMediaInfo(
+    id : Int,
+    name : String,
+    kind : String,
+    content : String,
+    author : Int,
+    shareaId : Int
+                              )
+  type DetailedShareaMedias = Seq[DetailedMediaInfo]
+  type DetailedMediaResponse = DetailedMediaInfo
 }
 
 @Endpoint(path = "/api/sharea")
@@ -69,6 +89,14 @@ trait ShareaController {
     .map {
       case (sharea, medias) => DetailedShareaInfo.from(sharea, medias)
     } recoverWith ErrorResponse.recover(404)
+
+  @Endpoint(method = HttpMethod.GET, path = "/:id/medias")
+  def medias(id : Int): Future[DetailedShareaMedias] = Sharea
+    .byIdWithMedias(id)
+    .map {
+      case (_, medias) => medias.map(DetailedMediaInfo.from)
+    } recoverWith ErrorResponse.recover(404)
+
 
   @Endpoint(method = HttpMethod.POST, path = "/")
   def create(request: ShareaCreationRequest): Future[DetailedShareaResponse] =
