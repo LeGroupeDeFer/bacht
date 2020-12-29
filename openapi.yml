@@ -100,6 +100,21 @@ paths:
           $ref: '#/components/responses/401Error'
         '422':
           $ref: '#/components/responses/422Error'
+  /api/media/kinds:
+    get:
+      tags: ['media']
+      summary: Collect the only accepted media kind
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example:
+                  ["text", "sound", "video", "image"]
   '/api/sharea/{id}/medias':
     get:
       tags:
@@ -291,7 +306,7 @@ components:
           type: integer
         name:
           type: string
-        type:
+        kind:
           type: string
         content:
           type: string
@@ -299,8 +314,6 @@ components:
       type: object
       properties:
         name:
-          type: string
-        type:
           type: string
         content:
           type: string
@@ -311,7 +324,7 @@ components:
           type: integer
         name:
           type: string
-        type:
+        kind:
           type: string
         content:
           type: string
@@ -320,6 +333,8 @@ components:
           $ref: '#/components/schemas/UserInfo'
         likes:
           type: integer
+        like:
+          type: boolean
     DetailedUserInfo:
       title: DetailedUserInfo
       type: object
