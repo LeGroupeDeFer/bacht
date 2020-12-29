@@ -11,7 +11,7 @@ import Loader from 'sharea/component/Loader';
 
 const Home = lazy(() => import('sharea/pages/Home'));
 const Auth = lazy(() => import('sharea/pages/Auth'));
-const Profile = lazy(() => import('sharea/pages/Profile'));
+const Profile = lazy(() => import('sharea/pages/Profile/index'));
 const Discover = lazy(() => import('sharea/pages/Discover'));
 
 
