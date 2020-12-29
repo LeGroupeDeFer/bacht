@@ -3,10 +3,8 @@ package be.unamur.infom451.bacht.controllers.api
 import scala.concurrent.Future
 import wvlet.airframe.http.{Endpoint, HttpMethod, Router}
 import be.unamur.infom451.bacht.lib._
-import be.unamur.infom451.bacht.models.{Media, Sharea}
 import be.unamur.infom451.bacht.models.ShareaTable.Sharea
-import be.unamur.infom451.bacht.models.UserTable.User
-import pdi.jwt.JwtClaim
+import be.unamur.infom451.bacht.models.{Media, Sharea}
 
 
 object ShareaController extends Guide {
@@ -106,4 +104,32 @@ trait ShareaController {
       .map(DetailedShareaInfo.from)
       .recoverWith(ErrorResponse.recover(409))
 
+
+  @Endpoint(method = HttpMethod.PUT, path = "/:id")
+  def update(id: Int, request: ShareaCreationRequest): Future[DetailedShareaResponse] =
+    withUser(u => u)
+      .flatMap(user => Sharea
+        .byId(id)
+        .map(s => {
+          if (s.get.creatorId != user.id.get) {
+            throw notCreator
+          }
+          s.get
+        }))
+      .flatMap(current => Sharea.update(Sharea(current.id, request.name, request.description, current.creatorId))
+        .map(DetailedShareaInfo.from))
+
+
+  @Endpoint(method = HttpMethod.DELETE, path = "/:id")
+  def delete(id: Int): Future[Boolean] =
+    withUser(u => u)
+      .flatMap(user => Sharea
+        .byId(id)
+        .map(s => {
+          if (s.get.creatorId != user.id.get) {
+            throw notCreator
+          }
+          s.get
+        }))
+      .flatMap(current => Sharea.delete(id))
 }

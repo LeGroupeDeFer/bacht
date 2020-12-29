@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "sharea/*": ["src/js/*"]
+    }
+  },
+  "include": ["src/js"]
+}

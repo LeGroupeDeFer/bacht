@@ -5,14 +5,14 @@ import {
   useHistory
 } from 'react-router-dom';
 
-import { connectAuth } from './store/auth';
-import Loader from './component/Loader';
+import { connectAuth } from 'sharea/store/auth';
+import Loader from 'sharea/component/Loader';
 
 
-const Home = lazy(() => import('./pages/Home'));
-const Auth = lazy(() => import('./pages/Auth'));
-const Profile = lazy(() => import('./pages/Profile'));
-const Discover = lazy(() => import('./pages/Discover'));
+const Home = lazy(() => import('sharea/pages/Home'));
+const Auth = lazy(() => import('sharea/pages/Auth'));
+const Profile = lazy(() => import('sharea/pages/Profile'));
+const Discover = lazy(() => import('sharea/pages/Discover'));
 
 
 // App :: None => Component

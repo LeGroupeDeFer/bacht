@@ -1,5 +1,5 @@
 import jwtDecode from 'jwt-decode';
-import { empty, identity, clean } from './utils';
+import { empty, identity, clean, normalizeEntities } from './utils';
 
 /* -------------------------------------------------------------------------
    ------------------------------- BARE API --------------------------------
@@ -254,8 +254,103 @@ Object.assign(auth, {
 
 });
 
+/* -------------------------------------------------------------------------
+   ------------------------------- USER API --------------------------------
+   ------------------------------------------------------------------------- */
 
-Object.assign(api, { auth });
+/**
+ * TODO
+ */
+async function user(endpoint = '', config = {}) {
+  return api(`/user${endpoint}`, config);
+}
+
+Object.assign(user, {
+
+  async all() {
+    return user().then(normalizeEntities);
+  },
+
+  async following(id) {
+    throw new Error('Not implemented');
+  },
+
+  async followers(id) {
+    throw new Error('Not implemented');
+  },
+
+  async self() {
+    return user('/self');
+  },
+
+  async update(id, diff) {
+    return user(`/${id}`, { method: 'PUT', body: diff });
+  },
+
+});
+
+
+/* -------------------------------------------------------------------------
+   ------------------------------ SHAREA API -------------------------------
+   ------------------------------------------------------------------------- */
+
+/**
+ * TODO
+ */
+async function sharea(endpoint = '', config = {}) {
+  return api(`/sharea${endpoint}`, config);
+}
+
+Object.assign(sharea, {
+
+  async all() {
+    return sharea().then(normalizeEntities);
+  },
+
+  async self() {
+    return user('/self/sharea').then(normalizeEntities);
+  },
+
+  async update(id, diff) {
+    return sharea(`/${id}`, { method: 'PUT', body: diff });
+  },
+
+  async create(shareaDefinition) {
+    return sharea('', { method: 'POST', body: shareaDefinition });
+  }
+
+});
+
+
+/* -------------------------------------------------------------------------
+   ------------------------------ MEDIA API --------------------------------
+   ------------------------------------------------------------------------- */
+
+/**
+ * TODO
+ */
+async function media(endpoint = '', config = {}) {
+  return api(`/media${endpoint}`, config);
+}
+
+Object.assign(sharea, {
+
+  async all() {
+    return media().then(normalizeEntities);
+  },
+
+  async update(id, diff) {
+    return media(`/${id}`, { method: 'PUT', body: diff });
+  },
+
+  async create(mediaDefinition) {
+    return media('', { method: 'POST', body: mediaDefinition });
+  }
+
+});
+
+
+Object.assign(api, { auth, user, sharea, media });
 
 
 export default api;

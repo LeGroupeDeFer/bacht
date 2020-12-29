@@ -1,19 +1,21 @@
-openapi: "3.0.2"
+openapi: 3.0.2
 info:
   title: Sharea
-  version: "0.0.1"
+  version: 0.0.1
 servers:
-  - url: https://sharea.be
-
+  - url: 'https://sharea.be'
 paths:
-  /api/media/{id}/like:
+  '/api/media/{id}/like':
     get:
       summary: Toggle liking of media
-      tags: ["media", "like", "user"]
+      tags:
+        - media
+        - like
+        - user
       parameters:
-        - $ref: "#/components/parameters/queryId"
+        - $ref: '#/components/parameters/queryId'
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
@@ -24,200 +26,239 @@ paths:
                     type: boolean
                   likes:
                     type: integer
-        401:
-          $ref: "#/components/responses/401Error"
-        404:
-          $ref: "#/components/responses/404IdError"
-
-  /api/media/{id}:
+        '401':
+          $ref: '#/components/responses/401Error'
+        '404':
+          $ref: '#/components/responses/404IdError'
+  '/api/media/{id}':
     get:
-      tags: ["media"]
-      summary: "Get the information relative to a specific media"
+      tags:
+        - media
+      summary: Get the information relative to a specific media
       parameters:
-        - $ref: "#/components/parameters/queryId"
+        - $ref: '#/components/parameters/queryId'
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MediaInfo"
-        404:
-          $ref: "#/components/responses/404IdError"
-
+                $ref: '#/components/schemas/MediaInfo'
+        '404':
+          $ref: '#/components/responses/404IdError'
     put:
-      tags: ["media"]
-      summary: "Update a media"
+      tags:
+        - media
+      summary: Update a media
       parameters:
-        - $ref: "#/components/parameters/queryId"
+        - $ref: '#/components/parameters/queryId'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/MediaUpdateForm"
+              $ref: '#/components/schemas/MediaUpdateForm'
       responses:
-        200:
+        '200':
           description: OK
-        401:
-          $ref: "#/components/responses/401Error"
-        403:
-          $ref: "#/components/responses/403Error"
-        404:
-          $ref: "#/components/responses/404IdError"
-        422:
-          $ref: "#/components/responses/422Error"
-
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404IdError'
+        '422':
+          $ref: '#/components/responses/422Error'
     delete:
-      tags: ["media"]
-      summary: "Delete a media"
+      tags:
+        - media
+      summary: Delete a media
       parameters:
-        - $ref: "#/components/parameters/queryId"
+        - $ref: '#/components/parameters/queryId'
       responses:
-        200:
+        '200':
           description: OK
-        401:
-          $ref: "#/components/responses/401Error"
-        403:
-          $ref: "#/components/responses/403Error"
-        404:
-          $ref: "#/components/responses/404IdError"
-
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404IdError'
   /api/media:
     post:
-      tags: ["media"]
-      summary: "Create a new media"
+      tags:
+        - media
+      summary: Create a new media
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/MediaCreationForm"
+              $ref: '#/components/schemas/MediaCreationForm'
       responses:
-        200:
-          $ref: "#/components/responses/CreationSuccessful"
-        401:
-          $ref: "#/components/responses/401Error"
-        422:
-          $ref: "#/components/responses/422Error"
-
-  /api/sharea/{id}/medias:
+        '200':
+          $ref: '#/components/responses/CreationSuccessful'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '422':
+          $ref: '#/components/responses/422Error'
+  '/api/sharea/{id}/medias':
     get:
-      tags: ["sharea", "media"]
-      summary: "Retrieve every media associated with a sharea"
+      tags:
+        - sharea
+        - media
+      summary: Retrieve every media associated with a sharea
       parameters:
-        - $ref: "#/components/parameters/queryId"
+        - $ref: '#/components/parameters/queryId'
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/MediaInfo"
-        401:
-          $ref: "#/components/responses/401Error"
-        404:
-          description: "Not found : There is no sharea with this id"
-
-  /api/sharea/{id}:
+                  $ref: '#/components/schemas/MediaInfo'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '404':
+          description: 'Not found : There is no sharea with this id'
+  '/api/sharea/{id}':
     get:
-      tags: ["sharea"]
-      summary: "Get the information relative to a specific sharea"
+      tags:
+        - sharea
+      summary: Get the information relative to a specific sharea
       parameters:
-        - $ref: "#/components/parameters/queryId"
+        - $ref: '#/components/parameters/queryId'
       responses:
-        200:
+        '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ShareaInfo"
-        404:
-          $ref: "#/components/responses/404IdError"
-
+                $ref: '#/components/schemas/ShareaInfo'
+        '404':
+          $ref: '#/components/responses/404IdError'
     put:
-      tags: ["sharea"]
-      summary: "Update a sharea"
-      description: "The backend has to check if the author_id is the same as the current user"
+      tags:
+        - sharea
+      summary: Update a sharea
+      description: The backend has to check if the author_id is the same as the current user
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ShareaForm"
+              $ref: '#/components/schemas/ShareaForm'
       parameters:
-        - $ref: "#/components/parameters/queryId"
+        - $ref: '#/components/parameters/queryId'
       responses:
-        200:
+        '200':
           description: OK
-        401:
-          $ref: "#/components/responses/401Error"
-        403:
-          $ref: "#/components/responses/403Error"
-        404:
-          $ref: "#/components/responses/404IdError"
-        422:
-          $ref: "#/components/responses/422Error"
-
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404IdError'
+        '422':
+          $ref: '#/components/responses/422Error'
     delete:
-      tags: ["sharea"]
-      summary: "Delete a sharea"
+      tags:
+        - sharea
+      summary: Delete a sharea
       parameters:
-        - $ref: "#/components/parameters/queryId"
+        - $ref: '#/components/parameters/queryId'
       responses:
-        200:
+        '200':
           description: OK
-        401:
-          $ref: "#/components/responses/401Error"
-        403:
-          $ref: "#/components/responses/403Error"
-        404:
-          $ref: "#/components/responses/404IdError"
-
+        '401':
+          $ref: '#/components/responses/401Error'
+        '403':
+          $ref: '#/components/responses/403Error'
+        '404':
+          $ref: '#/components/responses/404IdError'
   /api/sharea:
     post:
-      tags: ["sharea"]
-      summary: "Create a new sharea"
-      description: "The backend will ned the current user id to fill the 'creator_id' field."
+      tags:
+        - sharea
+      summary: Create a new sharea
+      description: The backend will ned the current user id to fill the 'creator_id' field.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ShareaForm"
+              $ref: '#/components/schemas/ShareaForm'
       responses:
-        200:
-          $ref: "#/components/responses/CreationSuccessful"
-        401:
-          $ref: "#/components/responses/401Error"
-        422:
-          $ref: "#/components/responses/422Error"
+        '200':
+          $ref: '#/components/responses/CreationSuccessful'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '422':
+          $ref: '#/components/responses/422Error'
+  /user:
+    get:
+      summary: Your GET endpoint
+      tags: [user]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserInfo'
+      operationId: get-user
+      description: The list of users
+      security:
+        - jwtToken: []
+  '/user/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: [user]
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetailedUserInfo'
+        '404':
+          description: Created
+      operationId: get-user-id
+      description: The detailed user information
+      security:
+        - jwtToken: []
 components:
   securitySchemes:
     jwtToken:
       type: http
       scheme: bearer
       bearerFormat: JWT
-
   parameters:
     queryId:
       name: id
       in: path
-      description: "A pertinent id for the current query"
+      description: A pertinent id for the current query
       schema:
         type: integer
       required: true
-
   schemas:
     ShareaForm:
       type: object
-      required: ["name"]
+      required:
+        - name
       properties:
         name:
           type: string
         description:
           type: string
-
     ShareaInfo:
       type: object
       properties:
@@ -228,15 +269,14 @@ components:
         description:
           type: string
         author:
-          $ref: "#/components/schemas/UserInfo"
-
+          $ref: '#/components/schemas/UserInfo'
     OnlyId:
       type: object
-      required: ["id"]
+      required:
+        - id
       properties:
         id:
           type: integer
-
     UserInfo:
       type: object
       properties:
@@ -244,9 +284,6 @@ components:
           type: integer
         username:
           type: string
-        biopic:
-          type: string
-
     MediaCreationForm:
       type: object
       properties:
@@ -258,7 +295,6 @@ components:
           type: string
         content:
           type: string
-
     MediaUpdateForm:
       type: object
       properties:
@@ -268,7 +304,6 @@ components:
           type: string
         content:
           type: string
-
     MediaInfo:
       type: object
       properties:
@@ -280,24 +315,52 @@ components:
           type: string
         content:
           type: string
-          description: "This can be anything and MUST be considered as blob"
+          description: This can be anything and MUST be considered as blob
         author:
-          $ref: "#/components/schemas/UserInfo"
+          $ref: '#/components/schemas/UserInfo'
         likes:
           type: integer
-
+    DetailedUserInfo:
+      title: DetailedUserInfo
+      type: object
+      x-examples:
+        example-1:
+          id: 137
+          username: jdoe
+          firstName: john
+          lastName: doe
+          biopic: Just a guy
+          shareas:
+            - 17
+            - 84
+            - 221
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        biopic:
+          type: string
+        shareas:
+          type: array
+          items:
+            type: integer
   responses:
     CreationSuccessful:
       description: OK
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/OnlyId"
+            $ref: '#/components/schemas/OnlyId'
     401Error:
-      description: "Unauthorized : Most likely the user is not logged in"
+      description: 'Unauthorized : Most likely the user is not logged in'
     403Error:
-      description: "Forbidden : The user has no right to do this"
+      description: 'Forbidden : The user has no right to do this'
     422Error:
-      description: "Unprocessable entity : Most likely the payload is malformatted"
+      description: 'Unprocessable entity : Most likely the payload is malformatted'
     404IdError:
-      description: "Not found : Unknown id"
+      description: 'Not found : Unknown id'

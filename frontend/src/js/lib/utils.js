@@ -105,6 +105,8 @@ export const clean = (o, hard = false) => {
     .reduce((a, k) => predicate(o[k]) ? update(a, k, o[k]) : a, {});
 }
 
+export const normalizeEntities = xs =>
+  xs.reduce((a, x) => ({ ...a, [x.id]: x }), {});
 
 /* ------------------------------ Date utils ------------------------------- */
 
@@ -186,6 +188,7 @@ export default {
   truthy,
   update,
   clean,
+  normalizeEntities,
 
   epoch,
   now,

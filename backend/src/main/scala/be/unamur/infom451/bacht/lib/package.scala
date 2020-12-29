@@ -45,6 +45,7 @@ package object lib {
   val invalidAttribute = new Exception("At least one attribute is missing")
   val idMismatch = new Exception("The ids do not match")
   val unknownIdentifier = new Exception("Unknown identifer")
+  val notCreator = new Exception("The user has no right to alter this")
 
   case class TokenException(
                              private val message: String,

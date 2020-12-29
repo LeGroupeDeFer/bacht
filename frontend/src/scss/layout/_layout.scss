@@ -21,12 +21,6 @@
   display: flex;
   height: 100%;
 
-}
-
-/* ------------------------------- DASHBOARD ------------------------------- */
-
-.dashboard {
-
   .heading {
 
     background: white;
@@ -57,6 +51,13 @@
     }
 
   }
+}
+
+/* ------------------------------- DASHBOARD ------------------------------- */
+
+.dashboard {
+
+
 
 }
 
@@ -133,12 +134,6 @@ main {
 .profile {
 
   // TODO - /profile scss
-
-  .heading {
-
-    padding: 1em;
-
-  }
 
 }
 
