@@ -1,7 +1,6 @@
 import React from 'react';
 
-import Sidebar from 'sharea/component/layout/Sidebar';
-import {connectAuth} from 'sharea/store/auth';
+import { useAuth } from 'sharea/store/app';
 import TabNav from "sharea/component/layout/TabNav";
 
 const links = [
@@ -24,9 +23,9 @@ const links = [
 ];
 
 
-const UserMedias = connectAuth(({token}) => {
+function UserMedias(_) {
 
-  // TODO - User medias List
+  const { token } = useAuth();
   const username = token.sub;
 
   return (
@@ -36,34 +35,33 @@ const UserMedias = connectAuth(({token}) => {
     </div>
   );
 
-});
+}
 
-const ProfileName = connectAuth((props, {token}) =>  {
+function ProfileName(props) {
+  const { token } = useAuth();
   const profileName = (props.username === undefined || props.username === token.sub)
     ? 'My'
     : `${props.username}'s`;
 
   return <h1>{profileName} profile</h1>
-});
+}
 
 
-function Profile({ token }) {
+function Profile(_) {
+  const { token } = useAuth();
+
   return (
-    <div className="section profile">
-      <Sidebar/>
-      <main className="content">
-        <div className="inner-content">
-          <div className="heading">
-            <ProfileName name={token.sub}/>
-            <TabNav links={links} default="/profile" />
-          </div>
+    <main className="content">
+      <div className="inner-content">
+        <div className="heading">
+          <ProfileName name={token.sub}/>
+          <TabNav links={links} default="/profile" />
         </div>
-        {/*<UserMedias/>*/}
-      </main>
-    </div>
+      </div>
+    </main>
   );
 
 }
 
 
-export default connectAuth(Profile);
+export default Profile;

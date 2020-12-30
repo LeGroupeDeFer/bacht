@@ -1,13 +1,15 @@
 import React from 'react';
 
-import { connectAuth } from '../store/auth';
+import { useAuth } from '../store/app';
 
 
-function AuthGuard({ inSession, reverse, children }) {
-  if (inSession && !reverse || !inSession && reverse)
+function AuthGuard({ reverse, children }) {
+  const { authenticated } = useAuth();
+
+  if (authenticated && !reverse || !authenticated && reverse)
     return children;
   return <></>;
 }
 
 
-export default connectAuth(AuthGuard);
+export default AuthGuard;

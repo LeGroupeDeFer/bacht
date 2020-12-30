@@ -1,1 +1,4 @@
-export * from 'sharea/Home';
+export * from './Discover';
+export * from './Home';
+export * from './Profile';
+export * from './Sharea';

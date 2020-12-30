@@ -1,11 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './auth';
+import appReducer from './app';
 import layoutReducer from './layout';
+import shareaReducer from './sharea';
+import mediaReducer from './media';
 
-export default configureStore({
+const store = configureStore({
   reducer: {
-    auth: authReducer,
-    layout: layoutReducer
+    app: appReducer,
+    layout: layoutReducer,
+    sharea: shareaReducer,
+    media: mediaReducer
   },
 });
 
+export default store;

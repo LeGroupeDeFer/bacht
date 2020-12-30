@@ -156,11 +156,11 @@ export const subscribed = (promise, onResolve, onReject) => {
   return () => isSubscribed = false;
 }
 
-export const status = {
-  IDLE:       'idle',
-  LOADING:    'loading',
-  SUCCEEDED:  'succeeded',
-  FAILED:     'failed'
+export const STATUS = {
+  INITIALIZING  : 'initializing',
+  LOADING       : 'loading',
+  IDLE          : 'idle',
+  FAILED        : 'failed',
 };
 
 /* ----------------------------- String utils ------------------------------ */
@@ -204,5 +204,7 @@ export default {
   delay,
   prevent,
 
-  subscribed
+  subscribed,
+  STATUS
+
 };

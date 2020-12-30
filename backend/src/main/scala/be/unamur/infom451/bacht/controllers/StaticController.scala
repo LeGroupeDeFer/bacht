@@ -41,6 +41,10 @@ trait StaticController {
   def redirectAuth(): Response =
     index()
 
+  @Endpoint(path = "/sharea/*path")
+  def redirectSharea(): Response =
+    index()
+
   @Endpoint(path = "/*path")
   def content(path: String): Response =
     asset(path)

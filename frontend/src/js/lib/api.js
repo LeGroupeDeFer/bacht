@@ -186,10 +186,9 @@ Object.assign(auth, {
     const refreshData = store.getItem('__refresh_data__') || '';
     const [username, token] = refreshData.split(':');
 
-    if (token === null)
-      throw new APIError(403, 'Not connected');
+    if (token !== null)
+      await auth('/logout', { body: { username, token } });
 
-    await auth('/logout', { body: { username, token } });
     auth.clear();
   },
 
@@ -212,11 +211,12 @@ Object.assign(auth, {
         '/refresh',
         { body: { username, token } }
       );
+
       currentAccessToken = access;
       store.setItem('__refresh_data__', `${username}:${refresh}`);
       return jwtDecode(currentAccessToken);
     } catch (e) {
-      if (e.code === 403) auth.clear();
+      auth.clear();
       throw e;
     }
 
@@ -305,6 +305,10 @@ Object.assign(sharea, {
 
   async all() {
     return sharea().then(normalizeEntities);
+  },
+
+  async byId(id) {
+    return sharea(id);
   },
 
   async self() {
