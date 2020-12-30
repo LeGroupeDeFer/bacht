@@ -6,8 +6,7 @@ import { api, status } from '../lib';
 const initialState = {
   status: status.IDLE,
   error: null,
-  media: {},
-  self: []
+  media: {}
 };
 
 export const fetchMedias = createAsyncThunk(
@@ -34,7 +33,6 @@ export const slice = createSlice({
       state.status = status.FAILED;
       state.error = action.error;
       state.media = {};
-      state.self = [];
     },
   }
 });
