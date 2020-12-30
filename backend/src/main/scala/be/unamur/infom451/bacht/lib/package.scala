@@ -42,7 +42,7 @@ package object lib {
   val invalidToken = new Exception("Invalid token")
   val usernameTaken = new Exception("Username in use")
   val missingAttribute = new Exception("At least one attribute is missing")
-  val invalidAttribute = new Exception("At least one attribute is missing")
+  val invalidAttribute = new Exception("At least one attribute is wrong")
   val idMismatch = new Exception("The ids do not match")
   val unknownIdentifier = new Exception("Unknown identifer")
   val notCreator = new Exception("The user has no right to alter this")

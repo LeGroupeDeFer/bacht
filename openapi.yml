@@ -5,8 +5,8 @@ info:
 servers:
   - url: 'https://sharea.be'
 paths:
-  '/api/media/{id}/like':
-    get:
+  '/api/media/{id}/medialike':
+    post:
       summary: Toggle liking of media
       tags:
         - media
@@ -20,12 +20,41 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  like:
-                    type: boolean
-                  likes:
-                    type: integer
+                $ref: '#/components/schemas/Likes'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '404':
+          $ref: '#/components/responses/404IdError'
+  '/api/sharea/{id}/sharealike':
+    post:
+      tags: ['like', 'sharea']
+      summary: Toggle the liking of sharea
+      parameters:
+        - $ref: '#/components/parameters/queryId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Likes'
+        '401':
+          $ref: '#/components/responses/401Error'
+        '404':
+          $ref: '#/components/responses/404IdError'
+  '/api/user/{id}/userlike':
+    post:
+      tags: ['like', 'user']
+      summary: Toggle the liking of user
+      parameters:
+        - $ref: '#/components/parameters/queryId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Likes'
         '401':
           $ref: '#/components/responses/401Error'
         '404':
@@ -100,6 +129,21 @@ paths:
           $ref: '#/components/responses/401Error'
         '422':
           $ref: '#/components/responses/422Error'
+  /api/media/kinds:
+    get:
+      tags: ['media']
+      summary: Collect the only accepted media kind
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                example:
+                  ["text", "sound", "video", "image"]
   '/api/sharea/{id}/medias':
     get:
       tags:
@@ -291,7 +335,7 @@ components:
           type: integer
         name:
           type: string
-        type:
+        kind:
           type: string
         content:
           type: string
@@ -299,8 +343,6 @@ components:
       type: object
       properties:
         name:
-          type: string
-        type:
           type: string
         content:
           type: string
@@ -311,13 +353,22 @@ components:
           type: integer
         name:
           type: string
-        type:
+        kind:
           type: string
         content:
           type: string
           description: This can be anything and MUST be considered as blob
         author:
           $ref: '#/components/schemas/UserInfo'
+        likes:
+          type: integer
+        like:
+          type: boolean
+    Likes:
+      type: object
+      properties:
+        like:
+          type: boolean
         likes:
           type: integer
     DetailedUserInfo:

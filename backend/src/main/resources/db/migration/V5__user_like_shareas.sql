@@ -1,4 +1,4 @@
-CREATE TABLE user_like
+CREATE TABLE sharea_like
 (
     id       INT UNSIGNED NOT NULL AUTO_INCREMENT,
     user_id INT UNSIGNED NOT NULL,
@@ -7,4 +7,4 @@ CREATE TABLE user_like
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (sharea_id) REFERENCES shareas (id)
-)
+);

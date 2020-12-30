@@ -32,4 +32,4 @@ CREATE TABLE media_like
     PRIMARY KEY (id),
     FOREIGN KEY (media_id) REFERENCES medias (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
-)
+);

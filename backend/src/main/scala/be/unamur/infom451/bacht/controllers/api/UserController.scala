@@ -6,8 +6,10 @@ import scala.concurrent.Future
 import wvlet.airframe.http.{Endpoint, HttpMethod, Router}
 import pdi.jwt.JwtClaim
 import be.unamur.infom451.bacht.lib._
-import be.unamur.infom451.bacht.models.{Sharea}
-import be.unamur.infom451.bacht.models.UserTable.{User}
+import be.unamur.infom451.bacht.models.Sharea
+import be.unamur.infom451.bacht.models.UserTable.User
+import be.unamur.infom451.bacht.models.likes.LikeResponse
+import be.unamur.infom451.bacht.models.likes.UserLikeTable.UserLike
 
 
 object UserController extends Guide {
@@ -28,7 +30,9 @@ object UserController extends Guide {
         user.firstName,
         user.lastName,
         user.biopic,
-        Seq()
+        Seq(),
+        None,
+        None
       )
 
     def from(user: User, shareas: Seq[Sharea]): DetailedUserInfo =
@@ -38,7 +42,21 @@ object UserController extends Guide {
         user.firstName,
         user.lastName,
         user.biopic,
-        shareas.map(_.id.get)
+        shareas.map(_.id.get),
+        None,
+        None
+      )
+
+    def from(user: User, shareas: Seq[Sharea], likeInfo: LikeResponse): DetailedUserInfo =
+      DetailedUserInfo(
+        user.id.get,
+        user.username,
+        user.firstName,
+        user.lastName,
+        user.biopic,
+        shareas.map(_.id.get),
+        Some(likeInfo.like),
+        Some(likeInfo.likes)
       )
   }
 
@@ -48,7 +66,9 @@ object UserController extends Guide {
     firstName: String,
     lastName : String,
     biopic   : String,
-    shareas  : Seq[Int]
+    shareas  : Seq[Int],
+    like     : Option[Boolean],
+    likes    : Option[Int]
   )
 
   type DetailedUserResponse = DetailedUserInfo
@@ -89,18 +109,20 @@ trait UserController {
     } recoverWith ErrorResponse.recover(404)
 
   @Endpoint(method = HttpMethod.GET, path = "/:id")
-  def one(id: String): Future[DetailedUserResponse] =
-    withContextValue("token") { (token: JwtClaim) =>
+  def one(id: String): Future[DetailedUserResponse] = {
+    withUser(u => u)
+      .flatMap(current => {
+        val user =
+          if (id == "self") User byIdWithShareas current.id.get
+          else User byIdWithShareas id.toInt
 
-      val user =
-        if (id == "self") User byUsernameWithShareas token.subject.get
-        else User byIdWithShareas id.toInt
-
-      user map {
-        case (user, shareas) => DetailedUserInfo.from(user, shareas)
-      }
-
-    } recoverWith ErrorResponse.recover(404)
+        user.flatMap {
+          case (user, shareas) => UserLike
+            .likeInformation(current.id.get, user.id.get)
+            .map(likeInfo => DetailedUserInfo.from(user, shareas, likeInfo))
+        }
+      })
+  } recoverWith ErrorResponse.recover(404)
 
 
   @Endpoint(method = HttpMethod.PUT, path = "/")
@@ -120,5 +142,10 @@ trait UserController {
         User.delete(current.id.get)
     } recoverWith ErrorResponse.recover(418)
 
-
+  @Endpoint(method = HttpMethod.POST, path = "/:id/userlike")
+  def likeUser(id  : Int): Future[LikeResponse] = {
+    withUser(u => u).flatMap(user => {
+      UserLike.toggle(user.id.get, id)
+    })
+  } recoverWith ErrorResponse.recover(418)
 }

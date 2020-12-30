@@ -39,11 +39,11 @@ object MediaTable {
         .execute
         .map( id => this.copy (id = Some(id)))
 
-    def delete: Future[Unit] =
+    def delete: Future[Boolean] =
       medias.withId(this.id.get)
         .delete
         .execute
-        .map(_ => ())
+        .map(m => if (m != 1) throw updateError else true)
 
     def update: Future[Media] =
       medias.insertOrUpdate(this)

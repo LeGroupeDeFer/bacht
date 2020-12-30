@@ -130,6 +130,14 @@ Authorization: Bearer {{access_token}}
 > {%
     client.global.set("last_sharea_id", response.body.id);
 %}
+
+### ------------------------------------------------------------- GET SHAREA
+
+GET http://localhost:8000/api/sharea/{{last_sharea_id}}
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
 ### ------------------------------------------------------------- UPDATE SHAREA
 
 PUT http://localhost:8000/api/sharea/{{last_sharea_id}}
@@ -149,3 +157,81 @@ DELETE http://localhost:8000/api/sharea/{{last_sharea_id}}
 Accept: application/json
 Cache-Control: no-cache
 Authorization: Bearer {{access_token}}
+
+### ------------------------------------------------------------- GET MEDIA KINDS
+
+GET http://localhost:8000/api/media/kinds
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+### ------------------------------------------------------------- CREATE MEDIA
+
+POST http://localhost:8000/api/media
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+{ "name": "test", "kind": "text", "content":"qmsdfkjmlqskdjfmlksdjfmljk", "shareaId": {{last_sharea_id}} }
+
+> {%
+    client.global.set("last_media_id", response.body.id);
+%}
+
+### ------------------------------------------------------------- GET MEDIA
+
+GET http://localhost:8000/api/media/{{last_media_id}}
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+### ------------------------------------------------------------- UPDATE MEDIA
+
+PUT http://localhost:8000/api/media/{{last_media_id}}
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+{ "name": "ohmygod", "kind": "text", "content": "qsjdkfm it just changed name and description" }
+
+> {%
+    client.global.set("last_media_id", response.body.id);
+%}
+
+### ------------------------------------------------------------- DELETE MEDIA
+
+DELETE http://localhost:8000/api/media/{{last_media_id}}
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+### ------------------------------------------------------------- LIKE A SHAREA
+
+POST http://localhost:8000/api/sharea/{{last_sharea_id}}/sharealike
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+### ------------------------------------------------------------- LIKE A MEDIA
+
+POST http://localhost:8000/api/media/{{last_media_id}}/medialike
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+
+### ------------------------------------------------------------- LIKE A USER
+
+POST http://localhost:8000/api/user/2/userlike
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+### ------------------------------------------------------------- GET USER
+
+GET http://localhost:8000/api/user/2
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+

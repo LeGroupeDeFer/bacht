@@ -40,4 +40,15 @@ package object models {
   type Media    = MediaTable.Media
   val medias    = MediaTable.medias
 
+  type ShareaLikes   = likes.ShareaLikeTable.ShareaLikes
+  type ShareaLike    = likes.ShareaLikeTable.ShareaLike
+  val shareaLikes    = likes.ShareaLikeTable.shareaLikes
+
+  type MediaLikes   = likes.MediaLikeTable.MediaLikes
+  type MediaLike    = likes.MediaLikeTable.MediaLike
+  val mediaLikes    = likes.MediaLikeTable.mediaLikes
+
+  type UserLikes   = likes.UserLikeTable.UserLikes
+  type UserLike    = likes.UserLikeTable.UserLike
+  val userLikes    = likes.UserLikeTable.userLikes
 }
