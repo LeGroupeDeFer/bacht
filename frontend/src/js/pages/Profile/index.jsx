@@ -1,15 +1,17 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import Sidebar from 'sharea/component/layout/Sidebar';
-import {connectAuth} from 'sharea/store/auth';
 import TabNav from 'sharea/component/layout/TabNav';
 import ProfileInfo from 'sharea/pages/Profile/ProfileInfo'
 import ProfileName from 'sharea/pages/Profile/ProfileName';
 import {Route, Switch} from 'react-router-dom';
+import {connectUser} from 'sharea/store/user';
+import {STATUS} from 'sharea/lib';
+import Loader from 'sharea/component/Loader';
 
 const links = [
   {
-    uri: '/profile',
+    uri: '/profile/self',
     title: 'Info',
     Component: ProfileInfo
   },
@@ -30,54 +32,57 @@ const links = [
   }
 ];
 
+function Profile(
+  {
+    currentUser,
+    users,
+    status,
+    fetchSpecificUser,
+    fetchCurrentUser,
+    id
+  }) {
 
-const UserMedias = connectAuth(({token}) => {
+  useEffect(() => {
+    if (id === 'self') {
+      fetchCurrentUser()
 
-  // TODO - User medias List
-  const username = token.sub;
+    } else {
+      fetchSpecificUser({id})
+    }
+  }, [id]);
+
+  if (status === STATUS.LOADING || currentUser === null) {
+    return <Loader.Centered width="100" />
+  }
+
+  const handlerUpdateProfile = (data) => {
+    // todo : dispatch l'update du user
+
+  }
+
+  const u = id === 'self' ? currentUser : users[id];
 
   return (
-    <div className="medias">
-      Hello, {username}!
-      { /* Met les medias ici pour le moment Alex! */}
-    </div>
-  );
-
-});
-
-
-function Profile({user, token}) {
-  const u = user === undefined ? {
-    userName: 'Tazoeur',
-    firstName: 'Guillaume',
-    lastName: 'Latour',
-    biopic: 'Born and raised in the Austrian Empire, Tesla studied engineering and physics in the 1870s without receiving a degree, gaining practical experience in the early 1880s working in telephony and at Continental Edison in the new electric power industry. In 1884 he emigrated to the United States, where he became a naturalized citizen. He worked for a short time at the Edison Machine Works in New York City before he struck out on his own. With the help of partners to finance and market his ideas, Tesla set up laboratories and companies in New York to develop a range of electrical and mechanical devices. His alternating current (AC) induction motor and related polyphase AC patents, licensed by Westinghouse Electric in 1888, earned him a considerable amount of money and became the cornerstone of the polyphase system which that company eventually marketed.'
-  } : user;
-
-  return (
-    <div className="section profile">
-      <Sidebar />
-      <main className="content">
-        <div className="inner-content">
-          <div className="heading">
-            <ProfileName user={u} />
-            <TabNav links={links} default="/profile" />
-          </div>
-
-          <Switch>
-            {links.map(l => (
-              <Route exact key={l.uri} path={l.uri}>
-                <l.Component user={u} />
-              </Route>
-            ))}
-          </Switch>
-
+    <main className="content">
+      <div className="inner-content">
+        <div className="heading">
+          <ProfileName isSelf />
+          <TabNav links={links} default="/profile" />
         </div>
-      </main>
-    </div>
+
+        <Switch>
+          {links.map(l => (
+            <Route exact key={l.uri} path={l.uri}>
+              <l.Component user={u} onUpdateProfile={() => console.log('ntm')} />
+            </Route>
+          ))}
+        </Switch>
+
+      </div>
+    </main>
   );
 
 }
 
 
-export default connectAuth(Profile);
+export default connectUser(Profile);

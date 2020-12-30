@@ -16,7 +16,7 @@ const links = [
     icon: faHome,
   },
   {
-    uri: '/profile',
+    uri: '/profile/self',
     title: 'Profile',
     icon: faUser
   },

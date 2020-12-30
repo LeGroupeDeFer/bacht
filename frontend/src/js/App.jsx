@@ -12,7 +12,7 @@ import { useInitialization } from 'sharea/store/app';
 
 const Home = lazy(() => import('sharea/pages/Home'));
 const Auth = lazy(() => import('sharea/pages/Auth'));
-const Profile = lazy(() => import('sharea/pages/Profile/index'));
+const Profile = lazy(() => import('sharea/pages/Profile'));
 const Discover = lazy(() => import('sharea/pages/Discover'));
 const Sharea = lazy(() => import('sharea/pages/Sharea'));
 
@@ -41,8 +41,8 @@ function App(_) {
             <Route path="/auth">
               <Auth />
             </Route>
-            <Route path="/profile">
-              <Profile />
+            <Route path="/profile/self">
+              <Profile id="self" />
             </Route>
             <Route path="/discover">
               <Discover />

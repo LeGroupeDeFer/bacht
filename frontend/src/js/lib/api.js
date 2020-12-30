@@ -283,6 +283,10 @@ Object.assign(user, {
     return user('/self');
   },
 
+  async byId(id) {
+    return user(`/${id}`);
+  },
+
   async update(id, diff) {
     return user(`/${id}`, { method: 'PUT', body: diff });
   },

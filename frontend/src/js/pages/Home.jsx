@@ -1,18 +1,12 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
-import { NavLink } from 'react-router-dom'
-
-import { useAuth } from 'sharea/store/app';
-import { useSharea } from 'sharea/store/sharea';
-import { capitalize } from 'sharea/lib';
-import TabNav from 'sharea/component/layout/TabNav';
 import Sidebar from 'sharea/component/layout/Sidebar';
-import {connectAuth} from 'sharea/store/auth';
-import {capitalize} from 'sharea/lib';
+import {capitalize, STATUS} from 'sharea/lib';
+import Loader from 'sharea/component/Loader';
 import TabNav from "sharea/component/layout/TabNav";
 import ShareasList from "sharea/pages/Sharea";
 import UsersList from "sharea/pages/UsersListing";
-
+import {connectUser} from 'sharea/store/user';
 
 const links = [
     {
@@ -72,7 +66,7 @@ const users = [
 
 // Home :: None => Component
 
-function Home({token}) {
+function Home() {
 
     return (
         <div className="section dashboard">
@@ -80,7 +74,7 @@ function Home({token}) {
             <main className="content">
                 <div className="inner-content">
                     <div className="heading">
-                        <h1>Hi, {capitalize(token.sub)}</h1>
+                        <h1>Hi, {capitalize("Fdp")}</h1>
                         <TabNav links={links} default="/dashboard"/>
                     </div>
                     <ShareasList shareas={shareas}/>
@@ -93,4 +87,4 @@ function Home({token}) {
 }
 
 
-export default Home;
+export default connectUser(Home);

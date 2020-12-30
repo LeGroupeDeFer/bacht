@@ -4,23 +4,18 @@ import {FontAwesomeIcon as Icon} from '@fortawesome/react-fontawesome';
 import {faEdit} from '@fortawesome/free-solid-svg-icons'
 import {prevent} from 'sharea/lib';
 
-function ProfileInfo(props) {
+function ProfileInfo({user, onUpdateProfile, ...props}) {
   const [isEditing, setIsEditing] = useState(false);
 
   const [state, setState] = useState({
-    userName: props.user.userName,
-    firstName: props.user.firstName,
-    lastName: props.user.lastName,
-    biopic: props.user.biopic
+    username: user.username,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    biopic: user.biopic
   });
 
   const reset = () => {
-    setState(s => ({ ...s,
-      ['userName']: props.user.userName,
-      ['firstName']: props.user.firstName,
-      ['lastName']: props.user.lastName,
-      ['biopic']: props.user.biopic
-    }));
+    setState(s => ({ ...s, ...user}));
   }
 
   const onChange = name => e => setState(
@@ -28,25 +23,25 @@ function ProfileInfo(props) {
   );
 
   const onSubmit = _ => {
-    props.updateProfile(state);
-    setIsEditing(false);
+    setIsEditing(false); // todo : check if rerender do not erase this
+    onUpdateProfile(state);
   }
 
   return <Container> <Form
-    method="POST"
-    action="/api/auth/register"
+    method="PUT"
+    action={`/api/user/${user.id}`}
     onSubmit={prevent(onSubmit)}
   >
 
-    <Form.Group as={Row} controlId="userName">
+    <Form.Group as={Row} controlId="username">
       <Form.Label column sm={2}>Username</Form.Label>
       <Col sm={10}>
         <Form.Control
           type="text"
-          value={state['userName']}
+          value={state['username']}
           readOnly={!isEditing}
           plaintext={!isEditing}
-          onChange={onChange('userName')}
+          onChange={onChange('username')}
         />
       </Col>
     </Form.Group>
@@ -78,7 +73,7 @@ function ProfileInfo(props) {
     </Form.Group>
 
     <Form.Group as={Row} controlId="biopic">
-      <Form.Label column sm={2}>{`About ${state['userName']}`}</Form.Label>
+      <Form.Label column sm={2}>{`About ${state['username']}`}</Form.Label>
       <Col sm={10}>
         <Form.Control
           as="textarea"
@@ -97,7 +92,6 @@ function ProfileInfo(props) {
           ? <Button onClick={() => setIsEditing(true)}>Update <Icon icon={faEdit} /></Button>
           : <><Button onClick={() => {reset(); setIsEditing(false);}}>Cancel</Button><Button type="submit">Submit</Button></>
         }
-
       </Col>
     </Form.Row>
   </Form></Container>

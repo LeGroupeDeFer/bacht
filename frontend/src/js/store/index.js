@@ -3,13 +3,15 @@ import appReducer from './app';
 import layoutReducer from './layout';
 import shareaReducer from './sharea';
 import mediaReducer from './media';
+import userReducer from './user';
 
 const store = configureStore({
   reducer: {
     app: appReducer,
     layout: layoutReducer,
     sharea: shareaReducer,
-    media: mediaReducer
+    media: mediaReducer,
+    user: userReducer
   },
 });
 
