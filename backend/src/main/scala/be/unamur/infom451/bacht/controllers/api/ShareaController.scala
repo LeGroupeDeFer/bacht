@@ -3,9 +3,10 @@ package be.unamur.infom451.bacht.controllers.api
 import scala.concurrent.Future
 import wvlet.airframe.http.{Endpoint, HttpMethod, Router}
 import be.unamur.infom451.bacht.lib._
+import be.unamur.infom451.bacht.models
 import be.unamur.infom451.bacht.models.ShareaTable.Sharea
 import be.unamur.infom451.bacht.models.likes.LikeResponse
-import be.unamur.infom451.bacht.models.likes.ShareaLikeTable.ShareaLike
+import be.unamur.infom451.bacht.models.likes.ShareaLikeTable.{ShareaLike, shareaLikes}
 import be.unamur.infom451.bacht.models.{Media, Sharea}
 
 
@@ -25,7 +26,9 @@ object ShareaController extends Guide {
         sharea.name,
         sharea.description,
         sharea.creatorId,
-        Seq()
+        Seq(),
+        None,
+        None
       )
     def from(sharea: Sharea, medias: Seq[Media]): DetailedShareaInfo =
       DetailedShareaInfo(
@@ -33,7 +36,19 @@ object ShareaController extends Guide {
         sharea.name,
         sharea.description,
         sharea.creatorId,
-        medias.map(_.id.get)
+        medias.map(_.id.get),
+        None,
+        None
+      )
+    def from(sharea: Sharea, medias: Seq[Media], likeInformation: LikeResponse): DetailedShareaInfo =
+      DetailedShareaInfo(
+        sharea.id.get,
+        sharea.name,
+        sharea.description,
+        sharea.creatorId,
+        medias.map(_.id.get),
+        Some(likeInformation.like),
+        Some(likeInformation.likes)
       )
   }
   case class DetailedShareaInfo(
@@ -41,7 +56,9 @@ object ShareaController extends Guide {
     name: String,
     description: String,
     creator: Int,
-    medias: Seq[Int]
+    medias: Seq[Int],
+    like: Option[Boolean],
+    likes: Option[Int]
   )
   type DetailedShareaResponse = DetailedShareaInfo
 
@@ -49,6 +66,7 @@ object ShareaController extends Guide {
     name: String,
     description: String
   )
+
   object DetailedMediaInfo {
     def from(media: Media) : DetailedMediaInfo =
       DetailedMediaInfo(
@@ -57,7 +75,9 @@ object ShareaController extends Guide {
         media.kind,
         media.content.map(_.toChar).mkString,
         media.creatorId,
-        media.shareaId
+        media.shareaId,
+        None,
+        None
       )
   }
   case class DetailedMediaInfo(
@@ -66,7 +86,9 @@ object ShareaController extends Guide {
     kind : String,
     content : String,
     author : Int,
-    shareaId : Int
+    shareaId : Int,
+    like: Option[Boolean],
+    likes: Option[Int]
                               )
   type DetailedShareaMedias = Seq[DetailedMediaInfo]
   type DetailedMediaResponse = DetailedMediaInfo
@@ -84,11 +106,14 @@ trait ShareaController {
     .recoverWith(ErrorResponse.recover(500))
 
   @Endpoint(method = HttpMethod.GET, path = "/:id")
-  def one(id: Int): Future[DetailedShareaResponse] = Sharea
+  def one(id: Int): Future[DetailedShareaResponse] =
+    withUser(u=>u).flatMap{user=>  Sharea
     .byIdWithMedias(id)
-    .map {
-      case (sharea, medias) => DetailedShareaInfo.from(sharea, medias)
-    } recoverWith ErrorResponse.recover(404)
+    .flatMap {
+      case (sharea, medias) => {
+        ShareaLike.likeInformation(user.id.get, id).map(likeInformation => DetailedShareaInfo.from(sharea, medias, likeInformation))
+      }
+    }} recoverWith ErrorResponse.recover(404)
 
   @Endpoint(method = HttpMethod.POST, path = "/:id/like")
   def like(id: Int): Future[LikeResponse] = {

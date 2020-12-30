@@ -43,9 +43,16 @@ object ShareaLikeTable {
           case Some(l) => l.delete
           case None => ShareaLike(None, userId, shareaId).insert
         }
-        .flatMap(_ => ShareaLike.byShareaId(shareaId).map(list => {
-          LikeResponse(list.map(_.userId).contains(userId), list.length)
-        }))
+        .flatMap(_ => ShareaLike.likeInformation(userId, shareaId))
+
+    def likeInformation(userId: Int, shareaId: Int)
+      (implicit ec: ExecutionContext, db: Database)
+    : Future[LikeResponse] = ShareaLike
+      .byShareaId(shareaId)
+      .map(list => {
+        LikeResponse(list.map(_.userId).contains(userId), list.length)
+      })
+
   }
 
   case class ShareaLike(
