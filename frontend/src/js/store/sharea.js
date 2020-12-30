@@ -1,23 +1,24 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { useDispatch, useSelector, connect } from 'react-redux';
-import { api, status } from '../lib';
+import { api, STATUS } from '../lib';
 
 
 const initialState = {
-  status: status.IDLE,
-  error: null,
-  sharea: {},
-  self: []
+  status: STATUS.IDLE,
+  error : null,
+  map   : {},
+  all   : [],
+  self  : []
 };
 
-export const fetchShareas = createAsyncThunk(
+export const fetchAll = createAsyncThunk(
   'sharea/all',
   () => {
     return api.sharea();
   }
 );
 
-export const fetchSelfShareas = createAsyncThunk(
+export const fetchSelf = createAsyncThunk(
   'sharea/self',
   () => {
     return api.sharea.self();
@@ -30,29 +31,33 @@ export const slice = createSlice({
   reducers: {},
   extraReducers: {
     // ALL
-    [fetchShareas.pending]: (state, _) => {
-      state.status = status.LOADING;
+    [fetchAll.pending]: (state, _) => {
+      state.status = STATUS.LOADING;
+      state.error = null;
     },
-    [fetchShareas.fulfilled]: (state, action) => {
-      state.status = status.SUCCEEDED;
-      state.sharea = action.payload;
+    [fetchAll.fulfilled]: (state, action) => {
+      state.status = STATUS.IDLE;
+      state.map = action.payload;
+      state.all = Object.values(action.payload);
+      state.error = null;
     },
-    [fetchShareas.rejected]: (state, action) => {
-      state.status = status.FAILED;
+    [fetchAll.rejected]: (state, action) => {
+      state.status = STATUS.FAILED;
       state.error = action.error;
-      state.sharea = {};
+      state.map = {};
+      state.all = [];
       state.self = [];
     },
     // SELF
-    [fetchSelfShareas.pending]: (state, _) => {
-      state.status = status.LOADING;
+    [fetchSelf.pending]: (state, _) => {
+      state.status = STATUS.LOADING;
     },
-    [fetchSelfShareas.fulfilled]: (state, action) => {
-      state.status = status.SUCCEEDED;
+    [fetchSelf.fulfilled]: (state, action) => {
+      state.status = STATUS.IDLE;
       state.self = Object.keys(action.payload);
     },
-    [fetchSelfShareas.rejected]: (state, action) => {
-      state.status = status.FAILED;
+    [fetchSelf.rejected]: (state, action) => {
+      state.status = STATUS.FAILED;
       state.error = action.error;
       state.self = [];
     },
@@ -65,15 +70,19 @@ export const useSharea = () => {
   const state = useSelector(state => state.sharea);
   return {
     ...state,
-    fetchShareas : () => dispatch(fetchShareas()),
-    fetchSelfShareas : () => dispatch(fetchSelfShareas()),
+    fetchAll : () => dispatch(fetchAll()),
+    fetchSelf : () => dispatch(fetchSelf()),
+    byId: (id) => state.sharea[id]
   };
 };
+
+export const selectSharea = id =>
+  useSelector(state => state.sharea.sharea[id]);
 
 
 export const connectSharea = connect(
   state => state.sharea,
-  { fetchShareas, fetchSelfShareas }
+  { fetchAll, fetchSelf }
 );
 
 

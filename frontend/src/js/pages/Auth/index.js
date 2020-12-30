@@ -1,25 +1,19 @@
-import React, { useEffect } from 'react';
-import { Link, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom';
+import React from 'react';
+import { Link, Route, Switch, useRouteMatch } from 'react-router-dom';
 
-import { connectAuth } from 'sharea/store/auth';
+import { useAuth } from 'sharea/store/app';
 import Loader from 'sharea/component/Loader';
 import Heading from 'sharea/component/Heading';
-
 import Login from 'sharea/pages/Auth/Login';
 import Logout from 'sharea/pages/Auth/Logout';
 import Register from 'sharea/pages/Auth/Register';
 
 
 // Auth :: None => Component
-function Auth({ inSession, refresh, status }) {
+function Auth(_) {
 
-  const { pathname } = useLocation();
   const { url } = useRouteMatch();
-
-  useEffect(() =>
-    inSession && !pathname.endsWith('logout') && refresh(),
-    []
-  );
+  const { status } = useAuth();
 
   if (status === 'loading')
     return <Loader.Centered width="100" />;
@@ -55,4 +49,4 @@ function Auth({ inSession, refresh, status }) {
 }
 
 
-export default connectAuth(Auth);
+export default Auth;

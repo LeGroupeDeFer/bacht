@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { useDispatch, useSelector, connect } from 'react-redux';
-import { api, status } from '../lib';
+import { api, STATUS } from '../lib';
 
 
 const initialState = {
@@ -23,14 +23,14 @@ export const slice = createSlice({
   extraReducers: {
     // ALL
     [fetchMedias.pending]: (state, _) => {
-      state.status = status.LOADING;
+      state.status = STATUS.LOADING;
     },
     [fetchMedias.fulfilled]: (state, action) => {
-      state.status = status.SUCCEEDED;
+      state.status = status.IDLE;
       state.media = action.payload;
     },
     [fetchMedias.rejected]: (state, action) => {
-      state.status = status.FAILED;
+      state.status = STATUS.FAILED;
       state.error = action.error;
       state.media = {};
     },

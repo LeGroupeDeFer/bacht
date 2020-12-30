@@ -1,14 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {useHistory} from 'react-router-dom';
-import {Button, Col, Form} from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { Button, Col, Form } from 'react-bootstrap';
 
-import {connectAuth} from 'sharea/store/auth';
-import {prevent} from 'sharea/lib';
+import { useAuth } from 'sharea/store/app';
+import { prevent } from 'sharea/lib';
 import Error from 'sharea/component/Error';
 
 
-function Register({error, inSession, register, request, status}) {
+function Register(_) {
 
+  const { authenticated, failure, register } = useAuth();
   const history = useHistory();
   const [state, setState] = useState({
     username: '',
@@ -19,16 +20,16 @@ function Register({error, inSession, register, request, status}) {
   });
   const [valid, setValid] = useState(false);
 
-  useEffect(() => inSession && history.push('/'), []);
+  useEffect(() => authenticated && history.replace('/dashboard'), []);
   useEffect(
-    () => request === 'register' && status === 'succeeded'
+    () => status === 'registered'
       ? history.push('/auth/login')
       : undefined,
     [status]
   );
   useEffect(() => setValid(
-    state.username.length > 1 && state.password.length > 2
-    && state.firstName.length > 1 && state.lastName.length > 1
+    state.username.length >= 3 && state.password.length >= 3
+    && state.firstName.length >= 3 && state.lastName.length >= 3
   ), [state]);
 
   const onChange = name => e => setState(
@@ -107,7 +108,7 @@ function Register({error, inSession, register, request, status}) {
         </Form.Row>
 
         <Form.Row>
-          <Col><Error error={error} variant="light" /></Col>
+          <Col><Error error={failure} variant="light" /></Col>
         </Form.Row>
 
         <hr />
@@ -119,4 +120,4 @@ function Register({error, inSession, register, request, status}) {
 }
 
 
-export default connectAuth(Register);
+export default Register;

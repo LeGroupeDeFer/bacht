@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Form, Button } from 'react-bootstrap';
 
-import { connectAuth } from 'sharea/store/auth';
+import { useAuth } from 'sharea/store/app';
 import { prevent } from 'sharea/lib';
 import Error from 'sharea/component/Error';
 
 
 
+function Login({}) {
 
-function Login({ error, inSession, login }) {
-
+  const { authenticated, failure, login } = useAuth();
   const history = useHistory();
   const [state, setState] = useState({
     username: '',
@@ -18,15 +18,15 @@ function Login({ error, inSession, login }) {
   });
   const [valid, setValid] = useState(false);
 
-  useEffect(() => inSession && history.push('/dashboard'), []);
+  useEffect(() => authenticated && history.push('/dashboard'), []);
   useEffect(() => setValid(
-    state.username.length > 3 && state.password.length > 4
+    state.username.length >= 3 && state.password.length >= 3
   ), [state]);
 
   const onChange = name => e => setState(
     s => ({ ...s, [name]: e.target.value })
   );
-  const onSubmit = _ => login(state);
+  const onSubmit = _ => login(state.username, state.password);
 
   return (
     <div className="login-form">
@@ -57,7 +57,7 @@ function Login({ error, inSession, login }) {
         </Form.Group>
 
         <Button type="submit" disabled={!valid}>Login</Button>
-        <Error error={error} variant="light" />
+        <Error error={failure} variant="light" />
 
         <hr />
 
@@ -69,4 +69,4 @@ function Login({ error, inSession, login }) {
 }
 
 
-export default connectAuth(Login);
+export default Login;

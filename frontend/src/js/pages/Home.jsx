@@ -1,9 +1,11 @@
 import React from 'react';
 
-import Sidebar from 'sharea/component/layout/Sidebar';
-import { connectAuth } from 'sharea/store/auth';
+import { NavLink } from 'react-router-dom'
+
+import { useAuth } from 'sharea/store/app';
+import { useSharea } from 'sharea/store/sharea';
 import { capitalize } from 'sharea/lib';
-import TabNav from "sharea/component/layout/TabNav";
+import TabNav from 'sharea/component/layout/TabNav';
 
 
 const links = [
@@ -22,23 +24,28 @@ const links = [
 ];
 
 // Home :: None => Component
-function Home({ token }) {
+function Home(_) {
+
+  const { token } = useAuth();
+  const { all:shareas } = useSharea();
 
   return (
-    <div className="section dashboard">
-      <Sidebar />
-      <main className="content">
-        <div className="inner-content">
-          <div className="heading">
-            <h1>Hi, {capitalize(token.sub)}</h1>
-            <TabNav links={links} default="/dashboard" />
-          </div>
+    <main className="content">
+      <div className="inner-content">
+        <div className="heading">
+          <h1>Hi, {capitalize(token.sub)}</h1>
+          <TabNav links={links} default="/dashboard" />
         </div>
-      </main>
-    </div>
+      </div>
+      <div className="tmp">
+        {shareas.map(({ id, name }) => (
+          <NavLink key={id} to={`/sharea/${id}`}>{name}</NavLink>
+        ))}
+      </div>
+    </main>
   );
 
 }
 
 
-export default connectAuth(Home);
+export default Home;
