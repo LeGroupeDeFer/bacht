@@ -156,6 +156,13 @@ export const subscribed = (promise, onResolve, onReject) => {
   return () => isSubscribed = false;
 }
 
+export const status = {
+  IDLE:       'idle',
+  LOADING:    'loading',
+  SUCCEEDED:  'succeeded',
+  FAILED:     'failed'
+};
+
 /* ----------------------------- String utils ------------------------------ */
 
 export const capitalize = s => typeof s === 'string'

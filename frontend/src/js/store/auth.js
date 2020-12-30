@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { useDispatch, useSelector, connect } from 'react-redux';
-import { now, api } from '../lib';
+import { now, api, status } from '../lib';
 
 
 class AuthError extends Error {}
@@ -8,7 +8,7 @@ class AuthError extends Error {}
 const initialState = {
   token     : null,
   request   : null,
-  status    : 'idle',
+  status    : status.IDLE,
   error     : null,
   inSession : api.auth.inSession()
 };
@@ -56,12 +56,12 @@ export const slice = createSlice({
   extraReducers: {
     // LOGIN
     [login.pending]: (state, _) => {
-      state.status = 'loading';
+      state.status = status.LOADING;
       state.request = 'login';
       state.error = null;
     },
     [login.fulfilled]: (state, action) => {
-      state.status = 'succeeded';
+      state.status = status.SUCCEEDED;
       state.token = action.payload;
       state.error = null;
 
@@ -69,18 +69,18 @@ export const slice = createSlice({
       state.inSession = true;
     },
     [login.rejected]: (state, action) => {
-      state.status = 'failed';
+      state.status = status.FAILED;
       state.token = null;
       state.error = action.error;
     },
     // LOGOUT
     [logout.pending]: (state, _) => {
-      state.status = 'loading'
+      state.status = status.LOADING;
       state.request = 'logout';
       state.error = null;
     },
     [logout.fulfilled]: (state, _) => {
-      state.status = 'succeeded';
+      state.status = status.SUCCEEDED;
       state.token = null;
       state.error = null;
       state.inSession = false;
@@ -89,16 +89,16 @@ export const slice = createSlice({
       state.timer = null;
     },
     [logout.rejected]: (state, action) => {
-      state.status = 'failed';
+      state.status = status.FAILED;
       state.error = action.error;
     },
     // REFRESH
     [refresh.pending]: (state, _) => {
-      state.status = 'loading';
+      state.status = status.LOADING;
       state.request = 'refresh';
     },
     [refresh.fulfilled]: (state, action) => {
-      state.status = 'succeeded';
+      state.status = status.SUCCEEDED;
       state.token = action.payload;
       state.inSession = true;
 
@@ -106,22 +106,22 @@ export const slice = createSlice({
       state.timer = setTimeout(refresh, state.token.exp - now());
     },
     [refresh.rejected]: (state, action) => {
-      state.status = 'failed';
+      state.status = status.FAILED;
       state.token = null;
       state.error = action.error;
       state.inSession = false;
     },
     // REGISTER
     [register.pending]: (state, _) => {
-      state.status = 'loading';
+      state.status = status.LOADING;
       state.request = 'register';
       state.error = null;
     },
     [register.fulfilled]: (state, _) => {
-      state.status = 'succeeded';
+      state.status = status.SUCCEEDED;
     },
     [register.rejected]: (state, action) => {
-      state.status = 'failed';
+      state.status = status.FAILED;
       state.error = action.error;
     }
   },
