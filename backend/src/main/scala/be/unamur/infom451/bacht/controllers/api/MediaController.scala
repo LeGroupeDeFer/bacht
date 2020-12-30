@@ -3,6 +3,8 @@ package be.unamur.infom451.bacht.controllers.api
 import wvlet.airframe.http.{Endpoint, HttpMethod, Router}
 import be.unamur.infom451.bacht.lib._
 import be.unamur.infom451.bacht.models.MediaTable.Media
+import be.unamur.infom451.bacht.models.likes.LikeResponse
+import be.unamur.infom451.bacht.models.likes.MediaLikeTable.MediaLike
 
 import scala.concurrent.Future
 
@@ -16,8 +18,8 @@ object MediaController extends Guide {
 
   case class MediaCreationRequest(
     name: String,
-    content: String,
-    kind: String,
+    content : String,
+    kind    : String,
     shareaId: Int
   )
 
@@ -29,23 +31,39 @@ object MediaController extends Guide {
         media.kind,
         media.content.toString,
         media.creatorId,
-        media.shareaId
+        media.shareaId,
+        None,
+        None
+      )
+
+    def from(media: Media, likeInfo: LikeResponse): DetailedMediaInfo =
+      DetailedMediaInfo(
+        media.id.get,
+        media.name,
+        media.kind,
+        media.content.toString,
+        media.creatorId,
+        media.shareaId,
+        Some(likeInfo.like),
+        Some(likeInfo.likes)
       )
   }
 
   case class DetailedMediaInfo(
-    id: Int,
-    name: String,
-    kind: String,
-    content: String,
-    author: Int,
-    shareaId: Int
+    id      : Int,
+    name    : String,
+    kind    : String,
+    content : String,
+    author  : Int,
+    shareaId: Int,
+    like    : Option[Boolean],
+    likes   : Option[Int]
   )
 
   type DetailedMediaResponse = DetailedMediaInfo
 
   case class MediaUpdateRequest(
-    name: String,
+    name   : String,
     content: String,
   )
 
@@ -74,10 +92,17 @@ trait MediaController {
       .recoverWith(ErrorResponse.recover(409))
 
   @Endpoint(method = HttpMethod.GET, path = "/:id")
-  def getMedia(id: Int): Future[DetailedMediaResponse] =
-    Media.byId(id)
-      .map(optionMedia => optionMedia.map(DetailedMediaInfo.from).get)
+  def getMedia(id: Int): Future[DetailedMediaResponse] = {
+    withUser(u => u)
+      .flatMap(user => Media
+        .byId(id)
+        .flatMap(optionMedia => MediaLike
+          .likeInformation(user.id.get, id)
+          .map(likeInformation => DetailedMediaInfo.from(optionMedia.get, likeInformation)))
+      )
+
       .recoverWith(ErrorResponse.recover(404))
+  }
 
   @Endpoint(method = HttpMethod.DELETE, path = "/:id")
   def deleteMedia(id: Int): Future[Boolean] =
@@ -93,4 +118,11 @@ trait MediaController {
       )
       .flatMap(mediaCopy => mediaCopy.update)
       .recoverWith(ErrorResponse.recover(404))
+
+  @Endpoint(method = HttpMethod.POST, path = "/:id/medialike")
+  def likeMedia(id: Int): Future[LikeResponse] = {
+    withUser(u => u).flatMap(user => {
+      MediaLike.toggle(user.id.get, id)
+    })
+  } recoverWith ErrorResponse.recover(418)
 }

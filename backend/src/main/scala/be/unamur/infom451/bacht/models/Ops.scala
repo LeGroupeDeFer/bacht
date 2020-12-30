@@ -146,8 +146,40 @@ object Ops {
     def withShareaId(shareaId: Int): Query[ShareaLikes, ShareaLike, C] =
       q.filter(_.shareaId === shareaId)
 
-    def insert(media: ShareaLike): DBIOAction[Int, NoStream, Effect.Write] =
-      shareaLikes returning shareaLikes.map(_.id) += media
+    def insert(sharea: ShareaLike): DBIOAction[Int, NoStream, Effect.Write] =
+      shareaLikes returning shareaLikes.map(_.id) += sharea
+
+  }
+
+  implicit class MediaLikeQueryOps[C[_]](q: Query[MediaLikes, MediaLike, C]) {
+
+    def withId(id: Int): Query[MediaLikes, MediaLike, C] =
+      q.filter(_.id === id)
+
+    def withUserId(userId: Int): Query[MediaLikes, MediaLike, C] =
+      q.filter(_.userId === userId)
+
+    def withMediaId(mediaId: Int): Query[MediaLikes, MediaLike, C] =
+      q.filter(_.mediaId === mediaId)
+
+    def insert(media: MediaLike): DBIOAction[Int, NoStream, Effect.Write] =
+      mediaLikes returning mediaLikes.map(_.id) += media
+
+  }
+
+  implicit class UserLikeQueryOps[C[_]](q: Query[UserLikes, UserLike, C]) {
+
+    def withId(id: Int): Query[UserLikes, UserLike, C] =
+      q.filter(_.id === id)
+
+    def withLikerId(likerId: Int): Query[UserLikes, UserLike, C] =
+      q.filter(_.likerId === likerId)
+
+    def withLikedId(likedId: Int): Query[UserLikes, UserLike, C] =
+      q.filter(_.likedId === likedId)
+
+    def insert(user: UserLike): DBIOAction[Int, NoStream, Effect.Write] =
+      userLikes returning userLikes.map(_.id) += user
 
   }
 

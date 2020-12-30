@@ -207,8 +207,31 @@ Authorization: Bearer {{access_token}}
 
 ### ------------------------------------------------------------- LIKE A SHAREA
 
-POST http://localhost:8000/api/sharea/{{last_sharea_id}}/like
+POST http://localhost:8000/api/sharea/{{last_sharea_id}}/sharealike
 Accept: application/json
 Cache-Control: no-cache
 Authorization: Bearer {{access_token}}
+
+### ------------------------------------------------------------- LIKE A MEDIA
+
+POST http://localhost:8000/api/media/{{last_media_id}}/medialike
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+
+### ------------------------------------------------------------- LIKE A USER
+
+POST http://localhost:8000/api/user/2/userlike
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+### ------------------------------------------------------------- GET USER
+
+GET http://localhost:8000/api/user/2
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
 
