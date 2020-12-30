@@ -119,6 +119,9 @@ object Ops {
     def insert(sharea: Sharea): DBIOAction[Int, NoStream, Effect.Write] =
       shareas returning shareas.map(_.id) += sharea
 
+    def withLikes =
+      q joinLeft shareaLikes on (_.id === _.shareaId)
+
   }
 
   implicit class MediaQueryOps[C[_]](q: Query[Medias, Media, C]) {
@@ -128,6 +131,23 @@ object Ops {
 
     def insert(media: Media): DBIOAction[Int, NoStream, Effect.Write] =
       medias returning medias.map(_.id) += media
+
+  }
+
+
+  implicit class ShareaLikeQueryOps[C[_]](q: Query[ShareaLikes, ShareaLike, C]) {
+
+    def withId(id: Int): Query[ShareaLikes, ShareaLike, C] =
+      q.filter(_.id === id)
+
+    def withUserId(userId: Int): Query[ShareaLikes, ShareaLike, C] =
+      q.filter(_.userId === userId)
+
+    def withShareaId(shareaId: Int): Query[ShareaLikes, ShareaLike, C] =
+      q.filter(_.shareaId === shareaId)
+
+    def insert(media: ShareaLike): DBIOAction[Int, NoStream, Effect.Write] =
+      shareaLikes returning shareaLikes.map(_.id) += media
 
   }
 

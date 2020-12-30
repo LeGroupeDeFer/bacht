@@ -204,3 +204,11 @@ DELETE http://localhost:8000/api/media/{{last_media_id}}
 Accept: application/json
 Cache-Control: no-cache
 Authorization: Bearer {{access_token}}
+
+### ------------------------------------------------------------- LIKE A SHAREA
+
+POST http://localhost:8000/api/sharea/{{last_sharea_id}}/like
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
