@@ -5,7 +5,7 @@ info:
 servers:
   - url: 'https://sharea.be'
 paths:
-  '/api/media/{id}/like':
+  '/api/media/{id}/medialike':
     post:
       summary: Toggle liking of media
       tags:
@@ -25,7 +25,7 @@ paths:
           $ref: '#/components/responses/401Error'
         '404':
           $ref: '#/components/responses/404IdError'
-  '/api/sharea/{id}/like':
+  '/api/sharea/{id}/sharealike':
     post:
       tags: ['like', 'sharea']
       summary: Toggle the liking of sharea
@@ -42,7 +42,7 @@ paths:
           $ref: '#/components/responses/401Error'
         '404':
           $ref: '#/components/responses/404IdError'
-  '/api/user/{id}/like':
+  '/api/user/{id}/userlike':
     post:
       tags: ['like', 'user']
       summary: Toggle the liking of user
