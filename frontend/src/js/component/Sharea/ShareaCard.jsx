@@ -12,10 +12,10 @@ function ShareaCard({ id, name, description, creatorId }) {
           <Link to={`/sharea/${id}`}>
             {name}
           </Link>
-          </Card.Title>
+        </Card.Title>
         <Card.Text>
-          <div>{description}</div>
-          <div>{id}</div>
+          <p>{description}</p>
+          <p>{id}</p>
         </Card.Text>
       </Card.Body>
       <Card.Footer>
