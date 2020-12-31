@@ -14,7 +14,7 @@ function AuthorEdit({currentUser, author, isEditing, cancelCallback, submitCallb
             isEditing
               ? (<>
                 <Button onClick={cancelCallback}>Cancel</Button>
-                <Button type="submit" onClick={submitCallback}>Submit</Button>
+                <Button type="submit">Submit</Button>
               </>)
               : (<Button onClick={editCallback}><Icon icon={faEdit} /></Button>)
           )

@@ -5,7 +5,8 @@ import Sharea from 'sharea/component/Sharea';
 import {connectUser} from 'sharea/store/user';
 import {capitalize} from 'sharea/lib';
 import Switch from 'react-bootstrap/Switch';
-import {Route} from 'react-router-dom';
+import {Link, Route} from 'react-router-dom';
+import {Button} from 'react-bootstrap';
 
 
 const links = [
@@ -56,6 +57,7 @@ function Home({currentUser, status}) {
         <Switch>
           <Route exact path="/dashboard">
             <Sharea.List shareas={shareas} />
+            <Link to="/sharea/new"><Button>Create new Sharea</Button></Link>
           </Route>
           <Route exact path="/dashboard/liked">
             <Sharea.List shareas={shareas} />

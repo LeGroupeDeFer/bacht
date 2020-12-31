@@ -9,6 +9,7 @@ import Loader from 'sharea/component/Loader';
 import Sidebar from 'sharea/component/layout/Sidebar';
 import { useInitialization } from 'sharea/store/app';
 import { useUser } from 'sharea/store/user';
+import NewSharea from 'sharea/component/Sharea/NewSharea';
 
 
 const Home = lazy(() => import('sharea/pages/Home'));
@@ -48,6 +49,9 @@ function App(_) {
             </Route>
             <Route path="/discover">
               <Discover />
+            </Route>
+            <Route exact path="/sharea/new">
+              <NewSharea />
             </Route>
             <Route path="/sharea/:id">
               <Sharea />
