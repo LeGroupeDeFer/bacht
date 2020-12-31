@@ -6,15 +6,16 @@ import {
 } from 'react-router-dom';
 
 import Loader from 'sharea/component/Loader';
-import Sidebar from "sharea/component/layout/Sidebar";
+import Sidebar from 'sharea/component/layout/Sidebar';
 import { useInitialization } from 'sharea/store/app';
+import { useUser } from 'sharea/store/user';
 
 
 const Home = lazy(() => import('sharea/pages/Home'));
 const Auth = lazy(() => import('sharea/pages/Auth'));
 const Profile = lazy(() => import('sharea/pages/Profile'));
 const Discover = lazy(() => import('sharea/pages/Discover'));
-const Sharea = lazy(() => import('sharea/component/Sharea/Sharea'));
+const Sharea = lazy(() => import('sharea/component/Sharea'));
 
 
 // App :: None => Component
@@ -22,6 +23,7 @@ function App(_) {
 
   const history = useHistory();
   const [status, authenticated] = useInitialization();
+  const { currentUser } = useUser();
 
   useEffect(() => {
     if (status === 'idle' && !authenticated)
@@ -42,7 +44,7 @@ function App(_) {
               <Auth />
             </Route>
             <Route path="/profile/self">
-              <Profile id="self" />
+              <Profile user={currentUser} />
             </Route>
             <Route path="/discover">
               <Discover />

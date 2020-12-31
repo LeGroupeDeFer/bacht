@@ -3,11 +3,9 @@ import React, { useEffect } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import TabNav from 'sharea/component/layout/TabNav';
-import Loader from 'sharea/component/Loader';
 import ProfileInfo from 'sharea/pages/Profile/ProfileInfo'
 import ProfileName from 'sharea/pages/Profile/ProfileName';
-import { connectUser } from 'sharea/store/user';
-import { STATUS } from 'sharea/lib';
+import { useUser } from 'sharea/store/user';
 
 
 const links = [
@@ -34,47 +32,36 @@ const links = [
 ];
 
 
-function Profile({
-  currentUser,
-  users,
-  status,
-  fetchSpecificUser,
-  fetchCurrentUser,
-  id
-}) {
+function Profile({ user }) {
 
-  useEffect(() => {
-    if (id === 'self') {
-      fetchCurrentUser()
+  const { currentUser } = useUser();
 
-    } else {
-      fetchSpecificUser({id})
-    }
-  }, [id]);
+  const isSelf = currentUser.id === user.id;
 
-  if (status === STATUS.LOADING || currentUser === null) {
-    return <Loader.Centered width="100" />
+  const onUpdate = (data) => {
+    console.log(data);
   }
-
-  const handlerUpdateProfile = (data) => {
-    // todo : dispatch l'update du user
-
-  }
-
-  const u = id === 'self' ? currentUser : users[id];
 
   return (
     <main className="content">
       <div className="inner-content">
         <div className="heading">
-          <ProfileName isSelf />
+          <ProfileName isSelf={isSelf} {...user} />
           <TabNav links={links} default="/profile" />
         </div>
 
         <Switch>
-          {links.map(l => (
-            <Route exact key={l.uri} path={l.uri}>
-              <l.Component user={u} onUpdateProfile={() => console.log('ntm')} />
+          {links.map(({ uri, Component }) => (
+            <Route
+              exact
+              key={uri}
+              path={uri}
+            >
+              <Component
+                {...user}
+                editable={isSelf}
+                onUpdateProfile={onUpdate}
+              />
             </Route>
           ))}
         </Switch>
@@ -85,5 +72,8 @@ function Profile({
 
 }
 
+Profile.Info = ProfileInfo;
+Profile.Name = ProfileName;
 
-export default connectUser(Profile);
+
+export default Profile;

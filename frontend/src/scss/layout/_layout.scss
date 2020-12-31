@@ -145,9 +145,22 @@ main {
 
 /* -------------------------------- profile -------------------------------- */
 
+.profile-card {
+
+  margin: 2em;
+
+}
+
 .profile {
 
-  // TODO - /profile scss
+  padding: 2em;
+
+  label {
+
+    color: theme-color("secondary");
+    font-weight: bold;
+
+  }
 
 }
 

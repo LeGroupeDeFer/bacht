@@ -1,22 +1,34 @@
 import React from 'react';
+
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome'
+import { faUserCog, faUser } from '@fortawesome/free-solid-svg-icons'
+
 import LikeCounter from 'sharea/component/LikeCounter';
 
-function ProfileName({username, isSelf, id, like, likes}) {
 
-  let profileName = <>'My profile'</>
-  if (!isSelf) {
-    profileName =
-      <>
-        <div>{`${username}'s profile`}</div>
-        <LikeCounter
-          like={like}
-          likes={likes}
-          url={`/user/${id}/like`}
-        />
-      </>
-  }
+function ProfileName({ isSelf, id, username, like, likes }) {
 
-  return <h1>{profileName}</h1>
+  if (isSelf)
+    return (
+      <h1>
+        <Icon icon={faUserCog} className="mr-3" />
+        Your profile
+      </h1>
+    );
+
+  return (
+    <h1>
+      <Icon icon={faUser} className="mr-3" />
+      {username}'s profile
+      <LikeCounter
+        like={like}
+        likes={likes}
+        url={`/user/${id}/like`}
+      />
+    </h1>
+  );
+
 }
+
 
 export default ProfileName;
