@@ -341,7 +341,7 @@ async function media(endpoint = '', config = {}) {
   return api(`/media${endpoint}`, config);
 }
 
-Object.assign(sharea, {
+Object.assign(media, {
 
   async all() {
     return media().then(normalizeEntities);

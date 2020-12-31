@@ -7,6 +7,7 @@ import {capitalize} from 'sharea/lib';
 import Switch from 'react-bootstrap/Switch';
 import {Link, Route} from 'react-router-dom';
 import {Button} from 'react-bootstrap';
+import {useSharea} from "sharea/store/sharea";
 
 
 const links = [
@@ -20,29 +21,11 @@ const links = [
   },
 ];
 
-const shareas = [
-  {
-    name: 'Cat Species',
-    description: 'Presentation of the different cat species that are visible in Belgium',
-    creatorId: 1001,
-    id: 9001,
-  },
-  {
-    name: 'INFOM451',
-    description: 'Sharea used by Prof. Jacquet to show useful resources and exchange information with students',
-    creatorId: 1002,
-    id: 9002,
-  },
-  {
-    name: 'Brainstorming',
-    description: 'Sharea for an enterprise that makes a brainstorming before developing a new software',
-    creatorId: 1003,
-    id: 9003,
-  },
-];
 
 // Home :: None => Component
-function Home({currentUser, status}) {
+function Home({ currentUser, status }) {
+
+  const { all:shareas } = useSharea();
 
   if (status === 'loading')
     return <>Loading...</>;
@@ -57,7 +40,9 @@ function Home({currentUser, status}) {
         <Switch>
           <Route exact path="/dashboard">
             <Sharea.List shareas={shareas} />
-            <Link to="/sharea/new"><Button>Create new Sharea</Button></Link>
+            <Link to="/sharea/new">
+              <Button>Create new Sharea</Button>
+            </Link>
           </Route>
           <Route exact path="/dashboard/liked">
             <Sharea.List shareas={shareas} />

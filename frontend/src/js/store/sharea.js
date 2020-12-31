@@ -25,6 +25,20 @@ export const fetchSelf = createAsyncThunk(
   }
 );
 
+export const create = createAsyncThunk(
+  'sharea/create',
+  (sharea) => {
+    return api.sharea.create(sharea);
+  }
+);
+
+export const update = createAsyncThunk(
+  'sharea/update',
+  (sharea) => {
+    return api.sharea.update(sharea.id, sharea);
+  }
+);
+
 export const slice = createSlice({
   name: 'sharea',
   initialState,
@@ -61,6 +75,36 @@ export const slice = createSlice({
       state.error = action.error;
       state.self = [];
     },
+    // CREATE
+    [create.pending]: (state, _) => {
+      state.status = STATUS.LOADING;
+    },
+    [create.fulfilled]: (state, action) => {
+      state.status = STATUS.IDLE;
+      const s = action.payload;
+      state.map[s.id] = s;
+      state.all = Object.values(state.map);
+    },
+    [create.rejected]: (state, action) => {
+      state.status = STATUS.FAILED;
+      state.error = action.error;
+      state.self = [];
+    },
+    // UPDATE
+    [update.pending]: (state, _) => {
+      state.status = STATUS.LOADING;
+    },
+    [update.fulfilled]: (state, action) => {
+      state.status = STATUS.IDLE;
+      const s = action.payload;
+      state.map[s.id] = s;
+      state.all = Object.values(state.map);
+    },
+    [update.rejected]: (state, action) => {
+      state.status = STATUS.FAILED;
+      state.error = action.error;
+      state.self = [];
+    },
   }
 });
 
@@ -72,6 +116,7 @@ export const useSharea = () => {
     ...state,
     fetchAll : () => dispatch(fetchAll()),
     fetchSelf : () => dispatch(fetchSelf()),
+    create: shareaDefinition => dispatch(create(shareaDefinition)),
     byId: (id) => state.sharea[id]
   };
 };
@@ -82,7 +127,7 @@ export const selectSharea = id =>
 
 export const connectSharea = connect(
   state => state.sharea,
-  { fetchAll, fetchSelf }
+  { fetchAll, fetchSelf, create }
 );
 
 
