@@ -13,8 +13,8 @@ function ShareaList({ shareas }) {
           {...sharea}
         />
       ))}
-      {Array(5).fill(0).map(_ => (
-        <div className="sharea-card-phantom" />
+      {Array(5).fill(0).map((_, index) => (
+        <div key={index} className="sharea-card-phantom" />
       ))}
     </div>
   );

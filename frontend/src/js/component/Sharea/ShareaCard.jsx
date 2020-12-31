@@ -13,10 +13,8 @@ function ShareaCard({ id, name, description, creatorId }) {
             {name}
           </Link>
         </Card.Title>
-        <Card.Text>
-          <p>{description}</p>
-          <p>{id}</p>
-        </Card.Text>
+        <Card.Text>{description}</Card.Text>
+        <Card.Text>{id}</Card.Text>
       </Card.Body>
       <Card.Footer>
         <small className="TODO">
