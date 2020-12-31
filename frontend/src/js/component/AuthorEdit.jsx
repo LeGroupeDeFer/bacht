@@ -1,11 +1,14 @@
-import {Button} from 'react-bootstrap';
-import {FontAwesomeIcon as Icon} from '@fortawesome/react-fontawesome';
-import {faEdit} from '@fortawesome/free-solid-svg-icons';
-import {Link} from 'react-router-dom';
 import React from 'react';
+import { Button } from 'react-bootstrap';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faEdit } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
+import { useUser } from 'sharea/store/user';
 
 
-function AuthorEdit({currentUser, author, isEditing, cancelCallback, submitCallback, editCallback, ...props}) {
+function AuthorEdit({ author, isEditing, cancelCallback, submitCallback, editCallback, ...props }) {
+  const { currentUser } = useUser();
+
   return (
     <div>
       {

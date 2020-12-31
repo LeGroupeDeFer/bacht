@@ -13,14 +13,67 @@ import Media from 'sharea/component/Media';
 import ShareaCard from './ShareaCard';
 import ShareaList from './ShareaList';
 
+const tmp_sharea = {
+  name: 'Cat Species',
+  description: 'Presentation of the different cat species that are visible in Belgium',
+  creator: 2,
+  id: 9001,
+  medias: [
+    10,
+    11,
+    12,
+    13
+  ],
+  like: false,
+  likes: 12
+};
 
-function Sharea({ id, name, description, medias, ...props }) {
+const tmp_medias = {
+  10: {
+    'id': 10,
+    'name': 'test',
+    'kind': 'text',
+    'content': '[B@281adda8',
+    'author': 1,
+    'shareaId': 8,
+    'like': false,
+    'likes': 0
+  },
+  11: {
+    'id': 11,
+    'name': 'test2',
+    'kind': 'text',
+    'content': '[B@281adda8',
+    'author': 1,
+    'shareaId': 8,
+    'like': false,
+    'likes': 0
+  },
+  12: {
+    'id': 12,
+    'name': 'test3',
+    'kind': 'text',
+    'content': '[B@281adda8',
+    'author': 1,
+    'shareaId': 8,
+    'like': false,
+    'likes': 0
+  },
+  13: {
+    'id': 13,
+    'name': 'test4',
+    'kind': 'text',
+    'content': '[B@281adda8',
+    'author': 1,
+    'shareaId': 8,
+    'like': false,
+    'likes': 0
+  }
+}
 
-  const isNew = id === 'new';
-  // todo : if is new, redirect elsewhere !!!
-
-  const defaultValues = { name, description };
-
+function Sharea({ id, name, description, medias, like, likes, ...props }) {
+  const author = { id: tmp_sharea.creator, username: 'darwin' };
+  const defaultValues = { name: tmp_sharea.name, description: tmp_sharea.description };
 
   const [isEditing, setIsEditing] = useState(false);
   const [state, setState] = useState(defaultValues);
@@ -46,7 +99,7 @@ function Sharea({ id, name, description, medias, ...props }) {
     <div className="heading">
       <Form
         method="PUT"
-        action={`/api/sharea/${id}`}
+        action={`/api/sharea/${tmp_sharea.id}`}
         className={`sharea ${isEditing ? 'sharea-edit' : ''}`}
         onSubmit={prevent(onSubmission)}>
         <Row>
@@ -59,13 +112,14 @@ function Sharea({ id, name, description, medias, ...props }) {
                   value={state['name']}
                   onChange={onChange('name')}
                 />)
-                : capitalize(name)
+                : capitalize(tmp_sharea.name)
             }
             </h1>
-            <LikeCounter like={props.like} likes={props.likes} url={`/api/sharea/${id}/sharealike`} />
+            <LikeCounter like={tmp_sharea.like} likes={tmp_sharea.likes}
+                         url={`/api/sharea/${tmp_sharea.id}/sharealike`} />
             <AuthorEdit
-              author={{ id: 12, username: 'darwin' }}
-              isEditing
+              author={author}
+              isEditing={isEditing}
               editCallback={() => setIsEditing(true)}
               cancelCallback={manageCancel}
             />
@@ -73,21 +127,15 @@ function Sharea({ id, name, description, medias, ...props }) {
         </Row>
         <Row>
           <Col sm={10}>
-            <CardDeck>
-              {/* todo : get real author*/}
-              {medias.map(m =>
-                <Media
-                  key={m.id}
-                  id={m.id}
-                  author={m.author}
-                  name={m.name}
-                  kind={m.kind}
-                  content={m.content}
-                  like={m.like}
-                  likes={m.likes}
-                  parentId={id}
-                />)}
-            </CardDeck>
+            {/*<CardDeck>*/}
+            {/*  {tmp_sharea.medias.map(mediaId => (<Media*/}
+            {/*    key={mediaId}*/}
+            {/*    {...tmp_medias[mediaId]}*/}
+            {/*     author={author}*/}
+            {/*  />))*/}
+            {/*  }*/}
+            {/*</CardDeck>*/}
+
             <OverlayTrigger
               trigger="click"
               placement="top"
@@ -110,13 +158,15 @@ function Sharea({ id, name, description, medias, ...props }) {
           </Col>
           <Col sm={2}>
             <div>
-              isEditing
-              ? (<Form.Control
-              type="textarea"
-              value={state['description']}
-              onChange={onChange('description')}
-            />)
-              : description
+              {
+                isEditing
+                  ? (<Form.Control
+                    type="textarea"
+                    value={state['description']}
+                    onChange={onChange('description')}
+                  />)
+                  : description
+              }
             </div>
           </Col>
         </Row>
