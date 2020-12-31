@@ -3,6 +3,7 @@ package be.unamur.infom451.bacht.controllers.api
 import scala.concurrent.Future
 import wvlet.airframe.http.{Endpoint, HttpMethod, Router}
 import be.unamur.infom451.bacht.lib._
+import be.unamur.infom451.bacht.lib.bacht.ShareaUserStore
 import be.unamur.infom451.bacht.models
 import be.unamur.infom451.bacht.models.ShareaTable.Sharea
 import be.unamur.infom451.bacht.models.likes.LikeResponse
@@ -174,5 +175,20 @@ trait ShareaController {
     withUser(u => u).flatMap(user => {
       ShareaLike.toggle(user.id.get, id)
     })
+  } recoverWith ErrorResponse.recover(418)
+
+  @Endpoint(method= HttpMethod.GET, path= "/:id/count_users")
+  def countUsers(id: Int): Future[Int] = {
+    Future(ShareaUserStore.count_token("sharea_%d".format(id)))
+  } recoverWith ErrorResponse.recover(418)
+
+  @Endpoint(method= HttpMethod.POST, path= "/:id/user")
+  def userJoins(id: Int): Future[Boolean] = {
+    Future(ShareaUserStore.tell("sharea_%d".format(id)))
+  } recoverWith ErrorResponse.recover(418)
+
+  @Endpoint(method= HttpMethod.DELETE, path= "/:id/user")
+  def userQuits(id: Int): Future[Boolean] = {
+    Future(ShareaUserStore.get("sharea_%d".format(id)))
   } recoverWith ErrorResponse.recover(418)
 }
