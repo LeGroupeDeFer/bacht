@@ -138,6 +138,13 @@ Accept: application/json
 Cache-Control: no-cache
 Authorization: Bearer {{access_token}}
 
+### ------------------------------------------------------------- GET SHAREA
+
+GET http://localhost:8000/api/sharea
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
 ### ------------------------------------------------------------- UPDATE SHAREA
 
 PUT http://localhost:8000/api/sharea/{{last_sharea_id}}

@@ -17,6 +17,16 @@ object ShareaTable {
     def all(implicit ec: ExecutionContext, db: Database): Future[Seq[Sharea]] =
       shareas.execute
 
+    def allWithMedia (implicit ec: ExecutionContext, db: Database): Future[Seq[(Sharea, Seq[Media])]] =
+      shareas
+        .withMedias
+        .execute
+        .map(
+          _.groupBy(_._1.id)
+            .toSeq
+            .map (t => (t._2.head._1, t._2.filter(_._2.isDefined).map(_._2.get)))
+        )
+
     def byId(id: Int)(
       implicit ec: ExecutionContext, db: Database
     ): Future[Option[Sharea]] = shareas
