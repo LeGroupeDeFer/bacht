@@ -235,3 +235,26 @@ Cache-Control: no-cache
 Authorization: Bearer {{access_token}}
 
 
+
+### ------------------------------------------------------------- USER JOINS SHAREA
+
+POST http://localhost:8000/api/sharea/5/user
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+
+### ------------------------------------------------------------- GET USERS COUNT IN SHAREA
+
+GET http://localhost:8000/api/sharea/5/count_users
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}
+
+
+### ------------------------------------------------------------- USER QUITS SHAREA
+
+DELETE http://localhost:8000/api/sharea/5/user
+Accept: application/json
+Cache-Control: no-cache
+Authorization: Bearer {{access_token}}

@@ -1,5 +1,7 @@
 package be.unamur.infom451.bacht
 
+import be.unamur.infom451.bacht.lib.bacht.ShareaUserStore
+
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import wvlet.airframe.http.finagle._
@@ -20,6 +22,8 @@ object Main extends App {
   }
 
   def serve(conf: Configuration): Unit = {
+    // init the store
+    ShareaUserStore.clear_store()
 
     val server = Finagle.server
       .withName("Bacht")
