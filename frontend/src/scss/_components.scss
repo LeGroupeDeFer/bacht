@@ -1,0 +1,21 @@
+@use 'theme' as *;
+
+/* -------------------------------- Sharea --------------------------------- */
+
+.sharea-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 1em;
+  justify-content: space-between;
+}
+
+.sharea-card {
+  width: 250px;
+  margin: 0 .5em;
+}
+
+.sharea-card-phantom {
+  width: 250px;
+  height: 1px;
+}

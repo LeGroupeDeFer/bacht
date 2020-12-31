@@ -37,28 +37,31 @@ function Sidebar({ sidebar: { isOpen }, toggleSidebar }) {
 
   return (
     <AuthGuard>
-      <div className={`sidebar ${isOpen ? 'sidebar-active' : ''}`}>
+      <div className={`sidebar-container ${isOpen ? 'sidebar-container-active' : ''}`}>
 
-        <div className="sidebar-toggle">
-          <Hamburger toggled={isOpen} toggle={toggleSidebar} />
+        <div className={`sidebar ${isOpen ? 'sidebar-active' : ''}`}>
+
+          <div className="sidebar-toggle">
+            <Hamburger toggled={isOpen} toggle={toggleSidebar} />
+          </div>
+
+          <Nav defaultActiveKey="/" className="flex-column">
+            {links.map(({ uri, title, icon }) => (
+              <Nav.Link
+                key={uri}
+                as={NavLink}
+                to={uri}
+              >
+                <span className="nav-link-text">{title}</span>
+                <Icon
+                  icon={icon}
+                  className="nav-link-icon"
+                />
+              </Nav.Link>
+            ))}
+          </Nav>
+
         </div>
-
-        <Nav defaultActiveKey="/" className="flex-column">
-          {links.map(({ uri, title, icon }) => (
-            <Nav.Link
-              key={uri}
-              as={NavLink}
-              to={uri}
-            >
-              <span className="nav-link-text">{title}</span>
-              <Icon
-                icon={icon}
-                className="nav-link-icon"
-              />
-            </Nav.Link>
-          ))}
-        </Nav>
-
       </div>
     </AuthGuard>
   );

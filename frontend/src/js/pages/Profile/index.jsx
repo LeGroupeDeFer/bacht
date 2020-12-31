@@ -1,13 +1,14 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import Sidebar from 'sharea/component/layout/Sidebar';
+import { Route, Switch } from 'react-router-dom';
+
 import TabNav from 'sharea/component/layout/TabNav';
+import Loader from 'sharea/component/Loader';
 import ProfileInfo from 'sharea/pages/Profile/ProfileInfo'
 import ProfileName from 'sharea/pages/Profile/ProfileName';
-import {Route, Switch} from 'react-router-dom';
-import {connectUser} from 'sharea/store/user';
-import {STATUS} from 'sharea/lib';
-import Loader from 'sharea/component/Loader';
+import { connectUser } from 'sharea/store/user';
+import { STATUS } from 'sharea/lib';
+
 
 const links = [
   {
@@ -32,15 +33,15 @@ const links = [
   }
 ];
 
-function Profile(
-  {
-    currentUser,
-    users,
-    status,
-    fetchSpecificUser,
-    fetchCurrentUser,
-    id
-  }) {
+
+function Profile({
+  currentUser,
+  users,
+  status,
+  fetchSpecificUser,
+  fetchCurrentUser,
+  id
+}) {
 
   useEffect(() => {
     if (id === 'self') {

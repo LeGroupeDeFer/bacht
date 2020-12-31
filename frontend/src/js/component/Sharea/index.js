@@ -1,13 +1,20 @@
-import {capitalize} from 'sharea/lib';
-import TabNav from 'sharea/component/layout/TabNav';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+
+import {
+  Button, CardDeck, Col, ListGroup, ListGroupItem, OverlayTrigger, Popover,
+  Row
+} from 'react-bootstrap';
+
+import { capitalize } from 'sharea/lib';
 import LikeCounter from 'sharea/component/LikeCounter';
 import AuthorEdit from 'sharea/component/AuthorEdit';
-import {Button, CardDeck, Col, ListGroup, ListGroupItem, OverlayTrigger, Popover, Row} from 'react-bootstrap';
 import Media from 'sharea/component/Media';
 
+import ShareaCard from './ShareaCard';
+import ShareaList from './ShareaList';
 
-function ShareaWall({id, name, description, medias, ...props}) {
+
+function Sharea({ id, name, description, medias, ...props }) {
 
   const [isEditing, setIsEditing] = useState(false)
 
@@ -39,11 +46,11 @@ function ShareaWall({id, name, description, medias, ...props}) {
       <Row>
         <Col sm={10}>
           <CardDeck>
+            {/* todo : get real author*/}
             {medias.map(m =>
               <Media
                 key={m.id}
                 id={m.id}
-                {/* todo : get real author*/}
                 author={m.author}
                 name={m.name}
                 kind={m.kind}
@@ -62,7 +69,9 @@ function ShareaWall({id, name, description, medias, ...props}) {
                 <Popover.Content>
                   <ListGroup>
                     {/* todo : button idea is to create a new media in this sharea*/}
-                    {['text', 'image'].map(kind => <ListGroupItem key={kind}><Button >{kind}</></ListGroupItem>)}
+                    {['text', 'image'].map(kind => (
+                      <ListGroupItem key={kind}><Button >{kind}</Button></ListGroupItem>
+                    ))}
                   </ListGroup>
                 </Popover.Content>
               </Popover>
@@ -77,5 +86,12 @@ function ShareaWall({id, name, description, medias, ...props}) {
       </Row>
 
     </div>
-  )
+  );
+
 }
+
+Sharea.Card = ShareaCard;
+Sharea.List = ShareaList;
+
+
+export default Sharea;
