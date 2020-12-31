@@ -14,7 +14,7 @@ const Home = lazy(() => import('sharea/pages/Home'));
 const Auth = lazy(() => import('sharea/pages/Auth'));
 const Profile = lazy(() => import('sharea/pages/Profile'));
 const Discover = lazy(() => import('sharea/pages/Discover'));
-const Sharea = lazy(() => import('sharea/pages/Sharea'));
+const Sharea = lazy(() => import('sharea/component/Sharea/Sharea'));
 
 
 // App :: None => Component

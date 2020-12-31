@@ -67,6 +67,20 @@ main {
 
 }
 
+.sidebar-container {
+
+  width: 60px;
+
+  transition: .2s ease-in;
+
+  &-active {
+
+    width: 360px;
+    transition: .2s ease-out;
+
+  }
+}
+
 .sidebar {
 
   display: flex;

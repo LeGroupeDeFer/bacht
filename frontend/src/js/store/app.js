@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { useSharea } from './sharea';
+import { useUser } from './user';
 import { api, now, STATUS } from 'sharea/lib';
 
 /* --------------------------------- Utils --------------------------------- */
@@ -169,6 +170,7 @@ export const useInitialization = () => {
 
   const { authenticated, status, failure } = useSelector(state => state.app);
   const { all, fetchAll: fetchShareas, fetchSelf: fetchSelfShareas } = useSharea();
+  const { fetchCurrentUser } = useUser();
 
   useEffect(() => api.auth.inSession()
     ? dispatch(refresh())
@@ -177,7 +179,7 @@ export const useInitialization = () => {
 
   useEffect(() => {
     if (all.length === 0 && status === STATUS.IDLE && authenticated)
-      fetchShareas() && fetchSelfShareas();
+      fetchShareas() && fetchSelfShareas() && fetchCurrentUser();
   }, [status, authenticated]);
 
   return [status, authenticated, failure];
