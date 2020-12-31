@@ -4,9 +4,10 @@ import { Link } from 'react-router-dom';
 import { useUser } from 'sharea/store/user';
 import Loader from 'sharea/component/Loader'
 import { STATUS } from 'sharea/lib';
+import LikeCounter from 'sharea/component/LikeCounter';
 
 
-function ShareaCard({ id, name, description, creator }) {
+function ShareaCard({ id, name, description, creator, like, likes}) {
 
   const { fetchSpecificUser, status, users } = useUser();
 
@@ -28,8 +29,8 @@ function ShareaCard({ id, name, description, creator }) {
       </Card.Body>
       <Card.Footer>
         <small className="TODO">
-          <Link to={`/user/${creator}`}>@{users[creator].username}</Link> Got
-          % likes
+          <Link to={`/profile/${creator}`}>@{users[creator].username}</Link>
+          <LikeCounter like={like} likes={likes} url={`/api/sharea/${id}/sharealike`}/>
         </small>
       </Card.Footer>
     </Card>
