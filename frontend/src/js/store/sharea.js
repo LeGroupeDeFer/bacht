@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import {createSlice, createAsyncThunk, unwrapResult} from '@reduxjs/toolkit';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { api, STATUS } from '../lib';
 
@@ -190,7 +190,7 @@ export const useSharea = () => {
     ...state,
     fetchAll : () => dispatch(fetchAll()),
     fetchSelf : () => dispatch(fetchSelf()),
-    create: shareaDefinition => dispatch(create(shareaDefinition)),
+    create: shareaDefinition => dispatch(create(shareaDefinition)).then(unwrapResult),
     byId: (id) => state.sharea[id],
     byUserId: (id) => state.all.filter(sh => sh.creator === id),
     update: data => dispatch(update(data)),

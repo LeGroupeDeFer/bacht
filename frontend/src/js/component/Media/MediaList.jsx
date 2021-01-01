@@ -52,11 +52,21 @@ function NewMedia({ shareaId }) {
   const onClose = () => setShow(false);
   const onChange = name => event =>
     setState(s => ({ ...s, [name]: event.target.value }));
+  const onKindChange = event => setState(s => ({
+    ...s,
+    content: '',
+    kind: event.target.value
+  }));
   const onFileChange = e =>
     setState(s => ({ ...s, content: e.target.files[0] }))
-  const onSubmit = _ => setPromise(readFile(state.content)
-    .then(content => postMedia({ ...state, content }))
-  );
+  const onSubmit = _ => {
+    if (state.kind === 'image')
+      setPromise(readFile(state.content)
+        .then(content => postMedia({ ...state, content }))
+      );
+    else
+      setPromise(postMedia({ ...state, content: btoa(state.content) }));
+  }
 
   return (
     <>
@@ -87,19 +97,32 @@ function NewMedia({ shareaId }) {
                 <Form.Control
                   as="select"
                   value={state.kind}
-                  onChange={onChange('kind')}
+                  onChange={onKindChange}
                 >
                   <option value="text">Text</option>
                   <option value="image">Image</option>
                 </Form.Control>
               </Col>
             </Form.Group>
-            <Form.File
-              id="content"
-              label={state.content && "File selected!" || "Select a file"}
-              onChange={onFileChange}
-              custom
-            />
+
+            {state.kind === 'image' && (
+              <Form.File
+                id="content"
+                label={state.content && "File selected!" || "Select a file"}
+                onChange={onFileChange}
+                custom
+              />
+            )}
+
+            {state.kind === 'text' && (
+              <Form.Control
+                as="textarea"
+                rows={6}
+                value={state.content}
+                onChange={onChange('content')}
+              />
+            )}
+
           </Modal.Body>
 
           <Modal.Footer>
