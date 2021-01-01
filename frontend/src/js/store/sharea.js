@@ -39,6 +39,14 @@ export const update = createAsyncThunk(
   }
 );
 
+export const like = createAsyncThunk(
+  'sharea/like',
+  ({ id }) => {
+    return api.sharea.like(id);
+  }
+);
+
+
 export const slice = createSlice({
   name: 'sharea',
   initialState,
@@ -105,6 +113,20 @@ export const slice = createSlice({
       state.error = action.error;
       state.self = [];
     },
+    // LIKE
+    [like.pending]: (state, _) => {
+      state.status = STATUS.LOADING;
+    },
+    [like.fulfilled]: (state, action) => {
+      state.status = STATUS.IDLE;
+      const { id, like, likes } = action.payload;
+      state.map[id] = { ...state.map[id], like, likes };
+      state.all = Object.values(state.map);
+    },
+    [like.rejected]: (state, action) => {
+      state.status = STATUS.FAILED;
+      state.error = action.error;
+    },
   }
 });
 
@@ -118,7 +140,9 @@ export const useSharea = () => {
     fetchSelf : () => dispatch(fetchSelf()),
     create: shareaDefinition => dispatch(create(shareaDefinition)),
     byId: (id) => state.sharea[id],
-    byUserId: (id) => state.all.filter(sh => sh.creator === id)
+    byUserId: (id) => state.all.filter(sh => sh.creator === id),
+    update: data => dispatch(update(data)),
+    like: (id) => dispatch(like({ id }))
   };
 };
 
@@ -128,7 +152,7 @@ export const selectSharea = id =>
 
 export const connectSharea = connect(
   state => state.sharea,
-  { fetchAll, fetchSelf, create }
+  { fetchAll, fetchSelf, create, update, like }
 );
 
 
