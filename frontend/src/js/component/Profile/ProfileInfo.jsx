@@ -42,10 +42,10 @@ function ProfileInfo({ editable, onUpdate, ...user }) {
   const [state, setState] = useState(user);
   const [isEditing, setIsEditing] = useState(false);
 
-  const reset     = () => setState(s => ({ ...s, ...user }));
-  const onEdit    = _  => setIsEditing(true);
-  const onCancel  = _  => reset() || setIsEditing(false);
-  const onChange  = name => e => setState(
+  const reset = () => setState(s => ({ ...s, ...user }));
+  const onEdit = _ => setIsEditing(true);
+  const onCancel = _ => reset() || setIsEditing(false);
+  const onChange = name => e => setState(
     s => ({ ...s, [name]: e.target.value })
   );
   const onSubmit = _ => {
@@ -125,17 +125,24 @@ function ProfileInfo({ editable, onUpdate, ...user }) {
             </Col>
           </Form.Group>
 
-          <Row><Col><hr /></Col></Row>
+          <Row><Col>
+            <hr />
+          </Col></Row>
 
-          <Form.Row>
-            <Col className="d-flex flex-row">
-              <EditionActions
-                isEditing={isEditing}
-                onEdit={onEdit}
-                onCancel={onCancel}
-              />
-            </Col>
-          </Form.Row>
+          {
+            editable
+              ? <Form.Row>
+                <Col className="d-flex flex-row">
+                  <EditionActions
+                    isEditing={isEditing}
+                    onEdit={onEdit}
+                    onCancel={onCancel}
+                  />
+                </Col>
+              </Form.Row>
+              : <></>
+          }
+
 
         </Form>
 
