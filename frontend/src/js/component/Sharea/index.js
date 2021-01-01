@@ -17,15 +17,20 @@ import { capitalize, STATUS } from 'sharea/lib';
 function ShareaTitle({ id, name, like, likes }) {
 
   return (
-    <h1>
-      {capitalize(name)}
-      <LikeCounter
-        size="2x"
-        like={like}
-        likes={likes}
-        url={`/api/sharea/${id}/sharealike`}
-      />
-    </h1>
+    <>
+      <h1>
+        {capitalize(name)}
+        <LikeCounter
+          size="2x"
+          like={like}
+          likes={likes}
+          url={`/api/sharea/${id}/sharealike`}
+        />
+      </h1>
+      <h1>
+        <PresenceCounter count={2} />
+      </h1>
+    </>
   );
 
 }
