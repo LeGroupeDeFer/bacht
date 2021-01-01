@@ -1,9 +1,10 @@
 import React from 'react';
+
 import { Turn as Hamburger } from 'hamburger-react';
 import { Nav } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome'
-import { faHome, faDoorOpen, faUser, faMountain } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
+import { faHome, faDoorOpen, faUser, faBinoculars } from '@fortawesome/free-solid-svg-icons';
 
 import AuthGuard from 'sharea/component/AuthGuard';
 import { connectLayout } from 'sharea/store/layout';
@@ -23,7 +24,7 @@ const links = [
   {
     uri: '/discover',
     title: 'Discover',
-    icon: faMountain
+    icon: faBinoculars
   },
   {
     uri: '/auth/logout',
