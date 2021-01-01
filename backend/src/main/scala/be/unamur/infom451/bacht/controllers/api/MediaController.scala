@@ -30,7 +30,7 @@ object MediaController extends Guide {
         media.id.get,
         media.name,
         media.kind,
-        Base64.getEncoder.encodeToString(media.content),
+        media.content.map(_.toChar).mkString,
         media.creatorId,
         media.shareaId,
         None,
@@ -42,7 +42,7 @@ object MediaController extends Guide {
         media.id.get,
         media.name,
         media.kind,
-        Base64.getEncoder.encodeToString(media.content),
+        media.content.map(_.toChar).mkString,
         media.creatorId,
         media.shareaId,
         Some(likeInfo.like),
@@ -85,7 +85,7 @@ trait MediaController {
         if (!availableMediaKinds.contains(request.kind)) {
           throw invalidAttribute
         }
-        Media(None, request.name, request.kind, Base64.getDecoder.decode(request.content), user.id.get, request.shareaId)
+        Media(None, request.name, request.kind, request.content.getBytes, user.id.get, request.shareaId)
       }
       )
       .flatMap(_.insert)
