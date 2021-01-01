@@ -9,7 +9,7 @@ import { useUser } from 'sharea/store/user';
 import Loader from 'sharea/component/Loader'
 
 import { STATUS } from 'sharea/lib';
-import LikeCounter from 'sharea/component/LikeCounter';
+import ShareaLikeCounter from './LikeCounter';
 import PresenceCounter from 'sharea/component/Sharea/PresenceCounter';
 
 
@@ -63,7 +63,7 @@ function ShareaCard({ isNew, id, name, description, creator, like, likes }) {
       <Card.Footer>
         <small className="sharea-card-footer d-flex justify-content-between">
           <Link to={`/profile/${creator}`}>@{users[creator].username}</Link>
-          <LikeCounter like={like} likes={likes} url={`/api/sharea/${id}/sharealike`} />
+          <ShareaLikeCounter id={id} />
         </small>
       </Card.Footer>
     </Card>
