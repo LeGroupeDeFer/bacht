@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import {
-  Button, Col, Container, Form, Row
-} from 'react-bootstrap';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 
 import LikeCounter from 'sharea/component/LikeCounter';
 import Media from 'sharea/component/Media';
@@ -11,26 +9,11 @@ import ShareaList from './ShareaList';
 import NewSharea from './NewSharea';
 import { useUser } from 'sharea/store/user';
 import { capitalize, STATUS } from 'sharea/lib';
+import {useSharea} from "sharea/store/sharea";
 
-
-function ShareaTitle({ id, name, like, likes }) {
-
-  return (
-    <h1>
-      {capitalize(name)}
-      <LikeCounter
-        size="2x"
-        like={like}
-        likes={likes}
-        url={`/api/sharea/${id}/sharealike`}
-      />
-    </h1>
-  );
-
-}
 
 function ShareaInfo({ isEditing, onChange, onSubmit, onCancel, ...sharea }) {
-  
+
   if (isEditing)
     return (
       <Form
@@ -58,7 +41,7 @@ function ShareaInfo({ isEditing, onChange, onSubmit, onCancel, ...sharea }) {
         </Form.Group>
         <div className="action">
           <Button variant="dark" onClick={onCancel}>Cancel</Button>
-          <Button variant="light" onSubmit={onSubmit}>Submit</Button>
+          <Button variant="light" onClick={onSubmit}>Submit</Button>
         </div>
       </Form>
     );
@@ -75,51 +58,50 @@ function ShareaInfo({ isEditing, onChange, onSubmit, onCancel, ...sharea }) {
 
 function Sharea(props) {
 
-  const { currentUser } = useUser();
+  /* User handling */
 
-  const [state, setState] = useState(props);
-  const [isEditing, setIsEditing] = useState(currentUser.id === props.creator);
-
-  const { id, name, description, medias, like, likes, creator } = state;
-  const { users, status, fetchSpecificUser } = useUser();
+  const { currentUser, users, status, fetchSpecificUser } = useUser();
+  const { update, like:likeSharea } = useSharea();
 
   useEffect(() => {
-    if (users[creator] === undefined) {
+    if (users[props.creator] === undefined) {
       fetchSpecificUser(creator);
     }
   }, []);
 
-  if (users[creator] === undefined || status === STATUS.LOADING) {
+  if (users[props.creator] === undefined || status === STATUS.LOADING) {
     return <Loader.Centered width="100" />
   }
 
-  const author = users[creator];
+  /* State handling */
 
-  const reset = () => setState(s => ({ ...s, ...props }));
+  const [state, setState] = useState(props);
+  const isEditing = currentUser.id === props.creator;
+  const { id, name, description, medias, like, likes, creator } = state;
+
+  /* Handlers */
+
+  const onCancel = () => setState(s => ({ ...s, ...props }));
   const onChange = name => e => setState(
     s => ({ ...s, [name]: e.target.value })
   );
-  const onCancel = () => reset() || setIsEditing(false);
-  const onLike = like => {
-    console.log(like);
-  };
-  const onSubmission = () => {
-    console.log('submitted');
-    setIsEditing(false);
-  };
+  const onLike = () => likeSharea(props.id);
+  const onSubmit = () => update(state);
 
   return (
     <main className="content sharea">
       <div className="inner-content">
         <div className="heading">
-          <ShareaTitle
-            id={id}
-            name={name}
-            author={author}
-            like={like}
-            likes={likes}
-            onLike={onLike}
-          />
+          <h1>
+            {capitalize(name)}
+            <LikeCounter
+              size="2x"
+              like={like}
+              likes={likes}
+              onLike={onLike}
+              url={`/api/sharea/${id}/sharealike`}
+            />
+          </h1>
         </div>
 
         <Container
@@ -137,7 +119,7 @@ function Sharea(props) {
                   {...state}
                   isEditing={isEditing}
                   onChange={onChange}
-                  onSubmit={onsubmit}
+                  onSubmit={onSubmit}
                   onCancel={onCancel}
                 />
               </aside>

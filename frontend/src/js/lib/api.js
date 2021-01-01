@@ -326,6 +326,11 @@ Object.assign(sharea, {
 
   async create(shareaDefinition) {
     return sharea('', { method: 'POST', body: shareaDefinition });
+  },
+
+  async like(id) {
+    return sharea(`/${id}/sharealike`, { method: 'POST' })
+      .then(response => ({ ...response, id }));
   }
 
 });
