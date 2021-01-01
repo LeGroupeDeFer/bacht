@@ -20,11 +20,6 @@ function ProfileName({ isSelf, id, username, like, likes }) {
     <h1>
       <Icon icon={faUser} className="mr-3" />
       {username}'s profile
-      <LikeCounter
-        like={like}
-        likes={likes}
-        url={`/user/${id}/like`}
-      />
     </h1>
   );
 
