@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { unwrapResult } from '@reduxjs/toolkit';
+
 import { useSharea } from './sharea';
 import { useUser } from './user';
 import { api, now, STATUS } from 'sharea/lib';
@@ -191,9 +194,12 @@ export const useAuth = () => {
   const state = useSelector(state => state.app);
   return {
     ...state,
-    login   : (username, password) => dispatch(login({ username, password })),
-    logout  : () => dispatch(logout()),
-    register: info => dispatch(register(info))
+    login: (username, password) =>
+      dispatch(login({ username, password })).then(unwrapResult),
+    logout: () =>
+      dispatch(logout()).then(unwrapResult),
+    register: info =>
+      dispatch(register(info)).then(unwrapResult)
   };
 };
 

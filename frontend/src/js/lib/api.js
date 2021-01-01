@@ -287,8 +287,8 @@ Object.assign(user, {
     return user(`/${id}`);
   },
 
-  async update(id, diff) {
-    return user(`/${id}`, { method: 'PUT', body: diff });
+  async update(data) {
+    return user(`/`, { method: 'PUT', body: data });
   },
 
 });

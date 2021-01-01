@@ -1,13 +1,13 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
+
+import { Link, Route, Switch } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
 
 import TabNav from 'sharea/component/layout/TabNav';
 import Sharea from 'sharea/component/Sharea';
-import {connectUser} from 'sharea/store/user';
-import {capitalize} from 'sharea/lib';
-import Switch from 'react-bootstrap/Switch';
-import {Link, Route} from 'react-router-dom';
-import {Button} from 'react-bootstrap';
-import {useSharea} from "sharea/store/sharea";
+import { connectUser } from 'sharea/store/user';
+import { capitalize } from 'sharea/lib';
+import { useSharea } from "sharea/store/sharea";
 
 
 const links = [
@@ -40,9 +40,11 @@ function Home({ currentUser, status }) {
         <Switch>
           <Route exact path="/dashboard">
             <Sharea.List shareas={shareas} />
-            <Link to="/sharea/new">
-              <Button>Create new Sharea</Button>
-            </Link>
+            <div className="ml-3">
+              <Link to="/sharea/new" className="btn btn-primary">
+                Create new Sharea
+              </Link>
+            </div>
           </Route>
           <Route exact path="/dashboard/liked">
             <Sharea.List shareas={shareas} />

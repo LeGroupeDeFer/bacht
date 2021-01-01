@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-import { unwrapResult } from '@reduxjs/toolkit';
 import { useHistory } from 'react-router-dom';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome';
@@ -26,7 +25,6 @@ function NewSharea() {
     let isSubscribed = true;
 
     submission
-      .then(unwrapResult)
       .then(({ id }) => isSubscribed && history.push(`/sharea/${id}`))
       .catch(error => isSubscribed && setError(error));
 
