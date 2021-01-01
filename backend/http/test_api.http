@@ -179,7 +179,7 @@ Accept: application/json
 Cache-Control: no-cache
 Authorization: Bearer {{access_token}}
 
-{ "name": "test", "kind": "text", "content":"qmsdfkjmlqskdjfmlksdjfmljk", "shareaId": {{last_sharea_id}} }
+{ "name": "test", "kind": "text", "content":"Y291Y291bGVzY29jb3M=", "shareaId": {{last_sharea_id}} }
 
 > {%
     client.global.set("last_media_id", response.body.id);
