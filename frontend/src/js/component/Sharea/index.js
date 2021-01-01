@@ -1,49 +1,18 @@
 import React, { useEffect, useState } from 'react';
 
 import {
-  Button, Card, CardDeck, Col, Container, Form, ListGroup, ListGroupItem, OverlayTrigger, Popover,
-  Row
+  Button, Col, Container, Form, Row
 } from 'react-bootstrap';
 
-import { capitalize, prevent, STATUS } from 'sharea/lib';
 import LikeCounter from 'sharea/component/LikeCounter';
-import AuthorEdit from 'sharea/component/AuthorEdit';
 import Media from 'sharea/component/Media';
-
 import ShareaCard from './ShareaCard';
 import ShareaList from './ShareaList';
 import NewSharea from './NewSharea';
-import { useMedia } from 'sharea/store/media';
-import Error from 'sharea/component/Error';
 import { useUser } from 'sharea/store/user';
 import PresenceCounter from 'sharea/component/Sharea/PresenceCounter';
+import { capitalize, STATUS } from 'sharea/lib';
 
-
-function LazyMedia({id}) {
-  const { state, medias, error, fetchMedia } = useMedia();
-
-  useEffect(() => {
-    if (medias[id] === undefined) {
-      fetchMedia(id);
-    }
-  }, []);
-
-  if(state === STATUS.FAILED) {
-    return <Card><Error error={error}/></Card>
-  }
-
-  if (medias[id] === undefined) {
-    return <Card><Media.Loading /></Card>
-  }
-
-  return <Media {...medias[id]} />
-}
-
-function MediaList({ medias, ...props }) {
-  return <CardDeck>
-    {medias.map(mediaId => <LazyMedia id={mediaId} key={mediaId} />)}
-  </CardDeck>
-}
 
 function ShareaTitle({ id, name, like, likes }) {
 
@@ -58,12 +27,59 @@ function ShareaTitle({ id, name, like, likes }) {
       />
     </h1>
   );
+
 }
+
+function ShareaInfo({ isEditing, onChange, onSubmit, onCancel, ...sharea }) {
+  
+  if (isEditing)
+    return (
+      <Form
+        autoComplete="off"
+        action={`/sharea/${sharea.id}`}
+        method="PUT"
+        className="sharea-info-form"
+      >
+        <Form.Group controlId="name">
+          <Form.Label>Name</Form.Label>
+          <Form.Control
+            type="text"
+            value={sharea.name}
+            onChange={onChange('name')}
+          />
+        </Form.Group>
+        <Form.Group controlId="description">
+          <Form.Label>Description</Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={6}
+            value={sharea.description}
+            onChange={onChange('description')}
+          />
+        </Form.Group>
+        <div className="action">
+          <Button variant="dark" onClick={onCancel}>Cancel</Button>
+          <Button variant="light" onSubmit={onSubmit}>Submit</Button>
+        </div>
+      </Form>
+    );
+
+  return (
+    <>
+      <h4 className="text-light">{sharea.name}</h4>
+      <p className="text-light">{sharea.description}</p>
+    </>
+  );
+
+}
+
 
 function Sharea(props) {
 
+  const { currentUser } = useUser();
+
   const [state, setState] = useState(props);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(currentUser.id === props.creator);
 
   const { id, name, description, medias, like, likes, creator } = state;
   const { users, status, fetchSpecificUser } = useUser();
@@ -84,15 +100,11 @@ function Sharea(props) {
   const onChange = name => e => setState(
     s => ({ ...s, [name]: e.target.value })
   );
-  const onCancel = () => {
-    reset();
-    setIsEditing(false);
-  };
+  const onCancel = () => reset() || setIsEditing(false);
   const onLike = like => {
     console.log(like);
   };
   const onSubmission = () => {
-    // todo : contact backend to create/update sharea
     console.log('submitted');
     setIsEditing(false);
   };
@@ -104,63 +116,32 @@ function Sharea(props) {
           <ShareaTitle
             id={id}
             name={name}
-            isEditing={isEditing}
-            onChange={onChange('name')}
+            author={author}
             like={like}
             likes={likes}
             onLike={onLike}
           />
-          <div className="edition-action">
-            <AuthorEdit
-              author={author}
-              isEditing={isEditing}
-              onEdit={() => setIsEditing(true)}
-              onCancel={onCancel}
-              onSubmit={onSubmission}
-            />
-          </div>
         </div>
 
         <Container
           fluid
-          className={`sharea${isEditing ? ' sharea-edit' : ''}`}
+          className={`sharea-content${isEditing ? ' sharea-edit' : ''}`}
         >
           <Row>
-            <Col sm={10}>
-              <MediaList medias={medias} />
-
-              <OverlayTrigger
-                trigger="click"
-                placement="top"
-                overlay={
-                  <Popover id={`popover-positioned-top`}>
-                    <Popover.Title as="h3">New media's type</Popover.Title>
-                    <Popover.Content>
-                      <ListGroup>
-                        {/* todo : button idea is to create a new media in this sharea*/}
-                        {['text', 'image'].map(kind => (
-                          <ListGroupItem key={kind}><Button>{kind}</Button></ListGroupItem>
-                        ))}
-                      </ListGroup>
-                    </Popover.Content>
-                  </Popover>
-                }
-              >
-                <Button>New media</Button>
-              </OverlayTrigger>
+            <Col lg={9} className="px-0">
+              <Media.List medias={medias} />
             </Col>
-            <Col sm={2}>
-              <div>
-                {
-                  isEditing
-                    ? (<Form.Control
-                      type="textarea"
-                      value={state['description']}
-                      onChange={onChange('description')}
-                    />)
-                    : description
-                }
-              </div>
+
+            <Col lg={3} className="px-0">
+              <aside className="sharea-sidebar">
+                <ShareaInfo
+                  {...state}
+                  isEditing={isEditing}
+                  onChange={onChange}
+                  onSubmit={onsubmit}
+                  onCancel={onCancel}
+                />
+              </aside>
             </Col>
           </Row>
         </Container>

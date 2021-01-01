@@ -1,17 +1,50 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
-import {connectMedia} from '../../store/media';
-import {Button, Card, Form} from 'react-bootstrap';
-import {FontAwesomeIcon as Icon} from '@fortawesome/react-fontawesome'
-import {faArrowUp, faEdit} from '@fortawesome/free-solid-svg-icons';
-import {Link} from 'react-router-dom';
-import {prevent} from 'sharea/lib';
+import { Card, Form } from 'react-bootstrap';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome'
+
+import { connectMedia } from 'sharea/store/media';
+import {faArrowUp, faPlusSquare} from '@fortawesome/free-solid-svg-icons';
+import { Link, useHistory } from 'react-router-dom';
+
+import { prevent } from 'sharea/lib';
 import LikeCounter from 'sharea/component/LikeCounter';
 import AuthorEdit from 'sharea/component/AuthorEdit';
-import LoadingMedia from 'sharea/component/Media/LoadingMedia';
+import LoadingMedia from './LoadingMedia';
+import LazyMedia from './LazyMedia';
+import MediaList from './MediaList';
 
 
-function Media({id, name, content, shareaId, author, likes, like, ...props}) {
+function MediaCardNew(_) {
+
+  const [show, setShow] = useState(false);
+
+  const history = useHistory();
+  const onClick = _ => history.push('/sharea/new');
+
+  return (
+    <Card className="sharea-card sharea-card-new" onClick={onClick}>
+      <Card.Body>
+        <Card.Title>
+          New Sharea
+        </Card.Title>
+        <Icon
+          icon={faPlusSquare}
+          size="4x"
+          className="d-block mx-auto mt-3"
+        />
+      </Card.Body>
+    </Card>
+  );
+
+}
+
+function MediaCard({
+  isNew, id, name, content, shareaId, author, likes, like
+}) {
+
+  if (isNew) return <MediaCardNew />;
+
   const [isEditing, setIsEditing] = useState(false);
 
   // `specificView` should be set to `true` if the media is the only thing displayed
@@ -91,6 +124,9 @@ function Media({id, name, content, shareaId, author, likes, like, ...props}) {
   );
 }
 
-Media.Loading = LoadingMedia;
+MediaCard.Loading = LoadingMedia;
+MediaCard.Lazy = LazyMedia;
+MediaCard.List = MediaList;
 
-export default connectMedia(Media);
+
+export default connectMedia(MediaCard);

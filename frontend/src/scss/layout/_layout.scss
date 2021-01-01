@@ -173,6 +173,14 @@ main {
 
 .sharea {
 
+  &-content {
+
+    flex-grow: 1;
+
+    .row { height: 100% }
+
+  }
+
   .heading {
     display: flex;
     justify-content: space-between;
@@ -199,21 +207,12 @@ main {
 .sharea-card {
 
   width: 250px;
-  margin: 0 .5em;
+  margin: 1em .5em;
   box-shadow: 0 0 5px rgba(0, 0, 0, .05);
   transition: .2s ease-in;
 
-  .sharea-card-description {
-
-    opacity: .8;
-    transition: .2s ease-in;
-
-  }
-
   &:hover {
 
-    transform: scale(1.1, 1.1);
-    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
     transition: .2s ease-out;
 
     .sharea-card-description {
@@ -233,6 +232,13 @@ main {
 
     cursor: pointer;
 
+    &:hover {
+
+      box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+      transform: scale(1.1, 1.1);
+
+    }
+
   }
 
   &-phantom {
@@ -242,9 +248,23 @@ main {
 
   }
 
+  .sharea-card-description {
+
+    opacity: .8;
+    transition: .2s ease-in;
+
+  }
+
+  .like-counter button {
+
+    padding-top: 0;
+    padding-bottom: 0;
+
+  }
+
 }
 
-.sharea-list {
+.sharea-list, .media-list {
 
   display: flex;
   flex-direction: row;
@@ -252,6 +272,65 @@ main {
   justify-content: space-between;
 
   padding: 2em;
+
 }
+
+.sharea-sidebar {
+
+  height: 100%;
+  width: 100%;
+
+  padding: 1em;
+
+  background: theme-color("primary");
+  color: theme-color("light");
+
+  label {
+
+    font-weight: bold;
+
+  }
+
+  input:not([type="submit"]), textarea {
+
+    color: theme-color("light");
+
+    border: none;
+    border-bottom: 2px solid theme-color("light");
+
+    transition: .2s ease-in;
+
+    &:focus {
+      background: theme-color("light");
+      color: theme-color("primary");
+
+      transition: .2s ease-out;
+    }
+
+  }
+
+}
+
+.sharea-info-form {
+
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .action {
+
+    margin-top: auto;
+
+    display: flex;
+    justify-content: space-between;
+
+  }
+
+}
+
+/* --------------------------------- MEDIA --------------------------------- */
+
 
 /* --------------------------------- AUTH ---------------------------------- */
