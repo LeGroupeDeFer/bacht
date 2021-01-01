@@ -62,13 +62,15 @@ function Sharea(props) {
   /* User handling */
 
   const { currentUser, users, status, fetchSpecificUser } = useUser();
-  const { update, like:likeSharea } = useSharea();
+  const { update, like:likeSharea, enter, quit } = useSharea();
   const onLike = () => likeSharea(props.id);
 
   useEffect(() => {
     if (users[props.creator] === undefined) {
       fetchSpecificUser(creator);
     }
+    enter(props.id);
+    return () => quit(props.id);
   }, []);
 
   if (users[props.creator] === undefined || status === STATUS.LOADING) {
@@ -79,7 +81,7 @@ function Sharea(props) {
 
   const [state, setState] = useState(props);
   const isEditing = currentUser.id === props.creator;
-  const { like, likes } = props;
+  const { like, likes, connectedUsers } = props;
   const { name, medias, creator } = state;
 
   /* Handlers */
@@ -104,7 +106,7 @@ function Sharea(props) {
             />
           </h1>
           <div className="sharea-page-title">
-            <PresenceCounter count={2} />
+            <PresenceCounter count={connectedUsers} />
           </div>
         </div>
 

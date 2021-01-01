@@ -35,7 +35,7 @@ function ShareaCardNew(_) {
 
 }
 
-function ShareaCard({ isNew, id, name, description, creator, like, likes }) {
+function ShareaCard({ isNew, id, name, description, creator, like, likes, connectedUsers }) {
   if (isNew) return <ShareaCardNew />;
 
   const { status, fetchSpecificUser, users } = useUser();
@@ -55,7 +55,7 @@ function ShareaCard({ isNew, id, name, description, creator, like, likes }) {
             </Link>
           </div>
           <div className="connected-user-counter">
-            <PresenceCounter count={0} />
+            <PresenceCounter count={connectedUsers} />
           </div>
         </Card.Title>
         <Card.Text className="sharea-card-description">{description}</Card.Text>
