@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import { empty, identity, clean, normalizeEntities } from './utils';
-import {trace} from "sharea/lib/utils";
+import { trace } from 'sharea/lib/utils';
 
 /* -------------------------------------------------------------------------
    ------------------------------- BARE API --------------------------------
@@ -214,6 +214,8 @@ Object.assign(auth, {
       );
 
       currentAccessToken = access;
+      // needed to send information to backend (see src/js/index.js:20)
+      window.currentAccessToken = access;
       store.setItem('__refresh_data__', `${username}:${refresh}`);
       return jwtDecode(currentAccessToken);
     } catch (e) {
@@ -224,9 +226,11 @@ Object.assign(auth, {
   },
 
   async register(username, password, firstName, lastName, biopic) {
-    return auth('/register', { body: {
-      username, password, firstName, lastName, biopic
-    } });
+    return auth('/register', {
+      body: {
+        username, password, firstName, lastName, biopic
+      }
+    });
   },
 
   /**
@@ -331,6 +335,16 @@ Object.assign(sharea, {
   async like(id) {
     return sharea(`/${id}/sharealike`, { method: 'POST' })
       .then(response => ({ ...response, id }));
+  },
+
+  async enter(id) {
+    return sharea(`/${id}/enter`, { method: 'POST' })
+      .then(response => ({connectedUsers:response, id}));
+  },
+
+  async quit(id) {
+    return sharea(`/${id}/quit`, { method: 'POST' })
+      .then(response => ({connectedUsers:response, id}));
   }
 
 });

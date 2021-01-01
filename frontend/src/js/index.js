@@ -16,3 +16,17 @@ ReactDOM.render(
   </Provider>,
   root
 );
+
+// ugly hack to send information to backend when a user force refresh on a page and therefore quits a Sharea view
+window.onunload = (e) => {
+  const path = window.location.pathname;
+  const shareaRegex = /\/sharea\/(?<id>\d+)/;
+  const match = path.match(shareaRegex);
+  if (match !== null) {
+    const id = match.groups.id;
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", `/api/sharea/${id}/quit`, false);
+    xhr.setRequestHeader('Authorization', `Bearer ${window.currentAccessToken}`);
+    xhr.send();
+  }
+};

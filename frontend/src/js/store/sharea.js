@@ -46,6 +46,20 @@ export const like = createAsyncThunk(
   }
 );
 
+export const enter = createAsyncThunk(
+  'sharea/enter',
+  ({ id }) => {
+    return api.sharea.enter(id);
+  }
+);
+
+export const quit = createAsyncThunk(
+  'sharea/quit',
+  ({ id }) => {
+    return api.sharea.quit(id);
+  }
+);
+
 
 export const slice = createSlice({
   name: 'sharea',
@@ -136,6 +150,34 @@ export const slice = createSlice({
       state.status = STATUS.FAILED;
       state.error = action.error;
     },
+    // ENTER
+    [enter.pending]: (state, _) => {
+      state.status = STATUS.LOADING;
+    },
+    [enter.fulfilled]: (state, action) => {
+      state.status = STATUS.IDLE;
+      const {connectedUsers, id} = action.payload;
+      state.map[id] = { ...state.map[id], connectedUsers };
+      state.all = Object.values(state.map);
+    },
+    [enter.rejected]: (state, action) => {
+      state.status = STATUS.FAILED;
+      state.error = action.error;
+    },
+    // QUIT
+    [quit.pending]: (state, _) => {
+      state.status = STATUS.LOADING;
+    },
+    [quit.fulfilled]: (state, action) => {
+      state.status = STATUS.IDLE;
+      const {connectedUsers, id} = action.payload;
+      state.map[id] = { ...state.map[id], connectedUsers };
+      state.all = Object.values(state.map);
+    },
+    [quit.rejected]: (state, action) => {
+      state.status = STATUS.FAILED;
+      state.error = action.error;
+    },
   }
 });
 
@@ -152,7 +194,9 @@ export const useSharea = () => {
     byId: (id) => state.sharea[id],
     byUserId: (id) => state.all.filter(sh => sh.creator === id),
     update: data => dispatch(update(data)),
-    like: (id) => dispatch(like({ id }))
+    like: (id) => dispatch(like({ id })),
+    enter: (id) => dispatch(enter({id})),
+    quit: (id) => dispatch(quit({id})),
   };
 };
 
@@ -162,7 +206,7 @@ export const selectSharea = id =>
 
 export const connectSharea = connect(
   state => state.sharea,
-  { fetchAll, fetchSelf, create, update, like }
+  { fetchAll, fetchSelf, create, update, like, enter, quit}
 );
 
 

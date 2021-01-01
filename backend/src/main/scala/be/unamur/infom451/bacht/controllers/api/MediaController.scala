@@ -6,6 +6,7 @@ import be.unamur.infom451.bacht.models.MediaTable.Media
 import be.unamur.infom451.bacht.models.likes.LikeResponse
 import be.unamur.infom451.bacht.models.likes.MediaLikeTable.MediaLike
 
+import java.util.Base64
 import scala.concurrent.Future
 
 object MediaController extends Guide {
@@ -29,7 +30,7 @@ object MediaController extends Guide {
         media.id.get,
         media.name,
         media.kind,
-        media.content.toString,
+        Base64.getEncoder.encodeToString(media.content),
         media.creatorId,
         media.shareaId,
         None,
@@ -41,7 +42,7 @@ object MediaController extends Guide {
         media.id.get,
         media.name,
         media.kind,
-        media.content.toString,
+        Base64.getEncoder.encodeToString(media.content),
         media.creatorId,
         media.shareaId,
         Some(likeInfo.like),
@@ -84,7 +85,7 @@ trait MediaController {
         if (!availableMediaKinds.contains(request.kind)) {
           throw invalidAttribute
         }
-        Media(None, request.name, request.kind, request.content.getBytes, user.id.get, request.shareaId)
+        Media(None, request.name, request.kind, Base64.getDecoder.decode(request.content), user.id.get, request.shareaId)
       }
       )
       .flatMap(_.insert)

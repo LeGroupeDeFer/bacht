@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 
-import LikeCounter from 'sharea/component/LikeCounter';
 import Media from 'sharea/component/Media';
 import ShareaCard from './ShareaCard';
 import ShareaList from './ShareaList';
@@ -63,12 +62,15 @@ function Sharea(props) {
   /* User handling */
 
   const { currentUser, users, status, fetchSpecificUser } = useUser();
-  const { update } = useSharea();
+  const { update, like:likeSharea, enter, quit } = useSharea();
+  const onLike = () => likeSharea(props.id);
 
   useEffect(() => {
     if (users[props.creator] === undefined) {
       fetchSpecificUser(creator);
     }
+    enter(props.id);
+    return () => quit(props.id);
   }, []);
 
   if (users[props.creator] === undefined || status === STATUS.LOADING) {
@@ -79,7 +81,8 @@ function Sharea(props) {
 
   const [state, setState] = useState(props);
   const isEditing = currentUser.id === props.creator;
-  const { id, like, likes, medias } = props;
+
+  const { id, medias, connectedUsers } = props;
   const { name, creator } = state;
 
   /* Handlers */
@@ -99,7 +102,7 @@ function Sharea(props) {
             <ShareaLikeCounter id={id} size="2x" />
           </h1>
           <div className="sharea-page-title">
-            <PresenceCounter count={2} />
+            <PresenceCounter count={connectedUsers} />
           </div>
         </div>
 

@@ -129,6 +129,9 @@ function MediaList({ medias, shareaId }) {
       {medias.map(id => (
         <LazyMedia key={id} id={id} />
       ))}
+      {Array(5).fill(0).map((_, index) => (
+        <div key={index} className="media-card-phantom" />
+      ))}
     </div>
   );
 

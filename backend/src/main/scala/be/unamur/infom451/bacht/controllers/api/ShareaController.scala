@@ -29,7 +29,8 @@ object ShareaController extends Guide {
         sharea.creatorId,
         Seq(),
         None,
-        None
+        None,
+        ShareaUserStore.count_token("sharea_%d".format(sharea.id.get))
       )
 
     def from(sharea: Sharea, medias: Seq[Media]): DetailedShareaInfo =
@@ -40,7 +41,8 @@ object ShareaController extends Guide {
         sharea.creatorId,
         medias.map(_.id.get),
         None,
-        None
+        None,
+        ShareaUserStore.count_token("sharea_%d".format(sharea.id.get))
       )
 
     def from(sharea: Sharea, medias: Seq[Media], likeInformation: LikeResponse): DetailedShareaInfo =
@@ -51,7 +53,8 @@ object ShareaController extends Guide {
         sharea.creatorId,
         medias.map(_.id.get),
         Some(likeInformation.like),
-        Some(likeInformation.likes)
+        Some(likeInformation.likes),
+        ShareaUserStore.count_token("sharea_%d".format(sharea.id.get))
       )
   }
 
@@ -62,7 +65,8 @@ object ShareaController extends Guide {
     creator    : Int,
     medias     : Seq[Int],
     like       : Option[Boolean],
-    likes      : Option[Int]
+    likes      : Option[Int],
+    connectedUsers: Int
   )
 
   type DetailedShareaResponse = DetailedShareaInfo
@@ -188,13 +192,15 @@ trait ShareaController {
     Future(ShareaUserStore.count_token("sharea_%d".format(id)))
   } recoverWith ErrorResponse.recover(418)
 
-  @Endpoint(method = HttpMethod.POST, path = "/:id/user")
-  def userJoins(id: Int): Future[Boolean] = {
-    Future(ShareaUserStore.tell("sharea_%d".format(id)))
+  @Endpoint(method = HttpMethod.POST, path = "/:id/enter")
+  def userJoins(id: Int): Future[Int] = {
+    ShareaUserStore.tell("sharea_%d".format(id))
+    countUsers(id)
   } recoverWith ErrorResponse.recover(418)
 
-  @Endpoint(method = HttpMethod.DELETE, path = "/:id/user")
-  def userQuits(id: Int): Future[Boolean] = {
-    Future(ShareaUserStore.get("sharea_%d".format(id)))
+  @Endpoint(method = HttpMethod.POST, path = "/:id/quit")
+  def userQuits(id: Int): Future[Int] = {
+    ShareaUserStore.get("sharea_%d".format(id))
+    countUsers(id)
   } recoverWith ErrorResponse.recover(418)
 }

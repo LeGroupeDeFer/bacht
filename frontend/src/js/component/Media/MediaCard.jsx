@@ -77,7 +77,7 @@ function MediaCard({
   }
 
   return (
-    <Card border="primary" style={{width: '18rem'}}>
+    <Card border="primary" className="media-card">
       <Form
         method="PUT"
         action={`/api/media/${id}`}
