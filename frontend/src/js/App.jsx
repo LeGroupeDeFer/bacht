@@ -9,7 +9,6 @@ import Loader from 'sharea/component/Loader';
 import Sidebar from 'sharea/component/layout/Sidebar';
 import { useInitialization } from 'sharea/store/app';
 import { useUser } from 'sharea/store/user';
-import NewSharea from 'sharea/component/Sharea/NewSharea';
 
 
 const Home = lazy(() => import('sharea/pages/Home'));

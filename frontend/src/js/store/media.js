@@ -1,18 +1,18 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { api, STATUS } from '../lib';
 
 
 const initialState = {
-  status: status.IDLE,
+  status: STATUS.IDLE,
   error: null,
-  media: {}
+  medias: {}
 };
 
-export const fetchMedias = createAsyncThunk(
-  'media/all',
-  () => {
-    return api.media();
+export const fetchMedia = createAsyncThunk(
+  'media/specific',
+  ({id}) => {
+    return api.media.byId(id);
   }
 );
 
@@ -22,17 +22,17 @@ export const slice = createSlice({
   reducers: {},
   extraReducers: {
     // ALL
-    [fetchMedias.pending]: (state, _) => {
+    [fetchMedia.pending]: (state, _) => {
       state.status = STATUS.LOADING;
     },
-    [fetchMedias.fulfilled]: (state, action) => {
-      state.status = status.IDLE;
-      state.media = action.payload;
+    [fetchMedia.fulfilled]: (state, action) => {
+      state.status = STATUS.IDLE;
+      const m = action.payload;
+      state.medias[m.id] = m;
     },
-    [fetchMedias.rejected]: (state, action) => {
+    [fetchMedia.rejected]: (state, action) => {
       state.status = STATUS.FAILED;
       state.error = action.error;
-      state.media = {};
     },
   }
 });
@@ -42,14 +42,14 @@ export const useMedia = () => {
   const state = useSelector(state => state.media);
   return {
     ...state,
-    fetchMedias : () => dispatch(fetchMedias()),
+    fetchMedia: id =>
+      dispatch(fetchMedia({id})).then(unwrapResult),
   };
 };
 
 export const connectMedia = connect(
   state => state.media,
-  { fetchMedias }
+  { fetchMedia }
 );
-
 
 export default slice.reducer;

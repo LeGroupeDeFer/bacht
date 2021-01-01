@@ -348,6 +348,10 @@ Object.assign(media, {
     return media().then(normalizeEntities);
   },
 
+  async byId(id) {
+    return media(`/${id}`);
+  },
+
   async update(id, diff) {
     return media(`/${id}`, { method: 'PUT', body: diff });
   },

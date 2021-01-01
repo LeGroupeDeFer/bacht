@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-import {connectMedia} from '../store/media';
+import {connectMedia} from '../../store/media';
 import {Button, Card, Form} from 'react-bootstrap';
 import {FontAwesomeIcon as Icon} from '@fortawesome/react-fontawesome'
 import {faArrowUp, faEdit} from '@fortawesome/free-solid-svg-icons';
@@ -8,6 +8,7 @@ import {Link} from 'react-router-dom';
 import {prevent} from 'sharea/lib';
 import LikeCounter from 'sharea/component/LikeCounter';
 import AuthorEdit from 'sharea/component/AuthorEdit';
+import LoadingMedia from 'sharea/component/Media/LoadingMedia';
 
 
 function Media({id, name, content, shareaId, author, likes, like, ...props}) {
@@ -90,5 +91,6 @@ function Media({id, name, content, shareaId, author, likes, like, ...props}) {
   );
 }
 
+Media.Loading = LoadingMedia;
 
 export default connectMedia(Media);

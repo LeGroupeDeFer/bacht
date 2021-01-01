@@ -41,11 +41,11 @@ function ShareaCardNew(_) {
 function ShareaCard({ isNew, id, name, description, creator, like, likes }) {
   if (isNew) return <ShareaCardNew />;
 
-  const { fetchSpecificUser, status, users } = useUser();
+  const { status, fetchSpecificUser, users } = useUser();
 
   if (users[creator] === undefined || status === STATUS.LOADING) {
     fetchSpecificUser(creator);
-    return <Loader.Centered width="100" />
+    return <div><Loader.Centered width="100" /></div>
   }
 
   return (

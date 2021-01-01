@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
-  Button, CardDeck, Col, Container, Form, ListGroup, ListGroupItem, OverlayTrigger, Popover,
+  Button, Card, CardDeck, Col, Container, Form, ListGroup, ListGroupItem, OverlayTrigger, Popover,
   Row
 } from 'react-bootstrap';
 
-import { capitalize, prevent } from 'sharea/lib';
+import { capitalize, prevent, STATUS } from 'sharea/lib';
 import LikeCounter from 'sharea/component/LikeCounter';
 import AuthorEdit from 'sharea/component/AuthorEdit';
 import Media from 'sharea/component/Media';
@@ -13,65 +13,35 @@ import Media from 'sharea/component/Media';
 import ShareaCard from './ShareaCard';
 import ShareaList from './ShareaList';
 import NewSharea from './NewSharea';
+import { useMedia } from 'sharea/store/media';
+import Error from 'sharea/component/Error';
 
-const tmp_sharea = {
-  name: 'Cat Species',
-  description: 'Presentation of the different cat species that are visible in Belgium',
-  creator: 2,
-  id: 9001,
-  medias: [
-    10,
-    11,
-    12,
-    13
-  ],
-  like: false,
-  likes: 12
-};
 
-const tmp_medias = {
-  10: {
-    'id': 10,
-    'name': 'test',
-    'kind': 'text',
-    'content': '[B@281adda8',
-    'author': 1,
-    'shareaId': 8,
-    'like': false,
-    'likes': 0
-  },
-  11: {
-    'id': 11,
-    'name': 'test2',
-    'kind': 'text',
-    'content': '[B@281adda8',
-    'author': 1,
-    'shareaId': 8,
-    'like': false,
-    'likes': 0
-  },
-  12: {
-    'id': 12,
-    'name': 'test3',
-    'kind': 'text',
-    'content': '[B@281adda8',
-    'author': 1,
-    'shareaId': 8,
-    'like': false,
-    'likes': 0
-  },
-  13: {
-    'id': 13,
-    'name': 'test4',
-    'kind': 'text',
-    'content': '[B@281adda8',
-    'author': 1,
-    'shareaId': 8,
-    'like': false,
-    'likes': 0
+function LazyMedia({id}) {
+  const { state, medias, error, fetchMedia } = useMedia();
+
+  useEffect(() => {
+    if (medias[id] === undefined) {
+      fetchMedia(id);
+    }
+  }, []);
+
+  if(state === STATUS.FAILED) {
+    return <Card><Error error={error}/></Card>
   }
+
+  if (medias[id] === undefined) {
+    return <Card><Media.Loading /></Card>
+  }
+
+  return <Media {...medias[id]} />
 }
 
+function MediaList({ medias, ...props }) {
+  return <CardDeck>
+    {medias.map(mediaId => <LazyMedia id={mediaId} key={mediaId} />)}
+  </CardDeck>
+}
 
 function ShareaTitle({ id, name, like, likes }) {
 
@@ -86,9 +56,7 @@ function ShareaTitle({ id, name, like, likes }) {
       />
     </h1>
   );
-
 }
-
 
 function Sharea(props) {
 
@@ -145,15 +113,7 @@ function Sharea(props) {
         >
           <Row>
             <Col sm={10}>
-              <CardDeck>
-                {tmp_sharea.medias.map(mediaId => (
-                  <Media
-                    key={mediaId}
-                    {...tmp_medias[mediaId]}
-                     author={author}
-                  />
-                ))}
-              </CardDeck>
+              <MediaList medias={medias}/>
 
               <OverlayTrigger
                 trigger="click"
