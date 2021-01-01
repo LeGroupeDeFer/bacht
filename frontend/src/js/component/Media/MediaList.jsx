@@ -6,7 +6,7 @@ import { faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 
 import LazyMedia from './LazyMedia';
 import { useMedia } from 'sharea/store/media';
-import { prevent} from 'sharea/lib';
+import {prevent, trace} from 'sharea/lib';
 
 
 const emptyMedia = shareaId => ({
@@ -15,6 +15,15 @@ const emptyMedia = shareaId => ({
   kind: 'text',
   content: '',
 });
+
+
+const readFile = file => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => resolve(reader.result);
+  reader.onError = error => reject(error)
+});
+
 
 function NewMedia({ shareaId }) {
 
@@ -44,8 +53,10 @@ function NewMedia({ shareaId }) {
   const onChange = name => event =>
     setState(s => ({ ...s, [name]: event.target.value }));
   const onFileChange = e =>
-    setState(s => ({ ...s, content: btoa(e.target.files[0]) }))
-  const onSubmit = _ => setPromise(postMedia(state));
+    setState(s => ({ ...s, content: e.target.files[0] }))
+  const onSubmit = _ => setPromise(readFile(state.content)
+    .then(content => postMedia({ ...state, content }))
+  );
 
   return (
     <>

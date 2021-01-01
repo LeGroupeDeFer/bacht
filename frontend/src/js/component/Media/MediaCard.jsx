@@ -38,86 +38,39 @@ function MediaCardNew(_) {
 }
 
 function MediaCard({
-  isNew, id, name, content, shareaId, author, likes, like
+  isNew, id, name, kind, content, shareaId, author, likes, like
 }) {
 
   if (isNew) return <MediaCardNew />;
-
-  const [isEditing, setIsEditing] = useState(false);
 
   // `specificView` should be set to `true` if the media is the only thing displayed
   // `specificView` should be set to `false` if the media is displayed alongside with other media of the same Sharea
   const specificView = false; // todo : get the information of the view elsewhere
 
-  const [state, setState] = useState({
-    name: name,
-    content: content
-  });
-
-  const reset = () => {
-    setState(s => ({
-      ...s,
-      ['name']: name,
-      ['content']: content
-    }));
-  }
-
-  const manageCancel = () => {
-    reset();
-    setIsEditing(false);
-  }
-
-  const onChange = name => e => setState(
-    s => ({...s, [name]: e.target.value})
-  );
-
-  const onSubmit = () => {
-    // props.updateMedia(state);
-    setIsEditing(false);
-  }
+  let parsedContent;
+  if (kind === 'text')
+    parsedContent = atob(content);
+  else
+    parsedContent = <img src={content} />;
 
   return (
     <Card border="primary" className="media-card">
-      <Form
-        method="PUT"
-        action={`/api/media/${id}`}
-        onSubmit={prevent(onSubmit)}
-      >
-        <Card.Header className="flex-container">
-          <div>
-            <Form.Group controlId="name">
-              <Form.Control
-                plaintext={!isEditing}
-                readOnly={!isEditing}
-                type="text"
-                value={state['name']}
-                onChange={onChange('name')}
-              />
-            </Form.Group>
-          </div>
-          {specificView ? (<div><Link to={`/sharea/${shareaId}`}><Icon icon={faArrowUp} /></Link></div>) : (<></>)}
-        </Card.Header>
-        <Card.Body>
-            <Form.Group controlId="content">
-              <Form.Control
-                plaintext={!isEditing}
-                readOnly={!isEditing}
-                type="textarea"
-                value={state['content']}
-                onChange={onChange('content')}
-              />
-            </Form.Group>
-        </Card.Body>
-        <Card.Footer className="flex-container">
-          <AuthorEdit
-            author={author}
-            isEditing={isEditing}
-            editCallback={() => setIsEditing(true)}
-            cancelCallback={manageCancel}
-          />
-          <LikeCounter like={like} likes={likes} url={`/api/media/${id}/medialike`} />
-        </Card.Footer>
-      </Form>
+      <Card.Header className="d-flex">
+        <h5>{name}</h5>
+        {
+          specificView ? (
+            <div><Link to={`/sharea/${shareaId}`}>
+              <Icon icon={faArrowUp} />
+            </Link></div>
+          ) : <></>
+        }
+      </Card.Header>
+
+      <Card.Body>{parsedContent}</Card.Body>
+
+      <Card.Footer className="flex-container">
+        @<Link to={`/profile/${author}`}>Author</Link>
+      </Card.Footer>
     </Card>
   );
 }
