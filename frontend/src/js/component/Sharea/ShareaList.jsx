@@ -3,10 +3,11 @@ import React from "react";
 import ShareaCard from './ShareaCard';
 
 
-function ShareaList({ shareas }) {
+function ShareaList({ shareas, newSharea }) {
 
   return (
     <div className="sharea-list">
+      {newSharea && <ShareaCard isNew />}
       {shareas.map(sharea => (
         <ShareaCard
           key={sharea.id}

@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 
 import { Link, Route, Switch } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
 
 import TabNav from 'sharea/component/layout/TabNav';
 import Sharea from 'sharea/component/Sharea';
@@ -39,12 +38,7 @@ function Home({ currentUser, status }) {
         </div>
         <Switch>
           <Route exact path="/dashboard">
-            <Sharea.List shareas={shareas} />
-            <div className="ml-3">
-              <Link to="/sharea/new" className="btn btn-primary">
-                Create new Sharea
-              </Link>
-            </div>
+            <Sharea.List shareas={shareas} newSharea />
           </Route>
           <Route exact path="/dashboard/liked">
             <Sharea.List shareas={shareas} />
