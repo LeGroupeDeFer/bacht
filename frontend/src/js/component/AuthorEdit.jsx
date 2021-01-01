@@ -26,7 +26,7 @@ function AuthorEdit({ author, isEditing, onCancel, onSubmit, onEdit }) {
   const { currentUser } = useUser();
 
   if (currentUser.id !== author.id)
-    return <Link to={`/user/${author.id}`}>@{author.username}</Link>;
+    return <Link to={`/profile/${author.id}`}>@{author.username}</Link>;
 
   if (isEditing)
     return (

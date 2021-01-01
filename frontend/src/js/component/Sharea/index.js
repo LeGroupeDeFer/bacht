@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from 'react';
 
 import {
-  Button, Col, Container, Form, ListGroup, ListGroupItem, OverlayTrigger,
-  Popover, Row
+  Button, Col, Container, Form, Row
 } from 'react-bootstrap';
 
-import { capitalize } from 'sharea/lib';
 import LikeCounter from 'sharea/component/LikeCounter';
-import AuthorEdit from 'sharea/component/AuthorEdit';
 import Media from 'sharea/component/Media';
-
 import ShareaCard from './ShareaCard';
 import ShareaList from './ShareaList';
 import NewSharea from './NewSharea';
-import {useUser} from "sharea/store/user";
+import { useUser } from 'sharea/store/user';
+import { capitalize, STATUS } from 'sharea/lib';
 
 
 function ShareaTitle({ id, name, like, likes }) {
@@ -84,7 +81,19 @@ function Sharea(props) {
   const [isEditing, setIsEditing] = useState(currentUser.id === props.creator);
 
   const { id, name, description, medias, like, likes, creator } = state;
-  const author = { id: creator, username: 'darwin' };
+  const { users, status, fetchSpecificUser } = useUser();
+
+  useEffect(() => {
+    if (users[creator] === undefined) {
+      fetchSpecificUser(creator);
+    }
+  }, []);
+
+  if (users[creator] === undefined || status === STATUS.LOADING) {
+    return <Loader.Centered width="100" />
+  }
+
+  const author = users[creator];
 
   const reset = () => setState(s => ({ ...s, ...props }));
   const onChange = name => e => setState(
