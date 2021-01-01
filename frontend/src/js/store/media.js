@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, unwrapResult } from '@reduxjs/toolkit';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { api, STATUS } from '../lib';
+import { addMedia } from './sharea';
 
 
 const initialState = {
@@ -16,12 +17,25 @@ export const fetchMedia = createAsyncThunk(
   }
 );
 
+export const postMedia = createAsyncThunk(
+  'media/post',
+  (data, thunkAPI) => {
+    return api.media.create(data).then(response => {
+      thunkAPI.dispatch(addMedia({
+        shareaId: response.shareaId, mediaId: response.id
+      }));
+      return response;
+    });
+  }
+);
+
+
 export const slice = createSlice({
   name: 'media',
   initialState,
   reducers: {},
   extraReducers: {
-    // ALL
+    // SPECIFIC
     [fetchMedia.pending]: (state, _) => {
       state.status = STATUS.LOADING;
     },
@@ -31,6 +45,19 @@ export const slice = createSlice({
       state.medias[m.id] = m;
     },
     [fetchMedia.rejected]: (state, action) => {
+      state.status = STATUS.FAILED;
+      state.error = action.error;
+    },
+    // POST
+    [postMedia.pending]: (state, _) => {
+      state.status = STATUS.LOADING;
+    },
+    [postMedia.fulfilled]: (state, action) => {
+      state.status = STATUS.IDLE;
+      const m = action.payload;
+      state.medias[m.id] = m;
+    },
+    [postMedia.rejected]: (state, action) => {
       state.status = STATUS.FAILED;
       state.error = action.error;
     },
@@ -44,6 +71,8 @@ export const useMedia = () => {
     ...state,
     fetchMedia: id =>
       dispatch(fetchMedia({id})).then(unwrapResult),
+    postMedia: data =>
+      dispatch(postMedia(data)).then(unwrapResult)
   };
 };
 

@@ -35,7 +35,8 @@ function ShareaCardNew(_) {
 
 }
 
-function ShareaCard({ isNew, id, name, description, creator, like, likes, connectedUsers }) {
+function ShareaCard({ isNew, id, name, description, creator, connectedUsers }) {
+
   if (isNew) return <ShareaCardNew />;
 
   const { status, fetchSpecificUser, users } = useUser();

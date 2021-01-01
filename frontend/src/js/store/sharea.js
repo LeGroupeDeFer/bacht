@@ -64,7 +64,16 @@ export const quit = createAsyncThunk(
 export const slice = createSlice({
   name: 'sharea',
   initialState,
-  reducers: {},
+  reducers: {
+    addMedia: (state, action) => {
+      const data = action.payload;
+      const sharea = JSON.parse(JSON.stringify(state.map[data.shareaId]));
+      state.map[data.shareaId] = {
+        ...sharea,
+        medias: [...sharea.medias, data.mediaId]
+      };
+    }
+  },
   extraReducers: {
     // ALL
     [fetchAll.pending]: (state, _) => {
@@ -172,6 +181,7 @@ export const slice = createSlice({
   }
 });
 
+export const { addMedia } = slice.actions;
 
 export const useSharea = () => {
   const dispatch = useDispatch();

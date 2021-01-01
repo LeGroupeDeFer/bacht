@@ -22,7 +22,6 @@ function App(_) {
 
   const history = useHistory();
   const [status, authenticated] = useInitialization();
-  const { currentUser } = useUser();
 
   useEffect(() => {
     if (status === 'idle' && !authenticated)
@@ -35,28 +34,28 @@ function App(_) {
     return <Loader.Centered width="100" />;
 
   return (
-      <div className="section">
-        <Sidebar />
-        <Suspense fallback={<Loader width="50" />}>
-          <Switch>
-            <Route path="/auth">
-              <Auth />
-            </Route>
-            <Route path="/profile/:id">
-              <Profile />
-            </Route>
-            <Route path="/discover">
-              <Discover />
-            </Route>
-            <Route path="/sharea/:id">
-              <Sharea />
-            </Route>
-            <Route path={['/', '/dashboard/:others']}>
-              <Home />
-            </Route>
-          </Switch>
-        </Suspense>
-      </div>
+    <div className="section">
+      <Sidebar />
+      <Suspense fallback={<Loader width="50" />}>
+        <Switch>
+          <Route path="/auth">
+            <Auth />
+          </Route>
+          <Route path="/profile/:id">
+            <Profile />
+          </Route>
+          <Route path="/discover">
+            <Discover />
+          </Route>
+          <Route path="/sharea/:id">
+            <Sharea />
+          </Route>
+          <Route path={['/', '/dashboard/:others']}>
+            <Home />
+          </Route>
+        </Switch>
+      </Suspense>
+    </div>
   );
 
 }

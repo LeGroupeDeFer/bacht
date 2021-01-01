@@ -81,8 +81,9 @@ function Sharea(props) {
 
   const [state, setState] = useState(props);
   const isEditing = currentUser.id === props.creator;
-  const { like, likes, connectedUsers } = props;
-  const { id, name, medias, creator } = state;
+
+  const { id, medias, connectedUsers } = props;
+  const { name, creator } = state;
 
   /* Handlers */
 
@@ -111,7 +112,7 @@ function Sharea(props) {
         >
           <Row>
             <Col lg={9} className="px-0">
-              <Media.List medias={medias} />
+              <Media.List medias={medias} shareaId={id} />
             </Col>
 
             <Col lg={3} className="px-0">

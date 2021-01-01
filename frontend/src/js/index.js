@@ -18,7 +18,7 @@ ReactDOM.render(
 );
 
 // ugly hack to send information to backend when a user force refresh on a page and therefore quits a Sharea view
-window.onunload = (_) => {
+window.onunload = (e) => {
   const path = window.location.pathname;
   const shareaRegex = /\/sharea\/(?<id>\d+)/;
   const match = path.match(shareaRegex);

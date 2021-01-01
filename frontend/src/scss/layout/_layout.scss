@@ -209,7 +209,7 @@ main {
 
 }
 
-.sharea-card {
+.sharea-card, .media-card {
 
   width: 250px;
   margin: 1em .5em;
@@ -254,6 +254,8 @@ main {
 
     width: 250px;
     height: 1px;
+
+    margin: 1em 0.5em;
 
   }
 
