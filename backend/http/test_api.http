@@ -245,7 +245,7 @@ Authorization: Bearer {{access_token}}
 
 ### ------------------------------------------------------------- USER JOINS SHAREA
 
-POST http://localhost:8000/api/sharea/5/user
+POST http://localhost:8000/api/sharea/5/enter
 Accept: application/json
 Cache-Control: no-cache
 Authorization: Bearer {{access_token}}
@@ -261,7 +261,7 @@ Authorization: Bearer {{access_token}}
 
 ### ------------------------------------------------------------- USER QUITS SHAREA
 
-DELETE http://localhost:8000/api/sharea/5/user
+POST http://localhost:8000/api/sharea/5/quit
 Accept: application/json
 Cache-Control: no-cache
 Authorization: Bearer {{access_token}}

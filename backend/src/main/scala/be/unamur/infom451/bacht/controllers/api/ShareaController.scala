@@ -192,13 +192,13 @@ trait ShareaController {
     Future(ShareaUserStore.count_token("sharea_%d".format(id)))
   } recoverWith ErrorResponse.recover(418)
 
-  @Endpoint(method = HttpMethod.POST, path = "/:id/user")
+  @Endpoint(method = HttpMethod.POST, path = "/:id/enter")
   def userJoins(id: Int): Future[Int] = {
     ShareaUserStore.tell("sharea_%d".format(id))
     countUsers(id)
   } recoverWith ErrorResponse.recover(418)
 
-  @Endpoint(method = HttpMethod.DELETE, path = "/:id/user")
+  @Endpoint(method = HttpMethod.POST, path = "/:id/quit")
   def userQuits(id: Int): Future[Int] = {
     ShareaUserStore.get("sharea_%d".format(id))
     countUsers(id)
