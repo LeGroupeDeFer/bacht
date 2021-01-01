@@ -27,9 +27,9 @@ function ShareaTitle({ id, name, like, likes }) {
           url={`/api/sharea/${id}/sharealike`}
         />
       </h1>
-      <h1>
+      <div className="sharea-page-title">
         <PresenceCounter count={2} />
-      </h1>
+      </div>
     </>
   );
 
