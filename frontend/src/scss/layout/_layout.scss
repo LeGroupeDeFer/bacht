@@ -197,11 +197,12 @@ main {
     padding: 1.5em 0.75em 0.75em 0.75em;
   }
 
+  .connected-user-counter {
+    white-space: nowrap;
+  }
 
   .like-counter {
-
     padding-left: 1rem;
-
   }
 
   .edition-action {

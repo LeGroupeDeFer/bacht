@@ -54,7 +54,7 @@ function ShareaCard({ isNew, id, name, description, creator, like, likes }) {
               {name}
             </Link>
           </div>
-          <div>
+          <div className="connected-user-counter">
             <PresenceCounter count={0} />
           </div>
         </Card.Title>
