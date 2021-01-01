@@ -17,11 +17,10 @@ function ProfilePage() {
   const { error, status, users, currentUser, fetchSpecificUser } = useUser();
 
   if(seeked === 'self') {
-    return <Profile user={currentUser}/>
+    return <Profile user={currentUser} viaSelf/>
   }
 
   useEffect(() => {
-    console.log("inside useEffect");
     if (users[seeked] === undefined) {
       fetchSpecificUser(seeked);
     }

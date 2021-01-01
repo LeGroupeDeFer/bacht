@@ -1,48 +1,44 @@
 import { useUser } from 'sharea/store/user';
 import ProfileName from 'sharea/component/Profile/ProfileName';
 import TabNav from 'sharea/component/layout/TabNav';
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
-import React, { useEffect } from 'react';
-import { STATUS } from 'sharea/lib';
-import { Card } from 'react-bootstrap';
-import Error from 'sharea/component/Error';
-import Loader from 'sharea/component/Loader';
+import { Route, Switch } from 'react-router-dom';
+import React from 'react';
 import ProfileInfo from 'sharea/component/Profile/ProfileInfo';
 
-const links = [
-  {
-    uri: '/profile/self',
-    title: 'Info',
-    Component: ProfileInfo
-  },
-  {
-    uri: '/profile/shareas',
-    title: 'Shareas',
-    Component: (_) => <></>
-  },
-  {
-    uri: '/profile/following',
-    title: 'Following',
-    Component: (_) => <></>
-  },
-  {
-    uri: '/profile/like',
-    title: 'Like',
-    Component: (_) => <></>
-  }
-];
 
-function Profile({ user }) {
+function Profile({ user, viaSelf}) {
 
   const { currentUser, update } = useUser();
   const isSelf = currentUser.id === user.id;
+  const links = [
+    {
+      uri: isSelf && viaSelf ? '/profile/self' : `/profile/${user.id}`,
+      title: 'Info',
+      Component: ProfileInfo
+    },
+    {
+      uri: isSelf && viaSelf ? '/profile/self/shareas' : `/profile/${user.id}/shareas`,
+      title: 'Shareas',
+      Component: (_) => <></>
+    },
+    {
+      uri: isSelf && viaSelf ? '/profile/self/following' : `/profile/${user.id}/following`,
+      title: 'Following',
+      Component: (_) => <></>
+    },
+    {
+      uri: isSelf && viaSelf ? '/profile/self/like' : `/profile/${user.id}/like`,
+      title: 'Like',
+      Component: (_) => <></>
+    }
+  ];
 
   return (
     <main className="content">
       <div className="inner-content">
         <div className="heading">
           <ProfileName isSelf={isSelf} {...user} />
-          <TabNav links={links} default="/profile" />
+          <TabNav links={links} default={links[0].uri} />
         </div>
 
         <Switch>
