@@ -63,8 +63,7 @@ function Sharea(props) {
   /* User handling */
 
   const { currentUser, users, status, fetchSpecificUser } = useUser();
-  const { update, like:likeSharea } = useSharea();
-  const onLike = () => likeSharea(props.id);
+  const { update } = useSharea();
 
   useEffect(() => {
     if (users[props.creator] === undefined) {
@@ -80,8 +79,8 @@ function Sharea(props) {
 
   const [state, setState] = useState(props);
   const isEditing = currentUser.id === props.creator;
-  const { like, likes } = props;
-  const { id, name, medias, creator } = state;
+  const { id, like, likes, medias } = props;
+  const { name, creator } = state;
 
   /* Handlers */
 
@@ -110,7 +109,7 @@ function Sharea(props) {
         >
           <Row>
             <Col lg={9} className="px-0">
-              <Media.List medias={medias} />
+              <Media.List medias={medias} shareaId={id} />
             </Col>
 
             <Col lg={3} className="px-0">

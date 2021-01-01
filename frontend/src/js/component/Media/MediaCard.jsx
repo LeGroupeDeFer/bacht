@@ -17,8 +17,6 @@ import MediaList from './MediaList';
 
 function MediaCardNew(_) {
 
-  const [show, setShow] = useState(false);
-
   const history = useHistory();
   const onClick = _ => history.push('/sharea/new');
 
