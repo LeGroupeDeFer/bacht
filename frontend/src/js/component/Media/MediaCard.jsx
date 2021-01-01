@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-import { Card, Form } from 'react-bootstrap';
-import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome'
-
+import { Card } from 'react-bootstrap';
 import { connectMedia } from 'sharea/store/media';
-import {faArrowUp, faPlusSquare} from '@fortawesome/free-solid-svg-icons';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { STATUS } from 'sharea/lib';
 
@@ -15,32 +12,7 @@ import MediaList from './MediaList';
 import { useUser } from 'sharea/store/user';
 import Loader from 'sharea/component/Loader';
 
-
-function MediaCardNew(_) {
-
-  const history = useHistory();
-  const onClick = _ => history.push('/sharea/new');
-
-  return (
-    <Card className="sharea-card sharea-card-new" onClick={onClick}>
-      <Card.Body>
-        <Card.Title>
-          New Sharea
-        </Card.Title>
-        <Icon
-          icon={faPlusSquare}
-          size="4x"
-          className="d-block mx-auto mt-3"
-        />
-      </Card.Body>
-    </Card>
-  );
-
-}
-
-function MediaCard({ isNew, name, kind, content, shareaId, author}) {
-
-  if (isNew) return <MediaCardNew />;
+function MediaCard({ name, kind, content, author}) {
 
   const { users, status, fetchSpecificUser } = useUser();
 
