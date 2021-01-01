@@ -29,10 +29,6 @@ function ShareaCardNew(_) {
           className="d-block mx-auto mt-3"
         />
       </Card.Body>
-      <Card.Footer>
-        <small className="sharea-card-footer">
-        </small>
-      </Card.Footer>
     </Card>
   );
 
