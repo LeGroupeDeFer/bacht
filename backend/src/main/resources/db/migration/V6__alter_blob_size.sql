@@ -1,0 +1,1 @@
+ALTER TABLE medias MODIFY content MEDIUMBLOB;
