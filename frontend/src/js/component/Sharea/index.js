@@ -8,6 +8,7 @@ import ShareaCard from './ShareaCard';
 import ShareaList from './ShareaList';
 import NewSharea from './NewSharea';
 import { useUser } from 'sharea/store/user';
+import PresenceCounter from 'sharea/component/Sharea/PresenceCounter';
 import { capitalize, STATUS } from 'sharea/lib';
 import {useSharea} from "sharea/store/sharea";
 
@@ -62,6 +63,7 @@ function Sharea(props) {
 
   const { currentUser, users, status, fetchSpecificUser } = useUser();
   const { update, like:likeSharea } = useSharea();
+  const onLike = () => likeSharea(props.id);
 
   useEffect(() => {
     if (users[props.creator] === undefined) {
@@ -77,7 +79,8 @@ function Sharea(props) {
 
   const [state, setState] = useState(props);
   const isEditing = currentUser.id === props.creator;
-  const { id, name, description, medias, like, likes, creator } = state;
+  const { like, likes } = props;
+  const { name, medias, creator } = state;
 
   /* Handlers */
 
@@ -85,7 +88,6 @@ function Sharea(props) {
   const onChange = name => e => setState(
     s => ({ ...s, [name]: e.target.value })
   );
-  const onLike = () => likeSharea(props.id);
   const onSubmit = () => update(state);
 
   return (
@@ -99,9 +101,11 @@ function Sharea(props) {
               like={like}
               likes={likes}
               onLike={onLike}
-              url={`/api/sharea/${id}/sharealike`}
             />
           </h1>
+          <div className="sharea-page-title">
+            <PresenceCounter count={2} />
+          </div>
         </div>
 
         <Container
@@ -135,6 +139,6 @@ function Sharea(props) {
 Sharea.Card = ShareaCard;
 Sharea.List = ShareaList;
 Sharea.Form = NewSharea;
-
+Sharea.PresenceCounter = PresenceCounter;
 
 export default Sharea;

@@ -114,16 +114,16 @@ export const slice = createSlice({
       state.self = [];
     },
     // LIKE
-    [update.pending]: (state, _) => {
+    [like.pending]: (state, _) => {
       state.status = STATUS.LOADING;
     },
-    [update.fulfilled]: (state, action) => {
+    [like.fulfilled]: (state, action) => {
       state.status = STATUS.IDLE;
       const { id, like, likes } = action.payload;
       state.map[id] = { ...state.map[id], like, likes };
       state.all = Object.values(state.map);
     },
-    [update.rejected]: (state, action) => {
+    [like.rejected]: (state, action) => {
       state.status = STATUS.FAILED;
       state.error = action.error;
     },

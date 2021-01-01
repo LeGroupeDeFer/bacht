@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useRouteMatch, useHistory } from 'react-router-dom';
 
 import { useUser } from 'sharea/store/user';
 import { STATUS } from 'sharea/lib';
@@ -13,11 +13,12 @@ import Profile from 'sharea/component/Profile';
 function ProfilePage() {
 
   const match = useRouteMatch();
+  const history = useHistory();
   const seeked = match.params.id;
   const { error, status, users, currentUser, fetchSpecificUser } = useUser();
 
-  if(seeked === 'self') {
-    return <Profile user={currentUser} viaSelf/>
+  if (seeked === 'self') {
+    history.replace(`/profile/${currentUser.id}`);
   }
 
   useEffect(() => {
@@ -27,8 +28,8 @@ function ProfilePage() {
   }, []);
 
 
-  if(status === STATUS.FAILED) {
-    return <Card><Error error={error}/></Card>
+  if (status === STATUS.FAILED) {
+    return <Card><Error error={error} /></Card>
   }
 
   if (users[seeked] === undefined) {

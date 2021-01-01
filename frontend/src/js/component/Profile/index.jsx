@@ -8,28 +8,28 @@ import ShareaList from 'sharea/component/Sharea/ShareaList';
 import { useSharea } from 'sharea/store/sharea';
 
 
-function Profile({ user, viaSelf}) {
+function Profile({ user}) {
 
   const { currentUser, update } = useUser();
   const isSelf = currentUser.id === user.id;
   const links = [
     {
-      uri: isSelf && viaSelf ? '/profile/self' : `/profile/${user.id}`,
+      uri: `/profile/${user.id}`,
       title: 'Info',
       Component: ProfileInfo
     },
     {
-      uri: isSelf && viaSelf ? '/profile/self/shareas' : `/profile/${user.id}/shareas`,
+      uri: `/profile/${user.id}/shareas`,
       title: 'Shareas',
       Component: ShareaList
     },
     // {
-    //   uri: isSelf && viaSelf ? '/profile/self/following' : `/profile/${user.id}/following`,
+    //   uri: `/profile/${user.id}/following`,
     //   title: 'Following',
     //   Component: (_) => <></>
     // },
     // {
-    //   uri: isSelf && viaSelf ? '/profile/self/like' : `/profile/${user.id}/like`,
+    //   uri: `/profile/${user.id}/like`,
     //   title: 'Like',
     //   Component: (_) => <></>
     // }

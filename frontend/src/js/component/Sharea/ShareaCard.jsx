@@ -10,6 +10,7 @@ import Loader from 'sharea/component/Loader'
 
 import { STATUS } from 'sharea/lib';
 import LikeCounter from 'sharea/component/LikeCounter';
+import PresenceCounter from 'sharea/component/Sharea/PresenceCounter';
 
 
 function ShareaCardNew(_) {
@@ -48,9 +49,14 @@ function ShareaCard({ isNew, id, name, description, creator, like, likes }) {
     <Card className="sharea-card">
       <Card.Body>
         <Card.Title>
-          <Link to={`/sharea/${id}`}>
-            {name}
-          </Link>
+          <div className="card-title">
+            <Link to={`/sharea/${id}`}>
+              {name}
+            </Link>
+          </div>
+          <div>
+            <PresenceCounter count={0} />
+          </div>
         </Card.Title>
         <Card.Text className="sharea-card-description">{description}</Card.Text>
       </Card.Body>
