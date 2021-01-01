@@ -1,9 +1,19 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useUser } from 'sharea/store/user';
+import Loader from 'sharea/component/Loader'
+import { STATUS } from 'sharea/lib';
 
 
-function ShareaCard({ id, name, description, creatorId }) {
+function ShareaCard({ id, name, description, creator }) {
+
+  const { fetchSpecificUser, status, users } = useUser();
+
+  if (users[creator] === undefined || status === STATUS.LOADING) {
+    fetchSpecificUser(creator);
+    return <Loader.Centered width="100" />
+  }
 
   return (
     <Card className="sharea-card">
@@ -18,7 +28,7 @@ function ShareaCard({ id, name, description, creatorId }) {
       </Card.Body>
       <Card.Footer>
         <small className="TODO">
-          <Link to={`/user/${creatorId}`}>@{creatorId}</Link> Got
+          <Link to={`/user/${creator}`}>@{users[creator].username}</Link> Got
           % likes
         </small>
       </Card.Footer>

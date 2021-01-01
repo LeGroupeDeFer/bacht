@@ -4,7 +4,6 @@ import scala.concurrent.Future
 import wvlet.airframe.http.{Endpoint, HttpMethod, Router}
 import be.unamur.infom451.bacht.lib._
 import be.unamur.infom451.bacht.lib.bacht.ShareaUserStore
-import be.unamur.infom451.bacht.models
 import be.unamur.infom451.bacht.models.ShareaTable.Sharea
 import be.unamur.infom451.bacht.models.likes.LikeResponse
 import be.unamur.infom451.bacht.models.likes.ShareaLikeTable.{ShareaLike, shareaLikes}
@@ -60,8 +59,8 @@ object ShareaController extends Guide {
     id         : Int,
     name       : String,
     description: String,
-    creator: Int,
-    medias: Seq[Int],
+    creator    : Int,
+    medias     : Seq[Int],
     like       : Option[Boolean],
     likes      : Option[Int]
   )
@@ -69,7 +68,7 @@ object ShareaController extends Guide {
   type DetailedShareaResponse = DetailedShareaInfo
 
   case class ShareaCreationRequest(
-    name       : String,
+    name: String,
     description: String
   )
 
@@ -91,7 +90,7 @@ object ShareaController extends Guide {
     id      : Int,
     name    : String,
     kind    : String,
-    content: String,
+    content : String,
     author  : Int,
     shareaId: Int,
     like    : Option[Boolean],
@@ -108,10 +107,17 @@ trait ShareaController {
   import ShareaController._
 
   @Endpoint(method = HttpMethod.GET, path = "/")
-  def all: Future[ShareaResponse] = Sharea
-    .all
-    .map(_.map(s => ShareaInfo(s.id.get, s.name, s.creatorId)))
-    .recoverWith(ErrorResponse.recover(500))
+  def all: Future[Seq[DetailedShareaInfo]] = withUser(u => u)
+    .flatMap(user =>
+      Sharea.allWithMedia.map(sm => (user, sm))
+    )
+    .map {
+      case (user, sm) => sm.map { case (sharea, medias) =>
+        ShareaLike.likeInformation(user.id.get, sharea.id.get)
+          .map(li => (sharea, medias, li))
+      }
+    }.flatMap((xs: Seq[Future[(Sharea, Seq[Media], LikeResponse)]]) => Future.sequence(xs))
+    .map(smls => smls.map(sml => DetailedShareaInfo.from(sml._1, sml._2, sml._3)))
 
   @Endpoint(method = HttpMethod.GET, path = "/:id")
   def one(id: Int): Future[DetailedShareaResponse] =
@@ -177,17 +183,17 @@ trait ShareaController {
     })
   } recoverWith ErrorResponse.recover(418)
 
-  @Endpoint(method= HttpMethod.GET, path= "/:id/count_users")
+  @Endpoint(method = HttpMethod.GET, path = "/:id/count_users")
   def countUsers(id: Int): Future[Int] = {
     Future(ShareaUserStore.count_token("sharea_%d".format(id)))
   } recoverWith ErrorResponse.recover(418)
 
-  @Endpoint(method= HttpMethod.POST, path= "/:id/user")
+  @Endpoint(method = HttpMethod.POST, path = "/:id/user")
   def userJoins(id: Int): Future[Boolean] = {
     Future(ShareaUserStore.tell("sharea_%d".format(id)))
   } recoverWith ErrorResponse.recover(418)
 
-  @Endpoint(method= HttpMethod.DELETE, path= "/:id/user")
+  @Endpoint(method = HttpMethod.DELETE, path = "/:id/user")
   def userQuits(id: Int): Future[Boolean] = {
     Future(ShareaUserStore.get("sharea_%d".format(id)))
   } recoverWith ErrorResponse.recover(418)

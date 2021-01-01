@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import {
-  Button, CardDeck, Col, Form, ListGroup, ListGroupItem, OverlayTrigger, Popover,
+  Button, CardDeck, Col, Container, Form, ListGroup, ListGroupItem, OverlayTrigger, Popover,
   Row
 } from 'react-bootstrap';
 
@@ -97,11 +97,10 @@ function Sharea({ id, name, description, medias, like, likes, ...props }) {
 
   return (
     <div className="heading">
-      <Form
-        method="PUT"
-        action={`/api/sharea/${tmp_sharea.id}`}
+      <Container
+        fluid
         className={`sharea ${isEditing ? 'sharea-edit' : ''}`}
-        onSubmit={prevent(onSubmission)}>
+        >
         <Row>
           <Col>
             <h1>
@@ -122,19 +121,20 @@ function Sharea({ id, name, description, medias, like, likes, ...props }) {
               isEditing={isEditing}
               editCallback={() => setIsEditing(true)}
               cancelCallback={manageCancel}
+              submitCallback={onSubmission}
             />
           </Col>
         </Row>
         <Row>
           <Col sm={10}>
-            {/*<CardDeck>*/}
-            {/*  {tmp_sharea.medias.map(mediaId => (<Media*/}
-            {/*    key={mediaId}*/}
-            {/*    {...tmp_medias[mediaId]}*/}
-            {/*     author={author}*/}
-            {/*  />))*/}
-            {/*  }*/}
-            {/*</CardDeck>*/}
+            <CardDeck>
+              {tmp_sharea.medias.map(mediaId => (<Media
+                key={mediaId}
+                {...tmp_medias[mediaId]}
+                 author={author}
+              />))
+              }
+            </CardDeck>
 
             <OverlayTrigger
               trigger="click"
@@ -170,7 +170,7 @@ function Sharea({ id, name, description, medias, like, likes, ...props }) {
             </div>
           </Col>
         </Row>
-      </Form>
+      </Container>
     </div>
   );
 

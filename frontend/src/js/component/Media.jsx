@@ -10,24 +10,24 @@ import LikeCounter from 'sharea/component/LikeCounter';
 import AuthorEdit from 'sharea/component/AuthorEdit';
 
 
-function Media({id, name, content, parentId, author, likes, like, ...props}) {
+function Media({id, name, content, shareaId, author, likes, like, ...props}) {
   const [isEditing, setIsEditing] = useState(false);
-  const authorName = 'john'; // todo : fetch the author name
+
   // `specificView` should be set to `true` if the media is the only thing displayed
   // `specificView` should be set to `false` if the media is displayed alongside with other media of the same Sharea
-  const specificView = true; // todo : get the information of the view elsewhere
+  const specificView = false; // todo : get the information of the view elsewhere
 
   const [state, setState] = useState({
     name: name,
     content: content
   });
 
-  setState(s => ({
-    ...s,
-    ['name']: name,
-    ['content']: content
-  }));
   const reset = () => {
+    setState(s => ({
+      ...s,
+      ['name']: name,
+      ['content']: content
+    }));
   }
 
   const manageCancel = () => {
@@ -40,7 +40,7 @@ function Media({id, name, content, parentId, author, likes, like, ...props}) {
   );
 
   const onSubmit = () => {
-    props.updateMedia(state);
+    // props.updateMedia(state);
     setIsEditing(false);
   }
 
@@ -63,10 +63,9 @@ function Media({id, name, content, parentId, author, likes, like, ...props}) {
               />
             </Form.Group>
           </div>
-          {specificView ? (<div><Link to={`/sharea/${parentId}`}><Icon icon={faArrowUp} /></Link></div>) : (<></>)}
+          {specificView ? (<div><Link to={`/sharea/${shareaId}`}><Icon icon={faArrowUp} /></Link></div>) : (<></>)}
         </Card.Header>
         <Card.Body>
-          <Card.Text>
             <Form.Group controlId="content">
               <Form.Control
                 plaintext={!isEditing}
@@ -76,15 +75,13 @@ function Media({id, name, content, parentId, author, likes, like, ...props}) {
                 onChange={onChange('content')}
               />
             </Form.Group>
-          </Card.Text>
         </Card.Body>
         <Card.Footer className="flex-container">
           <AuthorEdit
-            author
+            author={author}
             isEditing={isEditing}
             editCallback={() => setIsEditing(true)}
             cancelCallback={manageCancel}
-            submitCallback={prevent(onSubmit)}
           />
           <LikeCounter like={like} likes={likes} url={`/api/media/${id}/medialike`} />
         </Card.Footer>
