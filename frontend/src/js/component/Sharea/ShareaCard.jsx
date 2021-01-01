@@ -8,7 +8,7 @@ import { faPlusSquare } from '@fortawesome/free-solid-svg-icons'
 import { useUser } from 'sharea/store/user';
 import Loader from 'sharea/component/Loader'
 
-import { STATUS, randomColor } from 'sharea/lib';
+import { STATUS } from 'sharea/lib';
 import LikeCounter from 'sharea/component/LikeCounter';
 
 
