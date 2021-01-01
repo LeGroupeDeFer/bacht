@@ -6,7 +6,7 @@ function UserRow(props) {
     return (
         <tr>
             <td>{props.id}</td>
-            <Link to={`/user/${props.id}`}><td>{props.username}</td></Link>
+            <Link to={`/profile/${props.id}`}><td>{props.username}</td></Link>
             <td>{props.isLiked}</td>
             <td>{props.likedBy}</td>
         </tr>

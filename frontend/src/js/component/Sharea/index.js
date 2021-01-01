@@ -15,6 +15,7 @@ import ShareaList from './ShareaList';
 import NewSharea from './NewSharea';
 import { useMedia } from 'sharea/store/media';
 import Error from 'sharea/component/Error';
+import { useUser } from 'sharea/store/user';
 
 
 function LazyMedia({id}) {
@@ -64,7 +65,19 @@ function Sharea(props) {
   const [isEditing, setIsEditing] = useState(false);
 
   const { id, name, description, medias, like, likes, creator } = state;
-  const author = { id: creator, username: 'darwin' };
+  const { users, status, fetchSpecificUser } = useUser();
+
+  useEffect(() => {
+    if (users[creator] === undefined) {
+      fetchSpecificUser(creator);
+    }
+  }, []);
+
+  if (users[creator] === undefined || status === STATUS.LOADING) {
+    return <Loader.Centered width="100" />
+  }
+
+  const author = users[creator];
 
   const reset = () => setState(s => ({ ...s, ...props }));
   const onChange = name => e => setState(
@@ -113,7 +126,7 @@ function Sharea(props) {
         >
           <Row>
             <Col sm={10}>
-              <MediaList medias={medias}/>
+              <MediaList medias={medias} />
 
               <OverlayTrigger
                 trigger="click"
