@@ -1,10 +1,14 @@
-import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
-import {useDispatch, useSelector, connect} from 'react-redux';
-import {now, api, STATUS} from '../lib';
+import {createSlice, createAsyncThunk, unwrapResult} from '@reduxjs/toolkit';
+import { useDispatch, useSelector, connect } from 'react-redux';
+
+import { api, STATUS } from '../lib';
 
 
-class UserError extends Error {
-}
+/* --------------------------------- Utils --------------------------------- */
+
+class UserError extends Error {}
+
+/* ---------------------------- Initial State ------------------------------ */
 
 const initialState = {
   status: STATUS.IDLE,
@@ -12,6 +16,8 @@ const initialState = {
   currentUser: null,
   users: {}
 };
+
+/* -------------------------------- Thunks --------------------------------- */
 
 export const fetchCurrentUser = createAsyncThunk(
   'user/self',
@@ -27,11 +33,21 @@ export const fetchSpecificUser = createAsyncThunk(
   }
 );
 
+export const update = createAsyncThunk(
+  'user/update',
+  (data) => {
+    return api.user.update(data);
+  }
+);
+
+/* --------------------------------- Slice --------------------------------- */
+
 export const slice = createSlice({
   name: 'user',
   initialState,
   reducers: {},
   extraReducers: {
+    // CURRENT
     [fetchCurrentUser.pending]: (state, _) => {
       state.status = STATUS.LOADING;
     },
@@ -45,34 +61,54 @@ export const slice = createSlice({
       state.error = action.error;
       state.currentUser = null;
     },
+    // SPECIFIC
     [fetchSpecificUser.pending]: (state, _) => {
       state.status = STATUS.LOADING;
     },
     [fetchSpecificUser.fulfilled]: (state, action) => {
       state.status = STATUS.IDLE;
-      const u = action.payload;
-      state.users[u.id] = u;
+      state.users[action.payload.id] = action.payload;
     },
     [fetchSpecificUser.rejected]: (state, action) => {
+      state.status = STATUS.FAILED;
+      state.error = action.error;
+    },
+    // UPDATE CURRENT
+    [update.pending]: (state, _) => {
+      state.status = STATUS.LOADING;
+    },
+    [update.fulfilled]: (state, action) => {
+      state.status = STATUS.IDLE;
+      state.currentUser = action.payload;
+      state.users[action.payload.id] = action.payload;
+    },
+    [update.rejected]: (state, action) => {
       state.status = STATUS.FAILED;
       state.error = action.error;
     },
   }
 });
 
+/* ---------------------------------- API ---------------------------------- */
+
 export const useUser = () => {
   const dispatch = useDispatch();
   const state = useSelector(state => state.user);
   return {
     ...state,
-    fetchCurrentUser: () => dispatch(fetchCurrentUser()),
-    fetchSpecificUser: id => dispatch(fetchSpecificUser({id}))
+    fetchCurrentUser: () =>
+      dispatch(fetchCurrentUser()).then(unwrapResult),
+    fetchSpecificUser: id =>
+      dispatch(fetchSpecificUser({id})).then(unwrapResult),
+    update: data =>
+      dispatch(update(data)).then(unwrapResult)
   };
 };
 
 export const connectUser = connect(
   state => state.user,
-  {fetchCurrentUser, fetchSpecificUser}
+  { fetchCurrentUser, fetchSpecificUser, update }
 );
+
 
 export default slice.reducer;

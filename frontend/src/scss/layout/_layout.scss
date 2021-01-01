@@ -164,10 +164,36 @@ main {
 
 /* -------------------------------- SHAREA -------------------------------- */
 
-.sharea-creation-card {
+.sharea-card {
 
-  margin: 2em;
+  box-shadow: 0 0 5px rgba(0, 0, 0, .05);
+  transition: .2s ease-in;
+
+  .sharea-card-description {
+    opacity: .8;
+    transition: .2s ease-in;
+  }
+
+  &:hover {
+
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    transform: scale(1.1, 1.1);
+    transition: .2s ease-out;
+
+    .sharea-card-description {
+      opacity: 1;
+      transition: .2s ease-out;
+    }
+  }
+
+  &-new {
+    background: theme-color("primary");
+    color: theme-color("light");
+    text-align: center;
+    cursor: pointer;
+  }
 
 }
+
 
 /* --------------------------------- AUTH ---------------------------------- */

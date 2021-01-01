@@ -1,13 +1,44 @@
 import React from 'react';
+
 import { Card } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome'
+import { faPlusSquare } from '@fortawesome/free-solid-svg-icons'
+
 import { useUser } from 'sharea/store/user';
 import Loader from 'sharea/component/Loader'
-import { STATUS } from 'sharea/lib';
-import LikeCounter from 'sharea/component/LikeCounter';
+
+import { STATUS, randomColor } from 'sharea/lib';
 
 
-function ShareaCard({ id, name, description, creator, like, likes}) {
+function ShareaCardNew(_) {
+
+  const history = useHistory();
+  const onClick = _ => history.push('/sharea/new');
+
+  return (
+    <Card className="sharea-card sharea-card-new" onClick={onClick}>
+      <Card.Body>
+        <Card.Title>
+          New Sharea
+        </Card.Title>
+        <Icon
+          icon={faPlusSquare}
+          size="4x"
+          className="d-block mx-auto mt-3"
+        />
+      </Card.Body>
+      <Card.Footer>
+        <small className="sharea-card-footer">
+        </small>
+      </Card.Footer>
+    </Card>
+  );
+
+}
+
+function ShareaCard({ isNew, id, name, description, creator, likes }) {
+  if (isNew) return <ShareaCardNew />;
 
   const { fetchSpecificUser, status, users } = useUser();
 
@@ -24,13 +55,12 @@ function ShareaCard({ id, name, description, creator, like, likes}) {
             {name}
           </Link>
         </Card.Title>
-        <Card.Text>{description}</Card.Text>
-        <Card.Text>{id}</Card.Text>
+        <Card.Text className="sharea-card-description">{description}</Card.Text>
       </Card.Body>
       <Card.Footer>
-        <small className="TODO">
+        <small className="sharea-card-footer d-flex justify-content-between">
           <Link to={`/profile/${creator}`}>@{users[creator].username}</Link>
-          <LikeCounter like={like} likes={likes} url={`/api/sharea/${id}/sharealike`}/>
+          <LikeCounter like={like} likes={likes} url={`/api/sharea/${id}/sharealike`} />
         </small>
       </Card.Footer>
     </Card>

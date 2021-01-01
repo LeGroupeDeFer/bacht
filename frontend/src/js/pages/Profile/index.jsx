@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect, useState} from 'react';
 
 import { Route, Switch } from 'react-router-dom';
 
@@ -34,13 +34,8 @@ const links = [
 
 function Profile({ user }) {
 
-  const { currentUser } = useUser();
-
+  const { currentUser, update } = useUser();
   const isSelf = currentUser.id === user.id;
-
-  const onUpdate = (data) => {
-    console.log(data);
-  }
 
   return (
     <main className="content">
@@ -60,7 +55,7 @@ function Profile({ user }) {
               <Component
                 {...user}
                 editable={isSelf}
-                onUpdateProfile={onUpdate}
+                onUpdate={update}
               />
             </Route>
           ))}
