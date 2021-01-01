@@ -16,6 +16,7 @@ import NewSharea from './NewSharea';
 import { useMedia } from 'sharea/store/media';
 import Error from 'sharea/component/Error';
 import { useUser } from 'sharea/store/user';
+import PresenceCounter from 'sharea/component/Sharea/PresenceCounter';
 
 
 function LazyMedia({id}) {
@@ -172,6 +173,6 @@ function Sharea(props) {
 Sharea.Card = ShareaCard;
 Sharea.List = ShareaList;
 Sharea.Form = NewSharea;
-
+Sharea.PresenceCounter = PresenceCounter;
 
 export default Sharea;
