@@ -119,7 +119,7 @@ export const slice = createSlice({
     [update.fulfilled]: (state, action) => {
       state.status = STATUS.IDLE;
       const s = action.payload;
-      state.map[s.id] = s;
+      state.map[s.id] = { ...state.map[s.id], ...s };
       state.all = Object.values(state.map);
     },
     [update.rejected]: (state, action) => {

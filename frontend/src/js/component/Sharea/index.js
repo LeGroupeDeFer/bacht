@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 
-import LikeCounter from 'sharea/component/LikeCounter';
 import Media from 'sharea/component/Media';
 import ShareaCard from './ShareaCard';
 import ShareaList from './ShareaList';
@@ -10,7 +9,8 @@ import NewSharea from './NewSharea';
 import { useUser } from 'sharea/store/user';
 import PresenceCounter from 'sharea/component/Sharea/PresenceCounter';
 import { capitalize, STATUS } from 'sharea/lib';
-import {useSharea} from "sharea/store/sharea";
+import { useSharea } from "sharea/store/sharea";
+import ShareaLikeCounter from './LikeCounter';
 
 
 function ShareaInfo({ isEditing, onChange, onSubmit, onCancel, ...sharea }) {
@@ -82,7 +82,7 @@ function Sharea(props) {
   const [state, setState] = useState(props);
   const isEditing = currentUser.id === props.creator;
   const { like, likes, connectedUsers } = props;
-  const { name, medias, creator } = state;
+  const { id, name, medias, creator } = state;
 
   /* Handlers */
 
@@ -98,12 +98,7 @@ function Sharea(props) {
         <div className="heading">
           <h1>
             {capitalize(name)}
-            <LikeCounter
-              size="2x"
-              like={like}
-              likes={likes}
-              onLike={onLike}
-            />
+            <ShareaLikeCounter id={id} size="2x" />
           </h1>
           <div className="sharea-page-title">
             <PresenceCounter count={connectedUsers} />
@@ -142,5 +137,6 @@ Sharea.Card = ShareaCard;
 Sharea.List = ShareaList;
 Sharea.Form = NewSharea;
 Sharea.PresenceCounter = PresenceCounter;
+Sharea.LikeCounter = ShareaLikeCounter;
 
 export default Sharea;
