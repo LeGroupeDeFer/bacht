@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Card, Form } from 'react-bootstrap';
 import { FontAwesomeIcon as Icon } from '@fortawesome/react-fontawesome'
@@ -7,12 +7,13 @@ import { connectMedia } from 'sharea/store/media';
 import {faArrowUp, faPlusSquare} from '@fortawesome/free-solid-svg-icons';
 import { Link, useHistory } from 'react-router-dom';
 
-import { prevent } from 'sharea/lib';
-import LikeCounter from 'sharea/component/LikeCounter';
-import AuthorEdit from 'sharea/component/AuthorEdit';
+import { STATUS } from 'sharea/lib';
+
 import LoadingMedia from './LoadingMedia';
 import LazyMedia from './LazyMedia';
 import MediaList from './MediaList';
+import { useUser } from 'sharea/store/user';
+import Loader from 'sharea/component/Loader';
 
 
 function MediaCardNew(_) {
@@ -37,15 +38,21 @@ function MediaCardNew(_) {
 
 }
 
-function MediaCard({
-  isNew, id, name, kind, content, shareaId, author, likes, like
-}) {
+function MediaCard({ isNew, name, kind, content, shareaId, author}) {
 
   if (isNew) return <MediaCardNew />;
 
-  // `specificView` should be set to `true` if the media is the only thing displayed
-  // `specificView` should be set to `false` if the media is displayed alongside with other media of the same Sharea
-  const specificView = false; // todo : get the information of the view elsewhere
+  const { users, status, fetchSpecificUser } = useUser();
+
+  useEffect(() => {
+    if (users[author] === undefined) {
+      fetchSpecificUser(author);
+    }
+  }, []);
+
+  if (users[author] === undefined || status === STATUS.LOADING) {
+    return <Loader.Centered width="100" />
+  }
 
   let parsedContent;
   if (kind === 'text')
@@ -57,19 +64,12 @@ function MediaCard({
     <Card border="primary" className="media-card">
       <Card.Header className="d-flex">
         <h5>{name}</h5>
-        {
-          specificView ? (
-            <div><Link to={`/sharea/${shareaId}`}>
-              <Icon icon={faArrowUp} />
-            </Link></div>
-          ) : <></>
-        }
       </Card.Header>
 
       <Card.Body>{parsedContent}</Card.Body>
 
       <Card.Footer className="flex-container">
-        @<Link to={`/profile/${author}`}>Author</Link>
+        @<Link to={`/profile/${author}`}>{users[author].username}</Link>
       </Card.Footer>
     </Card>
   );
