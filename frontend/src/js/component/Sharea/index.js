@@ -12,6 +12,7 @@ import Media from 'sharea/component/Media';
 
 import ShareaCard from './ShareaCard';
 import ShareaList from './ShareaList';
+import NewSharea from './NewSharea';
 
 const tmp_sharea = {
   name: 'Cat Species',
@@ -71,113 +72,133 @@ const tmp_medias = {
   }
 }
 
-function Sharea({ id, name, description, medias, like, likes, ...props }) {
-  const author = { id: tmp_sharea.creator, username: 'darwin' };
-  const defaultValues = { name: tmp_sharea.name, description: tmp_sharea.description };
 
+function ShareaTitle({ id, name, like, likes }) {
+
+  return (
+    <h1>
+      {capitalize(name)}
+      <LikeCounter
+        size="2x"
+        like={like}
+        likes={likes}
+        url={`/api/sharea/${id}/sharealike`}
+      />
+    </h1>
+  );
+
+}
+
+
+function Sharea(props) {
+
+  const [state, setState] = useState(props);
   const [isEditing, setIsEditing] = useState(false);
-  const [state, setState] = useState(defaultValues);
 
-  const reset = () => setState(s => ({ ...s, ...defaultValues }));
+  const { id, name, description, medias, like, likes, creator } = state;
+  const author = { id: creator, username: 'darwin' };
+
+  const reset = () => setState(s => ({ ...s, ...props }));
   const onChange = name => e => setState(
     s => ({ ...s, [name]: e.target.value })
   );
-
-  const manageCancel = () => {
+  const onCancel = () => {
     reset();
     setIsEditing(false);
-  }
-
+  };
+  const onLike = like => {
+    console.log(like);
+  };
   const onSubmission = () => {
     // todo : contact backend to create/update sharea
     console.log('submitted');
     setIsEditing(false);
-  }
-
+  };
 
   return (
-    <div className="heading">
-      <Container
-        fluid
-        className={`sharea ${isEditing ? 'sharea-edit' : ''}`}
-        >
-        <Row>
-          <Col>
-            <h1>
-              Sharea {
-              isEditing
-                ? (<Form.Control
-                  type="text"
-                  value={state['name']}
-                  onChange={onChange('name')}
-                />)
-                : capitalize(tmp_sharea.name)
-            }
-            </h1>
-            <LikeCounter like={tmp_sharea.like} likes={tmp_sharea.likes}
-                         url={`/api/sharea/${tmp_sharea.id}/sharealike`} />
+    <main className="content sharea">
+      <div className="inner-content">
+        <div className="heading">
+          <ShareaTitle
+            id={id}
+            name={name}
+            isEditing={isEditing}
+            onChange={onChange('name')}
+            like={like}
+            likes={likes}
+            onLike={onLike}
+          />
+          <div className="edition-action">
             <AuthorEdit
               author={author}
               isEditing={isEditing}
-              editCallback={() => setIsEditing(true)}
-              cancelCallback={manageCancel}
-              submitCallback={onSubmission}
+              onEdit={() => setIsEditing(true)}
+              onCancel={onCancel}
+              onSubmit={onSubmission}
             />
-          </Col>
-        </Row>
-        <Row>
-          <Col sm={10}>
-            <CardDeck>
-              {tmp_sharea.medias.map(mediaId => (<Media
-                key={mediaId}
-                {...tmp_medias[mediaId]}
-                 author={author}
-              />))
-              }
-            </CardDeck>
+          </div>
+        </div>
 
-            <OverlayTrigger
-              trigger="click"
-              placement="top"
-              overlay={
-                <Popover id={`popover-positioned-top`}>
-                  <Popover.Title as="h3">New media's type</Popover.Title>
-                  <Popover.Content>
-                    <ListGroup>
-                      {/* todo : button idea is to create a new media in this sharea*/}
-                      {['text', 'image'].map(kind => (
-                        <ListGroupItem key={kind}><Button>{kind}</Button></ListGroupItem>
-                      ))}
-                    </ListGroup>
-                  </Popover.Content>
-                </Popover>
-              }
-            >
-              <Button>New media</Button>
-            </OverlayTrigger>
-          </Col>
-          <Col sm={2}>
-            <div>
-              {
-                isEditing
-                  ? (<Form.Control
-                    type="textarea"
-                    value={state['description']}
-                    onChange={onChange('description')}
-                  />)
-                  : description
-              }
-            </div>
-          </Col>
-        </Row>
-      </Container>
-    </div>
+        <Container
+          fluid
+          className={`sharea${isEditing ? ' sharea-edit' : ''}`}
+        >
+          <Row>
+            <Col sm={10}>
+              <CardDeck>
+                {tmp_sharea.medias.map(mediaId => (
+                  <Media
+                    key={mediaId}
+                    {...tmp_medias[mediaId]}
+                     author={author}
+                  />
+                ))}
+              </CardDeck>
+
+              <OverlayTrigger
+                trigger="click"
+                placement="top"
+                overlay={
+                  <Popover id={`popover-positioned-top`}>
+                    <Popover.Title as="h3">New media's type</Popover.Title>
+                    <Popover.Content>
+                      <ListGroup>
+                        {/* todo : button idea is to create a new media in this sharea*/}
+                        {['text', 'image'].map(kind => (
+                          <ListGroupItem key={kind}><Button>{kind}</Button></ListGroupItem>
+                        ))}
+                      </ListGroup>
+                    </Popover.Content>
+                  </Popover>
+                }
+              >
+                <Button>New media</Button>
+              </OverlayTrigger>
+            </Col>
+            <Col sm={2}>
+              <div>
+                {
+                  isEditing
+                    ? (<Form.Control
+                      type="textarea"
+                      value={state['description']}
+                      onChange={onChange('description')}
+                    />)
+                    : description
+                }
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </div>
+    </main>
   );
 
 }
 
 Sharea.Card = ShareaCard;
 Sharea.List = ShareaList;
+Sharea.Form = NewSharea;
 
 
 export default Sharea;

@@ -21,25 +21,26 @@ function SubmitButton({ onSubmit }) {
   }
 }
 
-function AuthorEdit({ author, isEditing, cancelCallback, submitCallback, editCallback, ...props }) {
+function AuthorEdit({ author, isEditing, onCancel, onSubmit, onEdit }) {
+
   const { currentUser } = useUser();
 
-  return (
-    <div>
-      {
-        currentUser.id === author.id
-          ? (
-            isEditing
-              ? (<>
-                <Button onClick={cancelCallback}>Cancel</Button>
-                <SubmitButton onSubmit={submitCallback} />
-              </>)
-              : (<Button onClick={editCallback}><Icon icon={faEdit} /></Button>)
-          )
-          : <Link to={`/user/${author.id}`}>@{author.username}</Link>
-      }
-    </div>
-  )
+  if (currentUser.id !== author.id)
+    return <Link to={`/user/${author.id}`}>@{author.username}</Link>;
+
+  if (isEditing)
+    return (
+      <>
+        <Button
+          onClick={onCancel}
+          variant="outline-primary"
+          className="mr-2"
+        >Cancel</Button>
+        <SubmitButton onSubmit={onSubmit} />
+      </>
+    );
+
+  return <Button onClick={onEdit}><Icon icon={faEdit} /></Button>;
 }
 
 // todo : withUser, withAuthor

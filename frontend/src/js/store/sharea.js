@@ -14,7 +14,7 @@ const initialState = {
 export const fetchAll = createAsyncThunk(
   'sharea/all',
   () => {
-    return api.sharea();
+    return api.sharea.all();
   }
 );
 

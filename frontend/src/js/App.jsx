@@ -16,7 +16,7 @@ const Home = lazy(() => import('sharea/pages/Home'));
 const Auth = lazy(() => import('sharea/pages/Auth'));
 const Profile = lazy(() => import('sharea/pages/Profile'));
 const Discover = lazy(() => import('sharea/pages/Discover'));
-const Sharea = lazy(() => import('sharea/component/Sharea'));
+const Sharea = lazy(() => import('sharea/pages/Sharea'));
 
 
 // App :: None => Component
@@ -49,9 +49,6 @@ function App(_) {
             </Route>
             <Route path="/discover">
               <Discover />
-            </Route>
-            <Route exact path="/sharea/new">
-              <NewSharea />
             </Route>
             <Route path="/sharea/:id">
               <Sharea />

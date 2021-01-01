@@ -1,21 +1,32 @@
 @use 'theme' as *;
 
-/* -------------------------------- Sharea --------------------------------- */
+.like-counter {
 
-.sharea-list {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  padding: 2em;
-  justify-content: space-between;
-}
+  button {
 
-.sharea-card {
-  width: 250px;
-  margin: 0 .5em;
-}
+    border: none;
+    background: transparent;
+    color: theme-color("primary");
+    outline: none !important;
+    box-shadow: none;
 
-.sharea-card-phantom {
-  width: 250px;
-  height: 1px;
+    transition: .1s ease-in;
+
+    &:hover, &:focus, &:active {
+
+      border: none !important;
+
+      background: transparent !important;
+      color: theme-color("primary") !important;
+      outline: none !important;
+      box-shadow: none !important;
+
+      transform: scale(1.2, 1.2);
+
+      transition: .1s ease-out;
+
+    }
+
+  }
+
 }

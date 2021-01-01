@@ -1,5 +1,6 @@
 import jwtDecode from 'jwt-decode';
 import { empty, identity, clean, normalizeEntities } from './utils';
+import {trace} from "sharea/lib/utils";
 
 /* -------------------------------------------------------------------------
    ------------------------------- BARE API --------------------------------
@@ -308,7 +309,7 @@ async function sharea(endpoint = '', config = {}) {
 Object.assign(sharea, {
 
   async all() {
-    return sharea().then(normalizeEntities);
+    return sharea().then(normalizeEntities).then(trace);
   },
 
   async byId(id) {

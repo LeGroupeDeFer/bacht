@@ -6,16 +6,17 @@ import {faHeart as heartRegular} from '@fortawesome/free-regular-svg-icons';
 
 
 
-function LikeCounter({likes, like, url}) {
-  const toggleLike = () => {
-    console.log("gneeee");
-    // contact given url
-  }
+function LikeCounter({ likes, like, onLike, size }) {
 
-  return <div>
-    (<Button onClick={toggleLike}><Icon icon={like ? heartSolid : heartRegular} /></Button>)
-    {likes}
-  </div>
+  return (
+    <div className="like-counter">
+      <Button onClick={onLike}>
+        <Icon icon={like ? heartSolid : heartRegular} size={size} />
+      </Button>
+      <small className="text-muted">{likes}</small>
+    </div>
+  );
+
 }
 
 export default LikeCounter;

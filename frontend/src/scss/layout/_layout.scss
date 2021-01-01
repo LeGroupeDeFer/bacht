@@ -164,36 +164,87 @@ main {
 
 /* -------------------------------- SHAREA -------------------------------- */
 
-.sharea-card {
+.sharea {
 
-  box-shadow: 0 0 5px rgba(0, 0, 0, .05);
-  transition: .2s ease-in;
-
-  .sharea-card-description {
-    opacity: .8;
-    transition: .2s ease-in;
+  .heading {
+    display: flex;
+    justify-content: space-between;
   }
 
-  &:hover {
-
-    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
-    transform: scale(1.1, 1.1);
-    transition: .2s ease-out;
-
-    .sharea-card-description {
-      opacity: 1;
-      transition: .2s ease-out;
-    }
+  h1 {
+    display: flex;
   }
 
-  &-new {
-    background: theme-color("primary");
-    color: theme-color("light");
-    text-align: center;
-    cursor: pointer;
+  .like-counter {
+
+    padding-left: 1rem;
+
+  }
+
+  .edition-action {
+
+    margin: 4em 2em 2.5em 0;
+
   }
 
 }
 
+.sharea-card {
+
+  width: 250px;
+  margin: 0 .5em;
+  box-shadow: 0 0 5px rgba(0, 0, 0, .05);
+  transition: .2s ease-in;
+
+  .sharea-card-description {
+
+    opacity: .8;
+    transition: .2s ease-in;
+
+  }
+
+  &:hover {
+
+    transform: scale(1.1, 1.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    transition: .2s ease-out;
+
+    .sharea-card-description {
+
+      opacity: 1;
+      transition: .2s ease-out;
+
+    }
+  }
+
+  &-new {
+
+    background: theme-color("primary");
+
+    color: theme-color("light");
+    text-align: center;
+
+    cursor: pointer;
+
+  }
+
+  &-phantom {
+
+    width: 250px;
+    height: 1px;
+
+  }
+
+}
+
+.sharea-list {
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  padding: 2em;
+}
 
 /* --------------------------------- AUTH ---------------------------------- */
