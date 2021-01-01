@@ -214,6 +214,8 @@ Object.assign(auth, {
       );
 
       currentAccessToken = access;
+      // needed to send information to backend (see src/js/index.js:20)
+      window.currentAccessToken = access;
       store.setItem('__refresh_data__', `${username}:${refresh}`);
       return jwtDecode(currentAccessToken);
     } catch (e) {
@@ -336,12 +338,12 @@ Object.assign(sharea, {
   },
 
   async enter(id) {
-    return sharea(`/${id}/user`, { method: 'POST' })
+    return sharea(`/${id}/enter`, { method: 'POST' })
       .then(response => ({connectedUsers:response, id}));
   },
 
   async quit(id) {
-    return sharea(`/${id}/user`, { method: 'DELETE' })
+    return sharea(`/${id}/quit`, { method: 'POST' })
       .then(response => ({connectedUsers:response, id}));
   }
 
