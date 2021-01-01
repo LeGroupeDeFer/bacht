@@ -117,7 +117,8 @@ export const useSharea = () => {
     fetchAll : () => dispatch(fetchAll()),
     fetchSelf : () => dispatch(fetchSelf()),
     create: shareaDefinition => dispatch(create(shareaDefinition)),
-    byId: (id) => state.sharea[id]
+    byId: (id) => state.sharea[id],
+    byUserId: (id) => state.all.filter(sh => sh.creator === id)
   };
 };
 

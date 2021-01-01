@@ -24,7 +24,7 @@ const links = [
 // Home :: None => Component
 function Home({ currentUser, status }) {
 
-  const { all:shareas } = useSharea();
+  const { all:shareas, byUserId } = useSharea();
   const likedShareas = shareas.filter(s => s.like);
 
   if (status === 'loading')
@@ -41,7 +41,7 @@ function Home({ currentUser, status }) {
           <Route exact path="/dashboard">
             <Sharea.List
               newSharea
-              shareas={shareas}
+              shareas={byUserId(currentUser.id)}
             />
           </Route>
           <Route exact path="/dashboard/liked">

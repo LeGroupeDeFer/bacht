@@ -4,6 +4,8 @@ import TabNav from 'sharea/component/layout/TabNav';
 import { Route, Switch } from 'react-router-dom';
 import React from 'react';
 import ProfileInfo from 'sharea/component/Profile/ProfileInfo';
+import ShareaList from 'sharea/component/Sharea/ShareaList';
+import { useSharea } from 'sharea/store/sharea';
 
 
 function Profile({ user, viaSelf}) {
@@ -19,19 +21,20 @@ function Profile({ user, viaSelf}) {
     {
       uri: isSelf && viaSelf ? '/profile/self/shareas' : `/profile/${user.id}/shareas`,
       title: 'Shareas',
-      Component: (_) => <></>
+      Component: ShareaList
     },
-    {
-      uri: isSelf && viaSelf ? '/profile/self/following' : `/profile/${user.id}/following`,
-      title: 'Following',
-      Component: (_) => <></>
-    },
-    {
-      uri: isSelf && viaSelf ? '/profile/self/like' : `/profile/${user.id}/like`,
-      title: 'Like',
-      Component: (_) => <></>
-    }
+    // {
+    //   uri: isSelf && viaSelf ? '/profile/self/following' : `/profile/${user.id}/following`,
+    //   title: 'Following',
+    //   Component: (_) => <></>
+    // },
+    // {
+    //   uri: isSelf && viaSelf ? '/profile/self/like' : `/profile/${user.id}/like`,
+    //   title: 'Like',
+    //   Component: (_) => <></>
+    // }
   ];
+  const {byUserId} = useSharea();
 
   return (
     <main className="content">
@@ -52,6 +55,7 @@ function Profile({ user, viaSelf}) {
                 {...user}
                 editable={isSelf}
                 onUpdate={update}
+                shareas={byUserId(user.id)}
               />
             </Route>
           ))}

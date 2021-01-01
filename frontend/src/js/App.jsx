@@ -18,7 +18,6 @@ const Discover = lazy(() => import('sharea/pages/Discover'));
 const Sharea = lazy(() => import('sharea/pages/Sharea'));
 
 
-// App :: None => Component
 function App(_) {
 
   const history = useHistory();
