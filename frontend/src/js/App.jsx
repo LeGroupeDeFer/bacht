@@ -43,12 +43,8 @@ function App(_) {
             <Route path="/auth">
               <Auth />
             </Route>
-            <Route exact path="/profile/self">
-              <Profile user={currentUser} />
-            </Route>
             <Route path="/profile/:id">
-              {/*todo : load correct user*/}
-              <Profile user={currentUser} />
+              <Profile />
             </Route>
             <Route path="/discover">
               <Discover />

@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from 'react';
-
-import { Route, Switch } from 'react-router-dom';
-
-import TabNav from 'sharea/component/layout/TabNav';
-import ProfileInfo from 'sharea/pages/Profile/ProfileInfo'
-import ProfileName from 'sharea/pages/Profile/ProfileName';
 import { useUser } from 'sharea/store/user';
-
+import ProfileName from 'sharea/component/Profile/ProfileName';
+import TabNav from 'sharea/component/layout/TabNav';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { STATUS } from 'sharea/lib';
+import { Card } from 'react-bootstrap';
+import Error from 'sharea/component/Error';
+import Loader from 'sharea/component/Loader';
+import ProfileInfo from 'sharea/component/Profile/ProfileInfo';
 
 const links = [
   {
@@ -30,7 +31,6 @@ const links = [
     Component: (_) => <></>
   }
 ];
-
 
 function Profile({ user }) {
 
