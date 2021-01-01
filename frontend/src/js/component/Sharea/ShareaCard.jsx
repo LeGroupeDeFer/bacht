@@ -9,6 +9,7 @@ import { useUser } from 'sharea/store/user';
 import Loader from 'sharea/component/Loader'
 
 import { STATUS, randomColor } from 'sharea/lib';
+import LikeCounter from 'sharea/component/LikeCounter';
 
 
 function ShareaCardNew(_) {
@@ -37,7 +38,7 @@ function ShareaCardNew(_) {
 
 }
 
-function ShareaCard({ isNew, id, name, description, creator, likes }) {
+function ShareaCard({ isNew, id, name, description, creator, like, likes }) {
   if (isNew) return <ShareaCardNew />;
 
   const { fetchSpecificUser, status, users } = useUser();
