@@ -218,10 +218,23 @@ main {
 
 .sharea-card, .media-card {
 
+  position: relative;
+
   width: 250px;
+
   margin: 1em .5em;
+
   box-shadow: 0 0 5px rgba(0, 0, 0, .05);
   transition: .2s ease-in;
+
+  &-loading {
+
+    min-height: 250px;
+
+    color: white;
+    background: theme-color("secondary");
+
+  }
 
   &:hover {
 

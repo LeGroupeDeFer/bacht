@@ -15,7 +15,7 @@ lazy val root = (project in file("."))
   .settings(
     organization := "be.unamur.infom451",
     name := "bacht",
-    version := "v0.0.1",
+    version := "v0.1.1",
     scalaVersion := "2.12.7",
     libraryDependencies ++= Seq(
       "org.wvlet.airframe" %% "airframe-http-finagle" % airFrameHttpVersion,

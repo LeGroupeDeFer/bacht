@@ -11,6 +11,7 @@ import PresenceCounter from 'sharea/component/Sharea/PresenceCounter';
 import { capitalize, STATUS } from 'sharea/lib';
 import { useSharea } from "sharea/store/sharea";
 import ShareaLikeCounter from './LikeCounter';
+import Loader from 'sharea/component/Loader';
 
 
 function ShareaInfo({ isEditing, onChange, onSubmit, onCancel, ...sharea }) {
@@ -61,15 +62,15 @@ function Sharea(props) {
 
   /* User handling */
 
+  const [state, setState] = useState(props);
   const { currentUser, users, status, fetchSpecificUser } = useUser();
   const { update, like:likeSharea, enter, quit } = useSharea();
   const onLike = () => likeSharea(props.id);
 
   useEffect(() => {
-    if (users[props.creator] === undefined) {
-      fetchSpecificUser(creator);
-    }
     enter(props.id);
+    if (users[props.creator] === undefined)
+      fetchSpecificUser(creator);
     return () => quit(props.id);
   }, []);
 
@@ -79,9 +80,7 @@ function Sharea(props) {
 
   /* State handling */
 
-  const [state, setState] = useState(props);
   const isEditing = currentUser.id === props.creator;
-
   const { id, medias, connectedUsers } = props;
   const { name, creator } = state;
 

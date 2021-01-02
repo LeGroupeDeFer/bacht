@@ -3,11 +3,11 @@ import { Card } from 'react-bootstrap';
 import Loader from 'sharea/component/Loader'
 
 function LoadingMedia({...props}) {
-  return <Card>
-    <div>
+  return (
+    <Card className="media-card media-card-loading">
       <Loader.Centered width="100"/>
-    </div>
-  </Card>
+    </Card>
+  );
 }
 
 export default LoadingMedia;

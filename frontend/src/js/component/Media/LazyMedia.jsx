@@ -18,11 +18,11 @@ function LazyMedia({id}) {
   }, []);
 
   if(state === STATUS.FAILED) {
-    return <Card><Error error={error}/></Card>
+    return <Error error={error}/>
   }
 
   if (medias[id] === undefined) {
-    return <Card><Media.Loading /></Card>
+    return <Media.Loading />
   }
 
   return <Media.Card {...medias[id]} />
